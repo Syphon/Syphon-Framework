@@ -1,0 +1,333 @@
+/*
+    SyphonServerDirectory.m
+    Syphon
+
+    Copyright 2010 bangnoise (Tom Butterworth) & vade (Anton Marini).
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#import "SyphonServerDirectory.h"
+#import "SyphonPrivate.h"
+#import <pthread.h>
+
+static SyphonServerDirectory *_sharedDirectory = nil;
+
+NSString * const SyphonServerAnnounceNotification = @"SyphonServerAnnounceNotification";
+NSString * const SyphonServerUpdateNotification = @"SyphonServerUpdateNotification";
+NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotification";
+
+@interface NSDictionary (SyphonServerDirectoryPimpMyDictionary)
+- (NSDictionary *)pimpedVersionForSyphon;
+@end
+
+@interface NSArray (SyphonServerDirectoryServerSearch)
+- (NSUInteger)indexOfDescriptionForSyphonServerUUID:(NSString *)uuid;
+@end
+
+@implementation SyphonServerDirectory
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey
+{
+	BOOL automatic;
+    if ([theKey isEqualToString:@"servers"])
+	{
+		automatic=NO;
+    }
+	else
+	{
+		automatic=[super automaticallyNotifiesObserversForKey:theKey];
+    }
+    return automatic;
+}
+
+#pragma mark Singleton Instance
++ (void)load
+{
+	// cause our instantiation so we always post notifications
+	[SyphonServerDirectory sharedDirectory];
+}
+
++ (SyphonServerDirectory *)sharedDirectory
+{
+    @synchronized([SyphonServerDirectory class]) {
+        if (_sharedDirectory == nil) {
+            [[self alloc] init]; // assignment not done here but in alloc
+        }
+    }
+    return _sharedDirectory;
+}
+
++ (id)allocWithZone:(NSZone *)zone
+{
+    @synchronized([SyphonServerDirectory class]) {
+        if (_sharedDirectory == nil) {
+            _sharedDirectory = [super allocWithZone:zone];
+            return _sharedDirectory;  // assignment and return on first allocation
+        }
+    }
+    return nil; //on subsequent allocation attempts return nil
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    return self;
+}
+
+- (id)retain
+{
+    return self;
+}
+
+- (NSUInteger)retainCount
+{
+    return UINT_MAX;  //denotes an object that cannot be released
+}
+
+- (void)release
+{
+    //do nothing
+}
+
+- (id)autorelease
+{
+    return self;
+}
+
+- (id)init
+{
+    if (self = [super init])
+	{
+		if (pthread_mutex_init(&_generalLock, NULL) != 0
+			|| pthread_mutex_init(&_mutateLock, NULL) != 0)
+		{
+			[self release];
+			return nil;
+		}
+		_servers = [[NSMutableArray alloc] initWithCapacity:4];
+		[[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(handleServerAnnounce:) name:SyphonServerAnnounce object:nil];
+		[[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(handleServerRetire:) name:SyphonServerRetire object:nil];
+		[[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(handleServerUpdate:) name:SyphonServerUpdate object:nil];
+		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounceRequest object:nil userInfo:nil];
+
+    }
+    return self;
+}
+
+- (void)finalize
+{
+	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
+	pthread_mutex_destroy(&_generalLock);
+	pthread_mutex_destroy(&_mutateLock);
+	[super finalize];
+}
+
+- (void)dealloc
+{
+	// This will never get called as long as we're a singleton object,
+	// but maintain it for completeness, and in case we add dealloc on
+	// framework unload or something later
+	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
+	pthread_mutex_destroy(&_generalLock);
+	pthread_mutex_destroy(&_mutateLock);
+	[_servers release];
+	[super dealloc];
+}
+
+- (NSArray *)servers
+{
+	pthread_mutex_lock(&_generalLock);
+	NSArray *array = [NSArray arrayWithArray:_servers];
+	pthread_mutex_unlock(&_generalLock);
+	return array;
+}
+
+- (NSArray *)serversMatchingName:(NSString *)name appName:(NSString *)appname
+{
+	if ([name length] == 0)
+	{
+		name = nil;
+	}
+	if ([appname length] == 0)
+	{
+		appname = nil;
+	}
+	pthread_mutex_lock(&_generalLock);
+	NSIndexSet *indexes = [_servers indexesOfObjectsPassingTest:^(id obj, NSUInteger idx, BOOL *stop) {
+		if ((name == nil || [[obj objectForKey:SyphonServerDescriptionNameKey] isEqualToString:name])
+			&& (appname == nil || [[obj objectForKey:SyphonServerDescriptionAppNameKey] isEqualToString:appname]))
+		{
+			return YES;
+		} else {
+			return NO;
+		}
+	}];
+	NSArray *array = [_servers objectsAtIndexes:indexes];
+	pthread_mutex_unlock(&_generalLock);
+	return array;
+}
+
+#pragma mark Notification Handling
+
+- (void)handleServerAnnounce:(NSNotification *)aNotification
+{
+	
+//	SYPHONLOG(@"new server description: %@", serverInfo);
+	
+	NSDictionary* serverInfo = [[aNotification userInfo] pimpedVersionForSyphon];
+	NSString *uuid = [serverInfo objectForKey:SyphonServerDescriptionUUIDKey];
+	// Lock so nobody mutates for the duration
+	pthread_mutex_lock(&_mutateLock);
+	// Lock for access
+	pthread_mutex_lock(&_generalLock);
+	NSUInteger index = [_servers indexOfDescriptionForSyphonServerUUID:uuid];
+	NSUInteger count = [_servers count];
+	// Unlock for access, so others can access in response to the willChange
+	pthread_mutex_unlock(&_generalLock);
+	if (index == NSNotFound)
+	{
+		NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(count, 1)];
+		[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexSet forKey:@"servers"];
+		// lock for access
+		pthread_mutex_lock(&_generalLock);
+		[_servers addObject:serverInfo];
+		// unlock for access so others can access in response to the didChange
+		pthread_mutex_unlock(&_generalLock);
+		[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexSet forKey:@"servers"];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounceNotification object:serverInfo userInfo:nil];
+	}
+	// unlock mutate lock
+	pthread_mutex_unlock(&_mutateLock);
+}
+
+- (void)handleServerRetire:(NSNotification *)aNotification
+{
+//	SYPHONLOG(@"retire server description: %@", serverInfo);
+	
+	NSDictionary* serverInfo = [[aNotification userInfo] pimpedVersionForSyphon];
+	NSString *uuid = [serverInfo objectForKey:SyphonServerDescriptionUUIDKey];
+	// Lock so nobody mutates for the duration
+	pthread_mutex_lock(&_mutateLock);
+	// lock for access
+	pthread_mutex_lock(&_generalLock);
+	NSUInteger index = [_servers indexOfDescriptionForSyphonServerUUID:uuid];
+	// unlock for access so others can access in response to willChange
+	pthread_mutex_unlock(&_generalLock);
+	if(index != NSNotFound)
+	{
+		NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:index];
+		[self willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexSet forKey:@"servers"];
+		// lock for access
+		pthread_mutex_lock(&_generalLock);
+		[_servers removeObjectAtIndex:index];
+		// unlock for access so others can access in response to didChange
+		pthread_mutex_unlock(&_generalLock);
+		[self didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexSet forKey:@"servers"];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerRetireNotification object:serverInfo userInfo:nil];
+	}
+	// unlock mutate lock
+	pthread_mutex_unlock(&_mutateLock);
+}
+
+- (void)handleServerUpdate:(NSNotification *)aNotification
+{
+//	SYPHONLOG(@"updated server description: %@", serverInfo);
+
+	NSDictionary* serverInfo = [[aNotification userInfo] pimpedVersionForSyphon];
+	NSString *uuid = [serverInfo objectForKey:SyphonServerDescriptionUUIDKey];
+	// Lock so nobody mutates for the duration
+	pthread_mutex_lock(&_mutateLock);
+	// lock for access
+	pthread_mutex_lock(&_generalLock);
+	NSUInteger index = [_servers indexOfDescriptionForSyphonServerUUID:uuid];
+	// unlock for access so others can access in response to willChange
+	pthread_mutex_unlock(&_generalLock);
+	if(index != NSNotFound)
+	{
+		NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:index];
+		[self willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexSet forKey:@"servers"];
+		// lock for access
+		pthread_mutex_lock(&_generalLock);
+		[_servers replaceObjectAtIndex:index withObject:serverInfo];
+		// unlock for access so others can access in response to didChange
+		pthread_mutex_unlock(&_generalLock);
+		[self didChange:NSKeyValueChangeReplacement valuesAtIndexes:indexSet forKey:@"servers"];
+				
+		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerUpdateNotification object:serverInfo userInfo:nil];
+	}
+	pthread_mutex_unlock(&_mutateLock);
+}
+@end
+
+@implementation NSDictionary (SyphonServerDirectoryPimpMyDictionary)
+/*
+ 
+ This all seems a bit silly, and it is probably easier and has no performance penalty to pass the NSImage through the notification.
+ NSImage is NSCoding compliant, so that should work and save us a bit of hassle and this bit of code.
+  */
+
+- (NSDictionary *)pimpedVersionForSyphon
+{
+	if ([self objectForKey:SyphonServerDescriptionIconKey] == nil)
+	{
+		NSString *appName = [self objectForKey:SyphonServerDescriptionAppNameKey];
+		NSImage *appImage = nil;
+		for(NSRunningApplication* app in [[NSWorkspace sharedWorkspace] runningApplications])
+		{
+			if([appName isEqualToString:[app localizedName]])
+			{
+				appImage = [app icon];
+			}
+		}
+		
+		if(appImage != nil)
+		{
+			NSMutableDictionary *newDictionary = [NSMutableDictionary dictionaryWithDictionary:self];
+			[newDictionary setObject:appImage forKey:SyphonServerDescriptionIconKey];
+			return newDictionary;
+		}
+	}	
+	return self;
+}
+@end
+
+@implementation NSArray (SyphonServerDirectoryServerSearch)
+/*
+ 
+ UUID is the only sure identity, as other members of a dictionary may change, unhelpfully yeilding a NO for isEqual
+ 
+ */
+- (NSUInteger)indexOfDescriptionForSyphonServerUUID:(NSString *)uuid
+{
+	return [self indexOfObjectPassingTest:^(id obj, NSUInteger idx, BOOL *stop) {
+		if ([[obj objectForKey:SyphonServerDescriptionUUIDKey] isEqualToString:uuid])
+		{
+			return YES;
+		} else {
+			return NO;
+		}
+	}];
+}
+@end
