@@ -100,6 +100,7 @@ extern NSString * const SyphonServerRetireNotification;
 	NSMutableArray *_servers;
 	pthread_mutex_t _generalLock;
 	pthread_mutex_t _mutateLock;
+	NSMutableSet *_pings;
 }
 
 /*!
