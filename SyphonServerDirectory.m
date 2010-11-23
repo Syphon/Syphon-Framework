@@ -48,6 +48,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 @end
 
 @interface SyphonServerDirectory (Private)
+- (id)initOnce;
 - (void)requestServerAnnounce;
 @end
 
@@ -77,8 +78,9 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 + (SyphonServerDirectory *)sharedDirectory
 {
     @synchronized([SyphonServerDirectory class]) {
-        if (_sharedDirectory == nil) {
-            [[self alloc] init]; // assignment not done here but in alloc
+        if (_sharedDirectory == nil)
+		{
+			_sharedDirectory = [[super allocWithZone:NULL] initOnce];
         }
     }
     return _sharedDirectory;
@@ -86,13 +88,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 
 + (id)allocWithZone:(NSZone *)zone
 {
-    @synchronized([SyphonServerDirectory class]) {
-        if (_sharedDirectory == nil) {
-            _sharedDirectory = [super allocWithZone:zone];
-            return _sharedDirectory;  // assignment and return on first allocation
-        }
-    }
-    return nil; //on subsequent allocation attempts return nil
+	return [[self sharedDirectory] retain];
 }
 
 - (id)copyWithZone:(NSZone *)zone
@@ -107,7 +103,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 
 - (NSUInteger)retainCount
 {
-    return UINT_MAX;  //denotes an object that cannot be released
+    return NSUIntegerMax;  //denotes an object that cannot be released
 }
 
 - (void)release
@@ -120,7 +116,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
     return self;
 }
 
-- (id)init
+- (id)initOnce
 {
     if (self = [super init])
 	{
