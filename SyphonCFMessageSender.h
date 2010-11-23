@@ -38,7 +38,6 @@
 @private
 	CFMessagePortRef _port;
 	SyphonMessageQueue *_queue;
-	id volatile *_backRef;
 	SyphonDispatchSourceRef _dispatch;
 }
 @end
