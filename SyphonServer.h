@@ -48,10 +48,13 @@ extern NSString * const SyphonServerOptionIsPrivate;
  
  A SyphonServer object represents one video output for your application. If your application produces several video outputs, then they should each have their own SyphonServer. If your application might have multiple servers running, you should name each server to aid identification by users.
  
- It is safe to access instances of this class across threads, however a call to bindToDrawFrameOfSize: must have returned before a call is made to unbindAndPublish, and these methods must be paired and called in order. You should not call the stop method while the FBO is bound.
+ It is safe to access instances of this class across threads, except for those calls related to OpenGL: a call to bindToDrawFrameOfSize: must have returned before a call is made to unbindAndPublish, and these methods must be paired and called in order. You should not call the stop method while the FBO is bound.
  */
 
 #define SYPHON_SERVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonServer)
+#define SYPHON_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonImage)
+
+@class SYPHON_IMAGE_UNIQUE_CLASS_NAME;
 
 @interface SYPHON_SERVER_UNIQUE_CLASS_NAME : NSObject
 {
@@ -66,8 +69,7 @@ extern NSString * const SyphonServerOptionIsPrivate;
 	
 	void  *_surfaceRef;
 	BOOL _pushPending;
-	NSSize _surfaceSize;
-	GLuint _surfaceTexture;
+	SYPHON_IMAGE_UNIQUE_CLASS_NAME *_surfaceTexture;
 	GLuint _surfaceFBO;
 	
 	GLint _previousReadFBO;
@@ -148,6 +150,15 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 */
 
 - (void)unbindAndPublish;
+
+/*! 
+ Returns a SyphonImage representing the current output from the server, valid in the server's CGL context. Call this method every time you wish to access the current server frame. This object has a limited useful lifetime, and may have GPU resources associated with it: you should release it as soon as you are finished drawing with it.
+ 
+ This method does not lock the CGL context. If there is a chance other threads may use the context during calls to this method, or while you are drawing with the returned SyphonImage, bracket access with calls to CGLLockContext() and CGLUnlockContext().
+  
+ @returns A SyphonImage representing the current output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it. 
+ */
+- (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage;
 
 /*! 
  Stops the server instance. In garbage-collected applications you must call this method prior to removing strong references to the server. In non-garbage-collected applications, use of this method is optional.

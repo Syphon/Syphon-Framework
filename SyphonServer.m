@@ -29,6 +29,7 @@
 
 
 #import "SyphonServer.h"
+#import "SyphonIOSurfaceImage.h"
 #import "SyphonPrivate.h"
 #import "SyphonServerConnectionManager.h"
 
@@ -40,7 +41,7 @@
 
 @interface SyphonServer (Private)
 // IOSurface
-- (void) setupIOSurface;
+- (void) setupIOSurfaceForSize:(NSSize)size;
 - (void) destroyIOSurface;
 // Broadcast and Discovery
 - (void)startBroadcasts;
@@ -112,9 +113,7 @@
 			[self release];
 			return nil;
 		}
-		
-		_surfaceSize = NSZeroSize;
-		
+				
 		NSNumber *isPrivate = [options objectForKey:SyphonServerOptionIsPrivate];
 		if ([isPrivate respondsToSelector:@selector(boolValue)]
 			&& [isPrivate boolValue] == YES)
@@ -143,13 +142,13 @@
 		[(SyphonServerConnectionManager *)_connectionManager stop];
 		[(SyphonServerConnectionManager *)_connectionManager release];
 		_connectionManager = nil;
-		
-		[self destroyIOSurface];
-		
-		if (_broadcasts)
-		{
-			[self stopBroadcasts];
-		}
+	}
+	
+	[self destroyIOSurface];
+	
+	if (_broadcasts)
+	{
+		[self stopBroadcasts];
 	}
 	
 	if (cgl_ctx)
@@ -249,11 +248,10 @@
 	// to enforce proper use
 #if !SYPHON_DEBUG_NO_DRAWING
 	// check the images bounds, compare with our cached rect, if they dont match, rebuild the IOSurface/FBO/Texture combo.
-	if(! NSEqualSizes(_surfaceSize, size)) 
+	if(! NSEqualSizes(_surfaceTexture.textureSize, size)) 
 	{
-		_surfaceSize = size;
 		[self destroyIOSurface];
-		[self setupIOSurface];
+		[self setupIOSurfaceForSize:size];
 		_pushPending = YES;
 	}
 	
@@ -308,7 +306,8 @@
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		glPushClientAttrib(GL_CLIENT_ALL_ATTRIB_BITS);
 		// Setup OpenGL states
-		glViewport(0, 0, _surfaceSize.width,  _surfaceSize.height);
+		NSSize surfaceSize = _surfaceTexture.textureSize;
+		glViewport(0, 0, surfaceSize.width,  surfaceSize.height);
 		
 		glMatrixMode(GL_TEXTURE);
 		glPushMatrix();
@@ -317,7 +316,7 @@
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
-		glOrtho(0, _surfaceSize.width, 0, _surfaceSize.height, -1, 1);
+		glOrtho(0, surfaceSize.width, 0, surfaceSize.height, -1, 1);
 		
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
@@ -377,17 +376,17 @@
 			{
 				tex_coords[0] = region.origin.x;						tex_coords[1] = region.size.height + region.origin.y;
 				tex_coords[2] = region.origin.x;						tex_coords[3] = region.origin.y;
-				tex_coords[4] = _surfaceSize.width;						tex_coords[5] = region.origin.y;
-				tex_coords[6] = _surfaceSize.width;						tex_coords[7] = region.size.height + region.origin.y;
+				tex_coords[4] = surfaceSize.width;						tex_coords[5] = region.origin.y;
+				tex_coords[6] = surfaceSize.width;						tex_coords[7] = region.size.height + region.origin.y;
 			}
 		}
 		
 		GLfloat verts[] = 
 		{
 			0.0f, 0.0f,
-			0.0f, _surfaceSize.height,
-			_surfaceSize.width, _surfaceSize.height,
-			_surfaceSize.width, 0.0f,
+			0.0f, surfaceSize.height,
+			surfaceSize.width, surfaceSize.height,
+			surfaceSize.width, 0.0f,
 		};
         
         // Ought to cache the GL_ARRAY_BUFFER_BINDING, GL_ELEMENT_ARRAY_BUFFER_BINDING, set buffer to 0, and reset
@@ -428,17 +427,22 @@
 //	glMatrixMode(matrixMode);
 }
 
+- (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage
+{
+	return [_surfaceTexture retain];
+}
+
 #pragma mark -
 #pragma mark Private methods
 
 #pragma mark IOSurface handling
-- (void) setupIOSurface
+- (void) setupIOSurfaceForSize:(NSSize)size
 {	
 #if !SYPHON_DEBUG_NO_DRAWING
 	// init our texture and IOSurface
 	NSDictionary* surfaceAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithBool:YES], (NSString*)kIOSurfaceIsGlobal,
-									   [NSNumber numberWithUnsignedInteger:(NSUInteger)_surfaceSize.width], (NSString*)kIOSurfaceWidth,
-									   [NSNumber numberWithUnsignedInteger:(NSUInteger)_surfaceSize.height], (NSString*)kIOSurfaceHeight,
+									   [NSNumber numberWithUnsignedInteger:(NSUInteger)size.width], (NSString*)kIOSurfaceWidth,
+									   [NSNumber numberWithUnsignedInteger:(NSUInteger)size.height], (NSString*)kIOSurfaceHeight,
 									   [NSNumber numberWithUnsignedInteger:4U], (NSString*)kIOSurfaceBytesPerElement, nil];
 	
 	_surfaceRef =  IOSurfaceCreate((CFDictionaryRef) surfaceAttributes);
@@ -452,16 +456,9 @@
 	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &_previousReadFBO);
 	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &_previousDrawFBO);
 	
-	
-	glGenTextures(1, &_surfaceTexture);
-	glEnable(GL_TEXTURE_RECTANGLE_ARB);
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, _surfaceTexture);
-	
-	CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, GL_RGBA8, (GLsizei)_surfaceSize.width, (GLsizei) _surfaceSize.height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, _surfaceRef, 0);
-	if(err != kCGLNoError)
+	_surfaceTexture = [[SyphonIOSurfaceImage alloc] initWithSurface:_surfaceRef forContext:cgl_ctx];
+	if(_surfaceTexture == nil)
 	{
-		NSLog(@"Syphon Server: Error creating IOSurface texture: %s & %x", CGLErrorString(err), glGetError());
-		_surfaceSize = NSZeroSize;
 		[self destroyIOSurface];
 	}
 	else
@@ -469,13 +466,12 @@
 		// no error
 		glGenFramebuffersEXT(1, &_surfaceFBO);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _surfaceFBO);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_EXT, _surfaceTexture, 0);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_EXT, _surfaceTexture.textureName, 0);
 		
 		GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 		if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
 		{
 			NSLog(@"Syphon Server: Cannot create FBO (OpenGL Error %04X)", status);
-			_surfaceSize = NSZeroSize;
 			[self destroyIOSurface];
 		}
 	}
@@ -491,17 +487,20 @@
 - (void) destroyIOSurface
 {
 #if !SYPHON_DEBUG_NO_DRAWING
-	if (_surfaceRef != NULL)
+	if (_surfaceFBO != 0)
 	{
-		glDeleteTextures(1,&_surfaceTexture);
-		_surfaceTexture = 0;
-		
 		glDeleteFramebuffersEXT(1, &_surfaceFBO);
 		_surfaceFBO = 0;
-		
+	}
+	
+	if (_surfaceRef != NULL)
+	{		
 		CFRelease(_surfaceRef);
 		_surfaceRef = NULL;
 	}
+	
+	[_surfaceTexture release];
+	_surfaceTexture = nil;
 #endif
 }
 
