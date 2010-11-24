@@ -101,7 +101,7 @@
 
 - (void)stop
 {
-	OSSpinLockLock(&_status);
+	OSSpinLockLock(&_lock);
 	if (_status == 1)
 	{
 		if (_handler != nil)
