@@ -55,6 +55,8 @@
 {
 	if((self = [super init]))
 	{
+		_status = 1;
+
 		NSNumber *dictionaryVersion = [description objectForKey:SyphonServerDescriptionDictionaryVersionKey];
 		_connectionManager = [[SyphonClientConnectionManager alloc] initWithServerDescription:description];
 		
@@ -74,14 +76,16 @@
 			[(SyphonClientConnectionManager *)_connectionManager addFrameClient:(id <SyphonFrameReceiving>)self];
 		}
 		_lock = OS_SPINLOCK_INIT;
-		_status = 1;
 	}
 	return self;
 }
 
 - (void)finalize
 {	
-	if (((SyphonClientConnectionManager *)_connectionManager).isValid)
+	OSSpinLockLock(&_lock);
+	BOOL alive = (_status != 0);
+	OSSpinLockUnlock(&_lock);
+	if (alive)
 	{
 		[NSException raise:@"SyphonClientException" format:@"finalize called on client that hasn't been stopped."];
 	}
@@ -91,27 +95,33 @@
 - (void) dealloc
 {
 	[self stop];
+	[_handler release];
 	[super dealloc];
 }
 
 - (void)stop
 {
-	if (OSAtomicDecrement32(&_status) == 0) // so this will only happen once even if stop is called multiple times
+	OSSpinLockLock(&_status);
+	if (_status == 1)
 	{
 		if (_handler != nil)
 		{
 			[(SyphonClientConnectionManager *)_connectionManager removeFrameClient:(id <SyphonFrameReceiving>) self];
-			[_handler release];
 		}		
 		[(SyphonClientConnectionManager *)_connectionManager removeInfoClient:self];
 		[(SyphonClientConnectionManager *)_connectionManager release];
 		_connectionManager = nil;
+		_status = 0;
 	}
+	OSSpinLockUnlock(&_lock);
 }
 
 - (BOOL)isValid
 {
-	return ((SyphonClientConnectionManager *)_connectionManager).isValid;
+	OSSpinLockLock(&_lock);
+	BOOL result = (_connectionManager == nil ? NO : YES);
+	OSSpinLockUnlock(&_lock);
+	return result;
 }
 
 - (void)receiveNewFrame
@@ -136,13 +146,17 @@
 {
 	OSSpinLockLock(&_lock);
 	_lastFrameID = [(SyphonClientConnectionManager *)_connectionManager frameID];
+	SyphonImage *frame = [(SyphonClientConnectionManager *)_connectionManager newFrameForContext:cgl_ctx];
 	OSSpinLockUnlock(&_lock);
-	return [(SyphonClientConnectionManager *)_connectionManager newFrameForContext:cgl_ctx];
+	return frame;
 }
 
 - (NSDictionary *)serverDescription
 {
-	return ((SyphonClientConnectionManager *)_connectionManager).serverDescription;
+	OSSpinLockLock(&_lock);
+	NSDictionary *description = ((SyphonClientConnectionManager *)_connectionManager).serverDescription;
+	OSSpinLockUnlock(&_lock);
+	return description;
 }
 
 @end

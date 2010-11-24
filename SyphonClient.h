@@ -70,7 +70,7 @@
 @property (readonly) BOOL isValid;
 
 /*!
- Returns a dictionary with a description of the server the client is attached to. See SyphonServerDirectory.h for the keys this dictionary contains
+ Returns a dictionary with a description of the server the client is attached to. See SyphonServerDirectory for the keys this dictionary contains
 */
 
 @property (readonly) NSDictionary *serverDescription;
