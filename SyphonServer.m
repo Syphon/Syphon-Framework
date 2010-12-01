@@ -34,7 +34,6 @@
 #import "SyphonServerConnectionManager.h"
 
 #import <IOSurface/IOSurface.h>
-#import <OpenGL/CGLIOSurface.h>
 #import <OpenGL/CGLMacro.h>
 
 #import <libkern/OSAtomic.h>
