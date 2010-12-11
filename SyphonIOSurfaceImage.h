@@ -28,8 +28,6 @@
 */
 
 #import <Cocoa/Cocoa.h>
-// vade added. Tom, you probably know better how & where to place the new extern keys for imageFormatOptions
-#import "SyphonServer.h" 
 #import "SyphonImage.h"
 #import <IOSurface/IOSurface.h>
 
@@ -42,7 +40,7 @@
 	GLuint _texture;
 	NSSize _size;
 }
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context formatOptions:(NSDictionary*) imageFormatOptions;
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context internalFormat:(GLenum)internal format:(GLenum)format type:(GLenum)type;
 @end
 
 #if defined(SYPHON_USE_CLASS_ALIAS)

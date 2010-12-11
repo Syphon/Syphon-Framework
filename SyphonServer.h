@@ -47,7 +47,7 @@ extern NSString * const SyphonServerOptionIsPrivate;
 
  */
 
-extern NSString* const SyphonServerImageFormatDescription;
+extern NSString* const SyphonServerOptionImageFormat;
 
 /*!
  @relates SyphonServer
@@ -58,9 +58,9 @@ extern NSString* const SyphonServerImageFormatDescription;
     96 bpp / 32bpc RGB Floating Point   : SyphonImageInternalFormat GL_RGB32F_ARB, SyphonImageFormat GL_RGB, SyphonImageType GL_FLOAT.
  */
 
-extern NSString* const SyphonImageInternalFormat;
-extern NSString* const SyphonImageFormat;
-extern NSString* const SyphonImageType;
+extern NSString* const SyphonServerImageFormatInternalFormat;
+extern NSString* const SyphonServerImageFormatFormat;
+extern NSString* const SyphonServerImageFormatType;
 
 /*! @} */
 

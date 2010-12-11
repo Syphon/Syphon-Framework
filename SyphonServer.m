@@ -455,7 +455,7 @@
 	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &_previousReadFBO);
 	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &_previousDrawFBO);
 	
-	_surfaceTexture = [[SyphonIOSurfaceImage alloc] initWithSurface:_surfaceRef forContext:cgl_ctx formatOptions:nil];
+	_surfaceTexture = [[SyphonIOSurfaceImage alloc] initWithSurface:_surfaceRef forContext:cgl_ctx internalFormat:GL_RGBA8 format:GL_BGRA type:GL_UNSIGNED_INT_8_8_8_8_REV];
 	if(_surfaceTexture == nil)
 	{
 		[self destroyIOSurface];
