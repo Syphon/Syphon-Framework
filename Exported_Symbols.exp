@@ -43,3 +43,7 @@ _SyphonServerDescriptionUUIDKey
 _SyphonServerOptionIsPrivate
 _SyphonServerRetireNotification
 _SyphonServerUpdateNotification
+_SyphonServerImageFormatDescription
+_SyphonImageInternalFormat
+_SyphonImageFormat
+_SyphonImageType
