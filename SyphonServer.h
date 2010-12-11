@@ -40,6 +40,28 @@
  */
 extern NSString * const SyphonServerOptionIsPrivate;
 
+
+/*!
+ @relates SyphonServer
+ If this (not yet implemented) optional key is present, its value is an NSDictionary containing the keys describing the specified image format of the internal texture/surface being published. (See SyphonImageInternalFormat, SyphonImageFormat, SyphonImageType below for description). This key and accompanying dictionary of values allow you to specify custom image formats for the texture being published. For example, you may want to specify a single plane greyscale image, or a RGB Float 32 image. Default (when option is not specifie) results in sharing an 8 bit RGBA image. 
+
+ */
+
+extern NSString* const SyphonServerImageFormatDescription;
+
+/*!
+ @relates SyphonServer
+  The following keys (not yet implemented) describe the specifics of the image format being created by the SyphonServer. These values are GL_Enums wrapped in an NSNumber. These values must be stored within an NSDictionary whose key is SyphonServerImageFormatDescription. See the documentation for CGLTexImageIOSurface2D in CGLIOSurface.h for details on proper usage and proper values. Default values (when these keys and the accompanying SyphonServerImageFormatDescription NSDictionary are not supplied/nil) are: Internal Format: GL_RGBA8, Format: BGRA, Type: GL_UNSIGNED_INT_8888_REV, resulting in a 8 bit per channel, 32 bit image with alpha support.
+ 
+ Some possible options are:
+    128 bpp / 32bpc RGBA Floating Point : SyphonImageInternalFormat GL_RGBA32F_ARB, SyphonImageFormat GL_RGBA, SyphonImageType GL_FLOAT.
+    96 bpp / 32bpc RGB Floating Point   : SyphonImageInternalFormat GL_RGB32F_ARB, SyphonImageFormat GL_RGB, SyphonImageType GL_FLOAT.
+ */
+
+extern NSString* const SyphonImageInternalFormat;
+extern NSString* const SyphonImageFormat;
+extern NSString* const SyphonImageType;
+
 /*! @} */
 
 /*!

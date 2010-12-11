@@ -366,7 +366,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	}
 	else
 	{
-		result = [[SyphonIOSurfaceImage alloc] initWithSurface:[self surfaceHavingLock] forContext:context];
+		result = [[SyphonIOSurfaceImage alloc] initWithSurface:[self surfaceHavingLock] forContext:context formatOptions:nil];
 		NSMapInsertKnownAbsent(_frames, context, result);
 	}
 	OSSpinLockUnlock(&_lock);

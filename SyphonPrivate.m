@@ -41,6 +41,12 @@ NSString * const SyphonSurfaceTypeIOSurface = @"SyphonSurfaceTypeIOSurface";
 
 
 NSString * const SyphonServerOptionIsPrivate = @"SyphonServerOptionIsPrivate";
+NSString * const SyphonServerImageFormatDescription = @"SyphonServerImageFormatDescription"; 
+
+NSString * const SyphonImageInternalFormat = @"SyphonImageInternalFormat";  
+NSString * const SyphonImageFormat = @"SyphonImageFormat";          
+NSString * const SyphonImageType = @"SyphonImageType";            
+
 
 NSString *SyphonCreateUUIDString()
 {

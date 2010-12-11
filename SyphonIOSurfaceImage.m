@@ -34,7 +34,7 @@
 #import <OpenGL/CGLIOSurface.h>
 
 @implementation SyphonIOSurfaceImage
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context formatOptions:(NSDictionary*) imageFormatOptions
 {
 	if (self = [super init])
 	{
@@ -47,16 +47,35 @@
 		cgl_ctx = CGLRetainContext(context);
 		_size.width = IOSurfaceGetWidth(surfaceRef);
 		_size.height = IOSurfaceGetHeight(surfaceRef);
-		
+
+        // Specify proper options.
+		GLenum internalFormat = GL_RGBA8;
+        GLenum format = GL_BGRA;
+        GLenum type = GL_UNSIGNED_INT_8_8_8_8_REV;
+        
+        NSNumber* internalFormatNum = [imageFormatOptions valueForKey:SyphonImageInternalFormat];
+        NSNumber* formatNum = [imageFormatOptions valueForKey:SyphonImageFormat];
+        NSNumber* typeNum = [imageFormatOptions valueForKey:SyphonImageType];
+        
+		if ([internalFormatNum respondsToSelector:@selector(unsignedIntValue)])
+            internalFormat = [internalFormatNum unsignedIntValue];
+
+        if ([formatNum respondsToSelector:@selector(unsignedIntValue)])
+            format = [formatNum unsignedIntValue];
+
+        if ([typeNum respondsToSelector:@selector(unsignedIntValue)])
+            type = [typeNum unsignedIntValue];
+
+        
 		CGLLockContext(cgl_ctx);
 		glPushAttrib(GL_TEXTURE_BIT);
-		
+
 		// create the surface backed texture
 		glGenTextures(1, &_texture);
 		glEnable(GL_TEXTURE_RECTANGLE_ARB);
 		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, _texture);
 		
-		CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, GL_RGBA8, _size.width, _size.height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, _surface, 0);
+		CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, internalFormat, _size.width, _size.height, format, type, _surface, 0);
 		
 		glPopAttrib();
 		CGLUnlockContext(cgl_ctx);

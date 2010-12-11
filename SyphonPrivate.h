@@ -54,8 +54,13 @@ extern NSString * const SyphonSurfaceType;
 extern NSString * const SyphonSurfaceTypeIOSurface;
 
 // SyphonServer options
-extern NSString * const SyphonServerOptionIsPrivate;
+extern NSString * const SyphonServerOptionIsPrivate;    // NSNumber wrapping boolean
+extern NSString* const SyphonServerImageFormatDescription; // NSDictionary whose values are NSNumbers as described below in image format options
 
+// Image format options
+extern NSString* const SyphonImageInternalFormat;  // NSNumber wrapping GLenum (unsigned int value)
+extern NSString* const SyphonImageFormat;          // NSNumber wrapping GLenum (unsigned int value)
+extern NSString* const SyphonImageType;            // NSNumber wrapping GLenum (unsigned int value)   
 
 NSString *SyphonCreateUUIDString() NS_RETURNS_RETAINED;
 
