@@ -44,7 +44,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	SyphonMessageReceiver *_connection;
 	NSMutableDictionary *_infoClients;
 	NSMutableDictionary *_frameClients;
-	BOOL _alive;
+	
+    NSDictionary* _optionsDict;
+    
+    BOOL _alive;
 	NSString *_uuid;
 	IOSurfaceID _surfaceID;
 	SyphonSafeBool _hasClients;

@@ -80,6 +80,7 @@
 		_infoClients = [[NSMutableDictionary alloc] initWithCapacity:1];
 		_frameClients = [[NSMutableDictionary alloc] initWithCapacity:1];
 		_queue = dispatch_queue_create([uuid cStringUsingEncoding:NSUTF8StringEncoding], NULL);
+        _optionsDict = [options retain];
 	}
 	return self;
 }
@@ -106,6 +107,7 @@
 	[_infoClients release];
 	[_frameClients release];
 	[_uuid release];
+    [_optionsDict release];
 	[super dealloc];
 }
 
@@ -133,6 +135,7 @@
 			SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:clientUUID protocol:SyphonMessagingProtocolCFMessage invalidationHandler:^(void){
 				[self handleDeadConnection];
 			}];
+            
 			if (sender)
 			{
 				NSUInteger countBefore = [_infoClients count];
@@ -143,6 +146,7 @@
 				if (_surfaceID != 0)
 				{
 					[sender send:[NSNumber numberWithUnsignedInt:_surfaceID] ofType:SyphonMessageTypeUpdateSurfaceID];
+					[sender send:_optionsDict ofType:SyphonMessageTypeUpdateSurfaceDescription];
 				}
 				[_infoClients setObject:sender forKey:clientUUID];
 				[sender release];
