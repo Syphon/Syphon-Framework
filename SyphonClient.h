@@ -52,6 +52,11 @@
 	void			(^_handler)(id);
 	int32_t			_status;
 	int32_t			_lock;
+    
+    // for handling specified / optional image formats
+    GLenum _internalFormat;
+    GLenum _format;
+    GLenum _type;    
 }
 /*! 
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.

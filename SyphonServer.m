@@ -112,6 +112,28 @@
 			[self release];
 			return nil;
 		}
+        
+        _internalFormat = GL_RGBA8;
+        _format = GL_BGRA;
+        _type = GL_UNSIGNED_INT_8_8_8_8_REV;
+        
+        NSDictionary* imageFmtOpts = [options objectForKey:SyphonServerOptionImageFormat];
+        if([imageFmtOpts respondsToSelector:@selector(objectForKey:)])
+        {
+            // seems we have a valid dictionary. Lets ensure our dictionary has valud entries.
+            NSNumber* internalFormat = [imageFmtOpts valueForKey:SyphonServerImageFormatInternalFormat];
+            NSNumber* format = [imageFmtOpts valueForKey:SyphonServerImageFormatFormat];
+            NSNumber* type = [imageFmtOpts valueForKey:SyphonServerImageFormatType];
+         
+            if([internalFormat respondsToSelector:@selector(unsignedIntValue)]
+               && [format respondsToSelector:@selector(unsignedIntValue)]
+               && [type respondsToSelector:@selector(unsignedIntValue)])
+            {
+                _internalFormat = [internalFormat unsignedIntValue];
+                _format = [format unsignedIntValue];
+                _type = [type unsignedIntValue];
+            }
+        }
 				
 		NSNumber *isPrivate = [options objectForKey:SyphonServerOptionIsPrivate];
 		if ([isPrivate respondsToSelector:@selector(boolValue)]
@@ -455,7 +477,7 @@
 	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &_previousReadFBO);
 	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &_previousDrawFBO);
 	
-	_surfaceTexture = [[SyphonIOSurfaceImage alloc] initWithSurface:_surfaceRef forContext:cgl_ctx internalFormat:GL_RGBA8 format:GL_BGRA type:GL_UNSIGNED_INT_8_8_8_8_REV];
+	_surfaceTexture = [[SyphonIOSurfaceImage alloc] initWithSurface:_surfaceRef forContext:cgl_ctx internalFormat:_internalFormat format:_format type:_type];
 	if(_surfaceTexture == nil)
 	{
 		[self destroyIOSurface];
