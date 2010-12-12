@@ -39,7 +39,6 @@ NSString * const SyphonServerDescriptionSurfacesKey = @"SyphonServerDescriptionS
 NSString * const SyphonSurfaceType = @"SyphonSurfaceType";
 NSString * const SyphonSurfaceTypeIOSurface = @"SyphonSurfaceTypeIOSurface";
 
-
 NSString * const SyphonServerOptionIsPrivate = @"SyphonServerOptionIsPrivate";
 NSString * const SyphonServerOptionImageFormat = @"SyphonServerOptionImageFormat";
 

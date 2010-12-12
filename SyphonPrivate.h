@@ -79,6 +79,8 @@ void SyphonSafeBoolSet(SyphonSafeBool *b, BOOL value);
  Groupings are for one sender/receiver pair
  
  */
+
+
 enum {
     SyphonMessageTypeAddClientForInfo = 0, /* Accompanying data is a NSString with the client's UUID.
 											Server will send server description changes, IOSurfaceID changes and server retirement notices. */
@@ -94,5 +96,6 @@ enum {
 	SyphonMessageTypeUpdateServerName = 0, /* Accompanying data is the server name as NSString. */
 	SyphonMessageTypeNewFrame = 1, /* No accompanying data. */
 	SyphonMessageTypeUpdateSurfaceID = 2, /* Accompanying data is an unsigned integer value in a NSNumber representing a new IOSurfaceID */
-	SyphonMessageTypeRetireServer = 3 /* No accompanying data. */
+	SyphonMessageTypeRetireServer = 3, /* No accompanying data. */
+    SyphonMessageTypeUpdateSurfaceDescription = 4 /* this contains an SyphonServerOptionImageFormat dict, with specific values for the Surfaces image format */
 };
