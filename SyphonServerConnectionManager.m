@@ -138,6 +138,10 @@
             
 			if (sender)
 			{
+                [sender send:_optionsDict ofType:SyphonMessageTypeUpdateSurfaceDescription];                
+                SYPHONLOG(@"%@", _optionsDict);
+                
+                
 				NSUInteger countBefore = [_infoClients count];
 				if (countBefore == 0)
 				{
@@ -146,9 +150,9 @@
 				if (_surfaceID != 0)
 				{
 					[sender send:[NSNumber numberWithUnsignedInt:_surfaceID] ofType:SyphonMessageTypeUpdateSurfaceID];
-					[sender send:_optionsDict ofType:SyphonMessageTypeUpdateSurfaceDescription];
-				}
-				[_infoClients setObject:sender forKey:clientUUID];
+				}                
+				
+                [_infoClients setObject:sender forKey:clientUUID];
 				[sender release];
 				if (countBefore == 0)
 				{

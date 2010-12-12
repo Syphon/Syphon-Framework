@@ -84,6 +84,11 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	{
 		NSString *serverUUID = [description objectForKey:SyphonServerDescriptionUUIDKey];
 		
+        // for newFrame Handler, default values for now.
+        _internalFormat = GL_RGBA8;
+        _format = GL_BGRA;
+        _type = GL_UNSIGNED_INT_8_8_8_8_REV;
+        
 		// Return an existing instance for this server if we have one
 		id existing = SyphonClientPrivateCopyInstance(serverUUID);
 		if (existing)
@@ -91,7 +96,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 			[self release];
 			return existing;
 		}
-		
+        
 		NSArray *surfaces = [description objectForKey:SyphonServerDescriptionSurfacesKey];
 		BOOL hasIOSurface = NO;
 		for (NSDictionary *surface in surfaces)
@@ -184,6 +189,30 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 				case SyphonMessageTypeRetireServer:
 					[self endConnectionHavingLock:NO];
 					break;
+                case SyphonMessageTypeUpdateSurfaceDescription:
+                    {
+                        SYPHONLOG(@"got SyphonMessageTypeUpdateSurfaceDescription : %@", data);
+                                                
+                        // assign our new image formats.
+                        if([data respondsToSelector:@selector(objectForKey:)])
+                        {
+                            // seems we have a valid dictionary. Lets ensure our dictionary has valud entries.
+                            NSNumber* internalFormat = [data valueForKey:SyphonServerImageFormatInternalFormat];
+                            NSNumber* format = [data valueForKey:SyphonServerImageFormatFormat];
+                            NSNumber* type = [data valueForKey:SyphonServerImageFormatType];
+                            
+                            if([internalFormat respondsToSelector:@selector(unsignedIntValue)]
+                               && [format respondsToSelector:@selector(unsignedIntValue)]
+                               && [type respondsToSelector:@selector(unsignedIntValue)])
+                            {
+                                _internalFormat = [internalFormat unsignedIntValue];
+                                _format = [format unsignedIntValue];
+                                _type = [type unsignedIntValue];
+                            }
+                        }
+                        
+                    }   
+                    break;
 				default:
 					SYPHONLOG(@"Unknown message type #%u received", type);
 					break;
@@ -366,7 +395,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	}
 	else
 	{
-		result = [[SyphonIOSurfaceImage alloc] initWithSurface:[self surfaceHavingLock] forContext:context internalFormat:GL_RGBA8 format:GL_BGRA type:GL_UNSIGNED_INT_8_8_8_8_REV];
+		result = [[SyphonIOSurfaceImage alloc] initWithSurface:[self surfaceHavingLock] forContext:context internalFormat:_internalFormat format:_format type:_type];
 		NSMapInsertKnownAbsent(_frames, context, result);
 	}
 	OSSpinLockUnlock(&_lock);
