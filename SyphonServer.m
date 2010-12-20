@@ -57,6 +57,7 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 		case GL_RGB_FLOAT32_APPLE:
 			return 16U;
 			break;
+			/*
 		case GL_LUMINANCE8_ALPHA8:
 			return 2U;
 			break;
@@ -69,11 +70,48 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 		case GL_R8: // TODO: take this out if we dont' use it
 			return 1U;
 			break;
+			 */
 		default:
 			NSLog(@"Unexpected internal format in SyphonBytesPerElementForSizedInternalFormat()");
 			return 0U;
 			break;
 	}
+}
+
+static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *extension)
+{
+	// TODO: This IS NOT sufficient. We need to check every renderer on the machine
+	// as the remote client (possibly on another renderer) needs to be able to reconstitute the surface
+	// OR alternatively clients indicate their ability to receive and server steps down texture backing
+	// for as long as incapable client is attached
+	const GLubyte *extensions = NULL;
+	const GLubyte *start;
+	GLubyte *where, *terminator;
+	
+	// Check for illegal spaces in extension name
+	where = (GLubyte *) strchr(extension, ' ');
+	if (where || *extension == '\0')
+		return NO;
+	
+	extensions = glGetString(GL_EXTENSIONS);
+	
+	start = extensions;
+	for (;;) {
+		
+		where = (GLubyte *) strstr((const char *) start, extension);
+		
+		if (!where)
+			break;
+		
+		terminator = where + strlen(extension);
+		
+		if (where == start || *(where - 1) == ' ')
+			if (*terminator == ' ' || *terminator == '\0')
+				return YES;
+		
+		start = terminator;
+	}
+	return NO;
 }
 
 @interface SyphonServer (Private)
@@ -156,26 +194,44 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 			 */
 			if ([imageFormat isEqualToString:SyphonImageFormatRGB8])
 			{
-				// This is the same as RGBA8
-				// TODO: check if alpha is discarded
+				// This is the same as RGBA8 except alpha is ignored
 				_internalFormat = GL_RGB8; // or GL_RGB
 				_format = GL_BGRA;
 				_type = GL_UNSIGNED_INT_8_8_8_8_REV;
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatRGBA32])
 			{
-				// TODO: check support for this on GMA X3100, GMA 950
-				_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGB
-				_format = GL_RGBA;
-				_type = GL_FLOAT;
+				// check support for this (doesn't work on GMA X3100, GMA 950)
+				if (SyphonOpenGLSupportsExtension(context, "APPLE_float_pixels")
+					|| SyphonOpenGLSupportsExtension(context, "GL_ARB_texture_float"))
+				{
+					_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGBA
+					_format = GL_RGBA;
+					_type = GL_FLOAT;
+				}
+				else
+				{
+					_internalFormat = GL_RGBA8;
+					_format = GL_BGRA;
+					_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+				}
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatRGB32])
 			{
-				// TODO: check support for this on GMA X3100, GMA 950
-				// This is the same as RGBA32
-				_internalFormat = GL_RGB_FLOAT32_APPLE;
-				_format = GL_RGBA;
-				_type = GL_FLOAT;
+				// This is the same as RGBA32 except alpha is ignored
+				if (SyphonOpenGLSupportsExtension(context, "APPLE_float_pixels")
+					|| SyphonOpenGLSupportsExtension(context, "GL_ARB_texture_float"))
+				{
+					_internalFormat = GL_RGB_FLOAT32_APPLE; // or GL_RGB
+					_format = GL_RGBA;
+					_type = GL_FLOAT;
+				}
+				else
+				{
+					_internalFormat = GL_RGB8;
+					_format = GL_BGRA;
+					_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+				}
 			}
 			/*
 			 Luminance/Alpha and FBOs
@@ -219,6 +275,7 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 				_format = GL_BGRA;
 				_type = GL_UNSIGNED_INT_8_8_8_8_REV;
 				/*
+				 // This doesn't work, don't use it
 				 _internalFormat = GL_LUMINANCE8; // or GL_LUMINANCE
 				 _format = GL_LUMINANCE;
 				 _type = GL_UNSIGNED_BYTE;
@@ -226,10 +283,19 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatLuminanceAlpha32])
 			{
-				// TODO: check support for this on GMA X3100, GMA 950
-				_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGB
-				_format = GL_RGBA;
-				_type = GL_FLOAT;
+				if (SyphonOpenGLSupportsExtension(context, "APPLE_float_pixels")
+					|| SyphonOpenGLSupportsExtension(context, "GL_ARB_texture_float"))
+				{
+					_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGBA
+					_format = GL_RGBA;
+					_type = GL_FLOAT;
+				}
+				else
+				{
+					_internalFormat = GL_RGBA8;
+					_format = GL_BGRA;
+					_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+				}
 				/*
 				 // IOSurface doesn't support a 32-bit luminance-alpha except GL_LUMINANCE_ALPHA_INTEGER_EXT, which has poor support on current cards
 				 // If you can spot a better combination than this, which is a complete fail (same as LA8), then change it.
@@ -241,14 +307,27 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatLuminance32])
 			{
-				// TODO: check support for this on GMA X3100, GMA 950
+				if (SyphonOpenGLSupportsExtension(context, "APPLE_float_pixels")
+					|| SyphonOpenGLSupportsExtension(context, "GL_ARB_texture_float"))
+				{
+					_internalFormat = GL_RGB_FLOAT32_APPLE; // or GL_RGB
+					_format = GL_RGBA;
+					_type = GL_FLOAT;
+				}
+				else
+				{
+					_internalFormat = GL_RGB8;
+					_format = GL_BGRA;
+					_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+				}
 				_internalFormat = GL_RGB_FLOAT32_APPLE;
 				_format = GL_RGBA;
 				_type = GL_FLOAT;
 				/*
 				 // IOSurface doesn't support a 32-bit luminance except GL_LUMINANCE_INTEGER_EXT, which has poor support on current cards
 				 // We use unsigned short as the closest match
-				 // Alternatively we could check for support on *all* installed cards
+				 // Alternatively we could check for support
+				 // But this doesn't work with FBOs anyway, so we can't use it
 				 _internalFormat = GL_LUMINANCE16; // or GL_LUMINANCE
 				 _format = GL_LUMINANCE;
 				 _type = GL_UNSIGNED_SHORT;
