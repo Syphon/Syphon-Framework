@@ -45,7 +45,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	NSMutableDictionary *_infoClients;
 	NSMutableDictionary *_frameClients;
 	
-    NSDictionary* _optionsDict;
+    NSMutableDictionary *_surfaceDescription;
     
     BOOL _alive;
 	NSString *_uuid;

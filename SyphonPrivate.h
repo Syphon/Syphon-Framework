@@ -49,18 +49,28 @@ extern NSString * const SyphonServerDescriptionAppNameKey; // NSString
 extern NSString * const SyphonServerDescriptionDictionaryVersionKey; // NSNumber as unsigned int
 extern NSString * const SyphonServerDescriptionSurfacesKey; // An NSArray of NSDictionaries describing each supported surface type
 
-// Surface-description (dictionary for SyphonServerDescriptionSurfacesKey) keys // and content
+// Surface-description (dictionary for SyphonServerDescriptionSurfacesKey) keys // and content (Private)
 extern NSString * const SyphonSurfaceType;
 extern NSString * const SyphonSurfaceTypeIOSurface;
+extern NSString * const SyphonServerIOSurfaceDescriptionKey;
+extern NSString * const SyphonServerIOSurfaceIDKey;			// NSNumber wrapping unsigned int
+extern NSString * const SyphonServerIOSurfaceInternalFormatKey;	// NSNumber wrapping GLenum (unsigned int value)
+extern NSString * const SyphonServerIOSurfaceFormatKey;			// NSNumber wrapping GLenum (unsigned int value)
+extern NSString * const SyphonServerIOSurfaceTypeKey;				// NSNumber wrapping GLenum (unsigned int value)
 
 // SyphonServer options
 extern NSString * const SyphonServerOptionIsPrivate;    // NSNumber wrapping boolean
-extern NSString* const SyphonServerOptionImageFormat;	// NSDictionary whose values are NSNumbers as described below in image format options
+extern NSString * const SyphonServerOptionImageFormat;	// NSDictionary whose values are NSNumbers as described below in image format options
 
-// Image format options
-extern NSString* const SyphonServerImageFormatInternalFormat;	// NSNumber wrapping GLenum (unsigned int value)
-extern NSString* const SyphonServerImageFormatFormat;			// NSNumber wrapping GLenum (unsigned int value)
-extern NSString* const SyphonServerImageFormatType;				// NSNumber wrapping GLenum (unsigned int value)
+// SyphonServerImageFormat constants
+extern NSString * const SyphonServerImageFormatRGBA8;
+extern NSString * const SyphonServerImageFormatRGB8;
+extern NSString * const SyphonServerImageFormatRGBA32;
+extern NSString * const SyphonServerImageFormatRGB32;
+extern NSString * const SyphonServerImageFormatLuminance8;
+extern NSString * const SyphonServerImageFormatLuminanceAlpha8;
+extern NSString * const SyphonServerImageFormatLuminance32;
+extern NSString * const SyphonServerImageFormatLuminanceAlpha32;
 
 NSString *SyphonCreateUUIDString() NS_RETURNS_RETAINED;
 
@@ -97,5 +107,5 @@ enum {
 	SyphonMessageTypeNewFrame = 1, /* No accompanying data. */
 	SyphonMessageTypeUpdateSurfaceID = 2, /* Accompanying data is an unsigned integer value in a NSNumber representing a new IOSurfaceID */
 	SyphonMessageTypeRetireServer = 3, /* No accompanying data. */
-    SyphonMessageTypeUpdateSurfaceDescription = 4 /* this contains an SyphonServerOptionImageFormat dict, with specific values for the Surfaces image format */
+    SyphonMessageTypeUpdateSurfaceDescription = 4 /* Accompanying data is a NSDictionary with keys SyphonServerImageFormatInternatlFormat, SyphonServerImageFormatFormat and SyphonServerImageFormatType, each with a NSNumber with an unsigned integer value. */
 };

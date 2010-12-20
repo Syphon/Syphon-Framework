@@ -80,7 +80,8 @@
 		_infoClients = [[NSMutableDictionary alloc] initWithCapacity:1];
 		_frameClients = [[NSMutableDictionary alloc] initWithCapacity:1];
 		_queue = dispatch_queue_create([uuid cStringUsingEncoding:NSUTF8StringEncoding], NULL);
-        _optionsDict = [options retain];
+        _surfaceDescription = [[NSMutableDictionary alloc] initWithDictionary:[options objectForKey:SyphonServerIOSurfaceDescriptionKey]];
+		[_surfaceDescription setObject:SyphonSurfaceTypeIOSurface forKey:SyphonSurfaceType];
 	}
 	return self;
 }
@@ -107,7 +108,7 @@
 	[_infoClients release];
 	[_frameClients release];
 	[_uuid release];
-    [_optionsDict release];
+    [_surfaceDescription release];
 	[super dealloc];
 }
 
@@ -123,7 +124,11 @@
 
 - (NSDictionary *)surfaceDescription
 {
-	return [NSDictionary dictionaryWithObject:SyphonSurfaceTypeIOSurface forKey:SyphonSurfaceType];
+	__block NSDictionary *result;
+	dispatch_sync(_queue, ^{
+		result = [NSDictionary dictionaryWithDictionary:_surfaceDescription];
+	});
+	return result;
 }
 
 - (void)addInfoClient:(NSString *)clientUUID
@@ -137,16 +142,13 @@
 			}];
             
 			if (sender)
-			{
-                [sender send:_optionsDict ofType:SyphonMessageTypeUpdateSurfaceDescription];                
-                SYPHONLOG(@"%@", _optionsDict);
-                
-                
+			{                
 				NSUInteger countBefore = [_infoClients count];
 				if (countBefore == 0)
 				{
 					[self willChangeValueForKey:@"hasClients"];
 				}
+				[sender send:_surfaceDescription ofType:SyphonMessageTypeUpdateSurfaceDescription];
 				if (_surfaceID != 0)
 				{
 					[sender send:[NSNumber numberWithUnsignedInt:_surfaceID] ofType:SyphonMessageTypeUpdateSurfaceID];
@@ -339,6 +341,7 @@
 {
 	dispatch_sync(_queue, ^{
 		_surfaceID = newID;
+		[_surfaceDescription setObject:[NSNumber numberWithUnsignedInt:newID] forKey:SyphonServerIOSurfaceIDKey]; // so we can send it to new clients
 		[_infoClients enumerateKeysAndObjectsUsingBlock:^(id key, id client, BOOL *stop) {
 			[(SyphonMessageSender *)client send:[NSNumber numberWithUnsignedInt:newID] ofType:SyphonMessageTypeUpdateSurfaceID];
 		}];

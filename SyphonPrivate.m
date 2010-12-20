@@ -1,5 +1,5 @@
 /*
-    SyphonConstants.c
+    SyphonPrivate.m
     Syphon
 
      Copyright 2010 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -42,9 +42,21 @@ NSString * const SyphonSurfaceTypeIOSurface = @"SyphonSurfaceTypeIOSurface";
 NSString * const SyphonServerOptionIsPrivate = @"SyphonServerOptionIsPrivate";
 NSString * const SyphonServerOptionImageFormat = @"SyphonServerOptionImageFormat";
 
-NSString * const SyphonServerImageFormatInternalFormat = @"SyphonServerImageFormatInternalFormat";
-NSString * const SyphonServerImageFormatFormat = @"SyphonServerImageFormatFormat";
-NSString * const SyphonServerImageFormatType = @"SyphonServerImageFormatType";
+NSString * const SyphonServerImageFormatRGBA8 = @"SyphonServerImageFormatRGBA8";
+NSString * const SyphonServerImageFormatRGB8 = @"SyphonServerImageFormatRGB8";
+NSString * const SyphonServerImageFormatRGBA32 = @"SyphonServerImageFormatRGBA32";
+NSString * const SyphonServerImageFormatRGB32 = @"SyphonServerImageFormatRGB32";
+NSString * const SyphonServerImageFormatLuminance8 = @"SyphonServerImageFormatLuminance8";
+NSString * const SyphonServerImageFormatLuminanceAlpha8 = @"SyphonServerImageFormatLuminanceAlpha8";
+NSString * const SyphonServerImageFormatLuminance32 = @"SyphonServerImageFormatLuminance32";
+NSString * const SyphonServerImageFormatLuminanceAlpha32 = @"SyphonServerImageFormatLuminanceAlpha32";
+
+NSString * const SyphonServerIOSurfaceDescriptionKey = @"SyphonServerIOSurfaceDescriptionKey";
+
+NSString * const SyphonServerIOSurfaceIDKey = @"SyphonServerIOSurfaceIDKey";
+NSString * const SyphonServerIOSurfaceInternalFormatKey = @"SyphonServerIOSurfaceInternalFormatKey";
+NSString * const SyphonServerIOSurfaceFormatKey = @"SyphonServerIOSurfaceFormatKey";
+NSString * const SyphonServerIOSurfaceTypeKey = @"SyphonServerIOSurfaceTypeKey";
 
 NSString *SyphonCreateUUIDString()
 {

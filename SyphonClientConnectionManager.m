@@ -73,6 +73,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 - (void)setServerName:(NSString *)name;
 - (void)publishNewFrame;
 - (void)setSurfaceID:(IOSurfaceID)surfaceID;
+- (void)updateSurface:(NSDictionary *)description;
 - (IOSurfaceRef)surfaceHavingLock;
 - (void)endConnectionHavingLock:(BOOL)hasLock;
 @end
@@ -190,28 +191,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 					[self endConnectionHavingLock:NO];
 					break;
                 case SyphonMessageTypeUpdateSurfaceDescription:
-                    {
-                        SYPHONLOG(@"got SyphonMessageTypeUpdateSurfaceDescription : %@", data);
-                                                
-                        // assign our new image formats.
-                        if([data respondsToSelector:@selector(objectForKey:)])
-                        {
-                            // seems we have a valid dictionary. Lets ensure our dictionary has valud entries.
-                            NSNumber* internalFormat = [data valueForKey:SyphonServerImageFormatInternalFormat];
-                            NSNumber* format = [data valueForKey:SyphonServerImageFormatFormat];
-                            NSNumber* type = [data valueForKey:SyphonServerImageFormatType];
-                            
-                            if([internalFormat respondsToSelector:@selector(unsignedIntValue)]
-                               && [format respondsToSelector:@selector(unsignedIntValue)]
-                               && [type respondsToSelector:@selector(unsignedIntValue)])
-                            {
-                                _internalFormat = [internalFormat unsignedIntValue];
-                                _format = [format unsignedIntValue];
-                                _type = [type unsignedIntValue];
-                            }
-                        }
-                        
-                    }   
+					[self updateSurface:(NSDictionary *)data];
                     break;
 				default:
 					SYPHONLOG(@"Unknown message type #%u received", type);
@@ -372,6 +352,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 
 - (void)setSurfaceID:(IOSurfaceID)surfaceID
 {
+	SYPHONLOG(@"Updating ID");
 	OSSpinLockLock(&_lock);
 	_surfaceID = surfaceID;
 	_frameID++; // new surface means a new frame
@@ -382,6 +363,32 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		[_frames removeAllObjects];
 	}
 	OSSpinLockUnlock(&_lock);
+}
+
+- (void)updateSurface:(NSDictionary *)description
+{	
+	// assign our new image formats.
+	NSNumber *internalFormat = [description valueForKey:SyphonServerIOSurfaceInternalFormatKey];
+	NSNumber *format = [description valueForKey:SyphonServerIOSurfaceFormatKey];
+	NSNumber *type = [description valueForKey:SyphonServerIOSurfaceTypeKey];
+	NSNumber *surfaceID = [description valueForKey:SyphonServerIOSurfaceIDKey];
+
+	if(internalFormat && format && type) // it's OK if surfaceID is missing (might be getting these before a surface has been created)
+	{
+		SYPHONLOG(@"Updating surface");
+		OSSpinLockLock(&_lock);
+		_internalFormat = [internalFormat unsignedIntValue];
+		_format = [format unsignedIntValue];
+		_type = [type unsignedIntValue];
+		_surfaceID = [surfaceID unsignedIntValue];
+		if (_surface)
+		{
+			CFRelease(_surface);
+			_surface = NULL;
+			[_frames removeAllObjects];
+		}
+		OSSpinLockUnlock(&_lock);
+	}
 }
 
 - (SyphonImage *)newFrameForContext:(CGLContextObj)context

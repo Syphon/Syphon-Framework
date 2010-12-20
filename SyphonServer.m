@@ -38,6 +38,44 @@
 
 #import <libkern/OSAtomic.h>
 
+static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
+{
+	/*
+	 This is what IOSurface will tolerate, based on when we use certain internal formats
+	 rather than anything meaningful...
+	 */
+	switch (format) {
+		case GL_RGBA8:
+			return 4U;
+			break;
+		case GL_RGB8:
+			return 4U;
+			break;
+		case GL_RGBA_FLOAT32_APPLE:
+			return 16U;
+			break;
+		case GL_RGB_FLOAT32_APPLE:
+			return 16U;
+			break;
+		case GL_LUMINANCE8_ALPHA8:
+			return 2U;
+			break;
+		case GL_LUMINANCE8:
+			return 1U;
+			break;
+		case GL_LUMINANCE16:
+			return 2U;
+			break;
+		case GL_R8: // TODO: take this out if we dont' use it
+			return 1U;
+			break;
+		default:
+			NSLog(@"Unexpected internal format in SyphonBytesPerElementForSizedInternalFormat()");
+			return 0U;
+			break;
+	}
+}
+
 @interface SyphonServer (Private)
 // IOSurface
 - (void) setupIOSurfaceForSize:(NSSize)size;
@@ -102,8 +140,132 @@
 		}
 		_name = [serverName copy];
 		_uuid = SyphonCreateUUIDString();
+        
+        _internalFormat = GL_RGBA8;
+        _format = GL_BGRA;
+        _type = GL_UNSIGNED_INT_8_8_8_8_REV;
 		
-		_connectionManager = [[SyphonServerConnectionManager alloc] initWithUUID:_uuid options:options];
+        NSString *imageFormat = [options objectForKey:SyphonServerOptionImageFormat];
+		if ([imageFormat isKindOfClass:[NSString class]])
+		{
+			/*
+			 if ([imageFormat isEqualToString:SyphonServerImageFormatRGBA8])
+			 {
+			 // This is pointless, we just set it above
+			 }
+			 */
+			if ([imageFormat isEqualToString:SyphonServerImageFormatRGB8])
+			{
+				// This is the same as RGBA8
+				// TODO: check if alpha is discarded
+				_internalFormat = GL_RGB8; // or GL_RGB
+				_format = GL_BGRA;
+				_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+			}
+			else if ([imageFormat isEqualToString:SyphonServerImageFormatRGBA32])
+			{
+				// TODO: check support for this on GMA X3100, GMA 950
+				_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGB
+				_format = GL_RGBA;
+				_type = GL_FLOAT;
+			}
+			else if ([imageFormat isEqualToString:SyphonServerImageFormatRGB32])
+			{
+				// TODO: check support for this on GMA X3100, GMA 950
+				// This is the same as RGBA32
+				_internalFormat = GL_RGB_FLOAT32_APPLE;
+				_format = GL_RGBA;
+				_type = GL_FLOAT;
+			}
+			/*
+			 Luminance/Alpha and FBOs
+			 FBOs don't like rendering into luminance or luminance/alpha bound textures
+			 http://lists.apple.com/archives/mac-opengl/2008/Nov/msg00076.html
+			 
+			 So for now we use the smallest possible alternative. SADFACE.
+			 
+			 I haven't tried every possible combination, but the obvious ones fail when you bind the FBO. Tom.
+			 
+			 */
+			else if ([imageFormat isEqualToString:SyphonServerImageFormatLuminanceAlpha8])
+			{
+				_internalFormat = GL_RGBA8;
+				_format = GL_BGRA;
+				_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+				/*
+				 _internalFormat = GL_LUMINANCE8_ALPHA8; // or GL_LUMINANCE_ALPHA
+				 _format = GL_LUMINANCE_ALPHA;
+				 _type = GL_UNSIGNED_BYTE;
+				 */
+			}
+			else if ([imageFormat isEqualToString:SyphonServerImageFormatLuminance8])
+			{
+				/*
+				 The following is single-channel and in a byte-per-element surface
+				 but, it's only the red channel of the source (not luminance).
+				 It is simple to misrepresent it at the end (just send the swizzledX values
+				 to clients) but would require a shader when we draw to put true luminance in the
+				 red channel
+				 
+				_internalFormat = GL_R8;
+				_format = GL_RED;
+				_type = GL_UNSIGNED_BYTE;
+				swizzledInternalFormat = GL_LUMINANCE8;
+				swizzledFormat = GL_LUMINANCE;
+				swizzledType = GL_UNSIGNED_BYTE;
+				*/
+				
+				_internalFormat = GL_RGB8; // or GL_RGB
+				_format = GL_BGRA;
+				_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+				/*
+				 _internalFormat = GL_LUMINANCE8; // or GL_LUMINANCE
+				 _format = GL_LUMINANCE;
+				 _type = GL_UNSIGNED_BYTE;
+				 */
+			}
+			else if ([imageFormat isEqualToString:SyphonServerImageFormatLuminanceAlpha32])
+			{
+				// TODO: check support for this on GMA X3100, GMA 950
+				_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGB
+				_format = GL_RGBA;
+				_type = GL_FLOAT;
+				/*
+				 // IOSurface doesn't support a 32-bit luminance-alpha except GL_LUMINANCE_ALPHA_INTEGER_EXT, which has poor support on current cards
+				 // If you can spot a better combination than this, which is a complete fail (same as LA8), then change it.
+				 // Alternatively we could check for support on *all* installed cards
+				 _internalFormat = GL_LUMINANCE8_ALPHA8; // or GL_LUMINANCE_ALPHA
+				 _format = GL_LUMINANCE_ALPHA;
+				 _type = GL_UNSIGNED_BYTE;
+				 */
+			}
+			else if ([imageFormat isEqualToString:SyphonServerImageFormatLuminance32])
+			{
+				// TODO: check support for this on GMA X3100, GMA 950
+				_internalFormat = GL_RGB_FLOAT32_APPLE;
+				_format = GL_RGBA;
+				_type = GL_FLOAT;
+				/*
+				 // IOSurface doesn't support a 32-bit luminance except GL_LUMINANCE_INTEGER_EXT, which has poor support on current cards
+				 // We use unsigned short as the closest match
+				 // Alternatively we could check for support on *all* installed cards
+				 _internalFormat = GL_LUMINANCE16; // or GL_LUMINANCE
+				 _format = GL_LUMINANCE;
+				 _type = GL_UNSIGNED_SHORT;
+				 */
+			}
+		}
+		
+		// We stuff the options we chose into the options dictionary for the connection-manager to pass around
+		NSMutableDictionary *extendedDictionary = [NSMutableDictionary dictionaryWithDictionary:options];
+		
+		NSDictionary *surfaceInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_internalFormat], SyphonServerIOSurfaceInternalFormatKey,
+									 [NSNumber numberWithUnsignedInt:_format], SyphonServerIOSurfaceFormatKey,
+									 [NSNumber numberWithUnsignedInt:_type], SyphonServerIOSurfaceTypeKey, nil];
+		
+		[extendedDictionary setObject:surfaceInfo forKey:SyphonServerIOSurfaceDescriptionKey];
+
+		_connectionManager = [[SyphonServerConnectionManager alloc] initWithUUID:_uuid options:extendedDictionary];
 		
 		[(SyphonServerConnectionManager *)_connectionManager addObserver:self forKeyPath:@"hasClients" options:NSKeyValueObservingOptionPrior context:nil];
 		
@@ -111,30 +273,8 @@
 		{
 			[self release];
 			return nil;
-		}
-        
-        _internalFormat = GL_RGBA8;
-        _format = GL_BGRA;
-        _type = GL_UNSIGNED_INT_8_8_8_8_REV;
-        
-        NSDictionary* imageFmtOpts = [options objectForKey:SyphonServerOptionImageFormat];
-        if([imageFmtOpts respondsToSelector:@selector(objectForKey:)])
-        {
-            // seems we have a valid dictionary. Lets ensure our dictionary has valud entries.
-            NSNumber* internalFormat = [imageFmtOpts valueForKey:SyphonServerImageFormatInternalFormat];
-            NSNumber* format = [imageFmtOpts valueForKey:SyphonServerImageFormatFormat];
-            NSNumber* type = [imageFmtOpts valueForKey:SyphonServerImageFormatType];
-         
-            if([internalFormat respondsToSelector:@selector(unsignedIntValue)]
-               && [format respondsToSelector:@selector(unsignedIntValue)]
-               && [type respondsToSelector:@selector(unsignedIntValue)])
-            {
-                _internalFormat = [internalFormat unsignedIntValue];
-                _format = [format unsignedIntValue];
-                _type = [type unsignedIntValue];
-            }
-        }
-				
+		}		
+		
 		NSNumber *isPrivate = [options objectForKey:SyphonServerOptionIsPrivate];
 		if ([isPrivate respondsToSelector:@selector(boolValue)]
 			&& [isPrivate boolValue] == YES)
@@ -461,11 +601,14 @@
 {	
 #if !SYPHON_DEBUG_NO_DRAWING
 	// init our texture and IOSurface
+	
+	NSUInteger bytesPerElement = SyphonBytesPerElementForSizedInteralFormat(_internalFormat);
+
 	NSDictionary* surfaceAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithBool:YES], (NSString*)kIOSurfaceIsGlobal,
 									   [NSNumber numberWithUnsignedInteger:(NSUInteger)size.width], (NSString*)kIOSurfaceWidth,
 									   [NSNumber numberWithUnsignedInteger:(NSUInteger)size.height], (NSString*)kIOSurfaceHeight,
-									   [NSNumber numberWithUnsignedInteger:4U], (NSString*)kIOSurfaceBytesPerElement, nil];
-	
+									   [NSNumber numberWithUnsignedInteger:bytesPerElement], (NSString*)kIOSurfaceBytesPerElement, nil];
+
 	_surfaceRef =  IOSurfaceCreate((CFDictionaryRef) surfaceAttributes);
 	[surfaceAttributes release];
 	
