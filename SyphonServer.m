@@ -335,6 +335,8 @@ static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *ext
 			}
 		}
 		
+		SYPHONLOG(@"Using a%@-bit pixel-format", (_type == GL_FLOAT ? @" 32" : @"n 8"));
+		
 		// We stuff the options we chose into the options dictionary for the connection-manager to pass around
 		NSMutableDictionary *extendedDictionary = [NSMutableDictionary dictionaryWithDictionary:options];
 		
