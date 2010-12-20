@@ -149,12 +149,12 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 		if ([imageFormat isKindOfClass:[NSString class]])
 		{
 			/*
-			 if ([imageFormat isEqualToString:SyphonServerImageFormatRGBA8])
+			 if ([imageFormat isEqualToString:SyphonImageFormatRGBA8])
 			 {
 			 // This is pointless, we just set it above
 			 }
 			 */
-			if ([imageFormat isEqualToString:SyphonServerImageFormatRGB8])
+			if ([imageFormat isEqualToString:SyphonImageFormatRGB8])
 			{
 				// This is the same as RGBA8
 				// TODO: check if alpha is discarded
@@ -162,14 +162,14 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 				_format = GL_BGRA;
 				_type = GL_UNSIGNED_INT_8_8_8_8_REV;
 			}
-			else if ([imageFormat isEqualToString:SyphonServerImageFormatRGBA32])
+			else if ([imageFormat isEqualToString:SyphonImageFormatRGBA32])
 			{
 				// TODO: check support for this on GMA X3100, GMA 950
 				_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGB
 				_format = GL_RGBA;
 				_type = GL_FLOAT;
 			}
-			else if ([imageFormat isEqualToString:SyphonServerImageFormatRGB32])
+			else if ([imageFormat isEqualToString:SyphonImageFormatRGB32])
 			{
 				// TODO: check support for this on GMA X3100, GMA 950
 				// This is the same as RGBA32
@@ -187,7 +187,7 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 			 I haven't tried every possible combination, but the obvious ones fail when you bind the FBO. Tom.
 			 
 			 */
-			else if ([imageFormat isEqualToString:SyphonServerImageFormatLuminanceAlpha8])
+			else if ([imageFormat isEqualToString:SyphonImageFormatLuminanceAlpha8])
 			{
 				_internalFormat = GL_RGBA8;
 				_format = GL_BGRA;
@@ -198,7 +198,7 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 				 _type = GL_UNSIGNED_BYTE;
 				 */
 			}
-			else if ([imageFormat isEqualToString:SyphonServerImageFormatLuminance8])
+			else if ([imageFormat isEqualToString:SyphonImageFormatLuminance8])
 			{
 				/*
 				 The following is single-channel and in a byte-per-element surface
@@ -224,7 +224,7 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 				 _type = GL_UNSIGNED_BYTE;
 				 */
 			}
-			else if ([imageFormat isEqualToString:SyphonServerImageFormatLuminanceAlpha32])
+			else if ([imageFormat isEqualToString:SyphonImageFormatLuminanceAlpha32])
 			{
 				// TODO: check support for this on GMA X3100, GMA 950
 				_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGB
@@ -239,7 +239,7 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 				 _type = GL_UNSIGNED_BYTE;
 				 */
 			}
-			else if ([imageFormat isEqualToString:SyphonServerImageFormatLuminance32])
+			else if ([imageFormat isEqualToString:SyphonImageFormatLuminance32])
 			{
 				// TODO: check support for this on GMA X3100, GMA 950
 				_internalFormat = GL_RGB_FLOAT32_APPLE;

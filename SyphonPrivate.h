@@ -62,15 +62,15 @@ extern NSString * const SyphonServerIOSurfaceTypeKey;				// NSNumber wrapping GL
 extern NSString * const SyphonServerOptionIsPrivate;    // NSNumber wrapping boolean
 extern NSString * const SyphonServerOptionImageFormat;	// NSDictionary whose values are NSNumbers as described below in image format options
 
-// SyphonServerImageFormat constants
-extern NSString * const SyphonServerImageFormatRGBA8;
-extern NSString * const SyphonServerImageFormatRGB8;
-extern NSString * const SyphonServerImageFormatRGBA32;
-extern NSString * const SyphonServerImageFormatRGB32;
-extern NSString * const SyphonServerImageFormatLuminance8;
-extern NSString * const SyphonServerImageFormatLuminanceAlpha8;
-extern NSString * const SyphonServerImageFormatLuminance32;
-extern NSString * const SyphonServerImageFormatLuminanceAlpha32;
+// SyphonImageFormat constants
+extern NSString * const SyphonImageFormatRGBA8;
+extern NSString * const SyphonImageFormatRGB8;
+extern NSString * const SyphonImageFormatRGBA32;
+extern NSString * const SyphonImageFormatRGB32;
+extern NSString * const SyphonImageFormatLuminance8;
+extern NSString * const SyphonImageFormatLuminanceAlpha8;
+extern NSString * const SyphonImageFormatLuminance32;
+extern NSString * const SyphonImageFormatLuminanceAlpha32;
 
 NSString *SyphonCreateUUIDString() NS_RETURNS_RETAINED;
 
@@ -107,5 +107,5 @@ enum {
 	SyphonMessageTypeNewFrame = 1, /* No accompanying data. */
 	SyphonMessageTypeUpdateSurfaceID = 2, /* Accompanying data is an unsigned integer value in a NSNumber representing a new IOSurfaceID */
 	SyphonMessageTypeRetireServer = 3, /* No accompanying data. */
-    SyphonMessageTypeUpdateSurfaceDescription = 4 /* Accompanying data is a NSDictionary with keys SyphonServerImageFormatInternatlFormat, SyphonServerImageFormatFormat and SyphonServerImageFormatType, each with a NSNumber with an unsigned integer value. */
+    SyphonMessageTypeUpdateSurfaceDescription = 4 /* Accompanying data is a NSDictionary with keys SyphonImageFormatInternatlFormat, SyphonImageFormatFormat and SyphonImageFormatType, each with a NSNumber with an unsigned integer value. */
 };

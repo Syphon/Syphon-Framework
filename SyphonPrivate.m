@@ -42,14 +42,14 @@ NSString * const SyphonSurfaceTypeIOSurface = @"SyphonSurfaceTypeIOSurface";
 NSString * const SyphonServerOptionIsPrivate = @"SyphonServerOptionIsPrivate";
 NSString * const SyphonServerOptionImageFormat = @"SyphonServerOptionImageFormat";
 
-NSString * const SyphonServerImageFormatRGBA8 = @"SyphonServerImageFormatRGBA8";
-NSString * const SyphonServerImageFormatRGB8 = @"SyphonServerImageFormatRGB8";
-NSString * const SyphonServerImageFormatRGBA32 = @"SyphonServerImageFormatRGBA32";
-NSString * const SyphonServerImageFormatRGB32 = @"SyphonServerImageFormatRGB32";
-NSString * const SyphonServerImageFormatLuminance8 = @"SyphonServerImageFormatLuminance8";
-NSString * const SyphonServerImageFormatLuminanceAlpha8 = @"SyphonServerImageFormatLuminanceAlpha8";
-NSString * const SyphonServerImageFormatLuminance32 = @"SyphonServerImageFormatLuminance32";
-NSString * const SyphonServerImageFormatLuminanceAlpha32 = @"SyphonServerImageFormatLuminanceAlpha32";
+NSString * const SyphonImageFormatRGBA8 = @"SyphonImageFormatRGBA8";
+NSString * const SyphonImageFormatRGB8 = @"SyphonImageFormatRGB8";
+NSString * const SyphonImageFormatRGBA32 = @"SyphonImageFormatRGBA32";
+NSString * const SyphonImageFormatRGB32 = @"SyphonImageFormatRGB32";
+NSString * const SyphonImageFormatLuminance8 = @"SyphonImageFormatLuminance8";
+NSString * const SyphonImageFormatLuminanceAlpha8 = @"SyphonImageFormatLuminanceAlpha8";
+NSString * const SyphonImageFormatLuminance32 = @"SyphonImageFormatLuminance32";
+NSString * const SyphonImageFormatLuminanceAlpha32 = @"SyphonImageFormatLuminanceAlpha32";
 
 NSString * const SyphonServerIOSurfaceDescriptionKey = @"SyphonServerIOSurfaceDescriptionKey";
 
