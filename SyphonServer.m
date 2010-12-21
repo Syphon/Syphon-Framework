@@ -46,14 +46,14 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 	 */
 	switch (format) {
 		case GL_RGBA8:
-			return 4U;
-			break;
 		case GL_RGB8:
 			return 4U;
 			break;
+		case GL_RGBA_FLOAT16_APPLE:
+		case GL_RGB_FLOAT16_APPLE:
+			return 8U;
+			break;			
 		case GL_RGBA_FLOAT32_APPLE:
-			return 16U;
-			break;
 		case GL_RGB_FLOAT32_APPLE:
 			return 16U;
 			break;
@@ -67,7 +67,7 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 		case GL_LUMINANCE16:
 			return 2U;
 			break;
-		case GL_R8: // TODO: take this out if we dont' use it
+		case GL_R8:
 			return 1U;
 			break;
 			 */
@@ -80,10 +80,6 @@ static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 
 static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *extension)
 {
-	// TODO: This IS NOT sufficient. We need to check every renderer on the machine
-	// as the remote client (possibly on another renderer) needs to be able to reconstitute the surface
-	// OR alternatively clients indicate their ability to receive and server steps down texture backing
-	// for as long as incapable client is attached
 	const GLubyte *extensions = NULL;
 	const GLubyte *start;
 	GLubyte *where, *terminator;
@@ -112,6 +108,90 @@ static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *ext
 		start = terminator;
 	}
 	return NO;
+}
+
+/*
+ GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
+ 
+ Returns one of GL_UNSIGNED_INT_8_8_8_8_REV, GL_HALF_APPLE, GL_FLOAT to the best capabilities of the renderer
+ 
+ */
+static GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
+{	
+	/*
+	 Check for support for float pixels
+	 Based on http://www.opengl.org/registry/specs/APPLE/float_pixels.txt
+	 
+	 */
+	// any Floating Point Support at all?
+	BOOL supportsFloatColorBuffers = NO;
+	BOOL supportsFloatTextures     = NO;
+	
+	// 16 bit/component Floating Point Blend/Filter Support?
+	BOOL supportsFloat16ColorBufferBlending = NO;
+	BOOL supportsFloat16TextureFiltering    = NO;
+	
+	// 32 bit/component Floating Point Blend/Filter Support?
+	BOOL supportsFloat32ColorBufferBlending = NO;
+	BOOL supportsFloat32TextureFiltering    = NO;
+	
+	// ===============================================
+	// Check for floating point texture support
+	// 
+	// * First check for full ARB_texture_float
+	//   extension and only then check for more
+	//   limited APPLE and APPLEX texture extensions
+	// ===============================================
+	if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_ARB_texture_float"))
+	{
+		supportsFloatTextures           = YES;
+		supportsFloat16TextureFiltering = YES;
+		supportsFloat32TextureFiltering = YES;            
+	}
+	else if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
+	{
+		supportsFloatTextures = YES;
+		
+		if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLEX_texture_float_16_filter"))
+		{
+			supportsFloat16TextureFiltering = YES;
+		}
+	}
+	
+	// ===============================================
+	// Check for floating point color buffer support
+	// 
+	// * First check for full ARB_color_buffer_float
+	//   extension and only then check for more
+	//   limited APPLE and APPLEX color buffer extensions
+	// ===============================================
+	if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_ARB_color_buffer_float"))
+	{
+		supportsFloatColorBuffers          = YES;
+		supportsFloat16ColorBufferBlending = YES;
+		supportsFloat32ColorBufferBlending = YES;            
+	}
+	else if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
+	{
+		supportsFloatColorBuffers = YES;
+		
+		if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLEX_color_buffer_float_16_blend"))
+		{
+			supportsFloat16ColorBufferBlending = YES;
+		}
+	}
+	if (supportsFloat32TextureFiltering && supportsFloat32ColorBufferBlending)
+	{
+		return GL_FLOAT;
+	}
+	else if (supportsFloat16TextureFiltering && supportsFloat16ColorBufferBlending)
+	{
+		return GL_HALF_APPLE;
+	}
+	else
+	{
+		return GL_UNSIGNED_INT_8_8_8_8_REV;
+	}
 }
 
 @interface SyphonServer (Private)
@@ -202,35 +282,43 @@ static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *ext
 			else if ([imageFormat isEqualToString:SyphonImageFormatRGBA32])
 			{
 				// check support for this (doesn't work on GMA X3100, GMA 950)
-				if (SyphonOpenGLSupportsExtension(context, "APPLE_float_pixels")
-					|| SyphonOpenGLSupportsExtension(context, "GL_ARB_texture_float"))
-				{
-					_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGBA
-					_format = GL_RGBA;
-					_type = GL_FLOAT;
-				}
-				else
-				{
-					_internalFormat = GL_RGBA8;
-					_format = GL_BGRA;
-					_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+				switch (SyphonOpenGLBestFloatType(context)) {
+					case GL_FLOAT:
+						_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGBA
+						_format = GL_RGBA;
+						_type = GL_FLOAT;						
+						break;
+					case GL_HALF_APPLE:
+						_internalFormat = GL_RGBA_FLOAT16_APPLE; // or GL_RGBA
+						_format = GL_RGBA;
+						_type = GL_HALF_APPLE;
+					case GL_UNSIGNED_INT_8_8_8_8_REV:
+					default:
+						_internalFormat = GL_RGBA8;
+						_format = GL_BGRA;
+						_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+						break;
 				}
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatRGB32])
 			{
 				// This is the same as RGBA32 except alpha is ignored
-				if (SyphonOpenGLSupportsExtension(context, "APPLE_float_pixels")
-					|| SyphonOpenGLSupportsExtension(context, "GL_ARB_texture_float"))
-				{
-					_internalFormat = GL_RGB_FLOAT32_APPLE; // or GL_RGB
-					_format = GL_RGBA;
-					_type = GL_FLOAT;
-				}
-				else
-				{
-					_internalFormat = GL_RGB8;
-					_format = GL_BGRA;
-					_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+				switch (SyphonOpenGLBestFloatType(context)) {
+					case GL_FLOAT:
+						_internalFormat = GL_RGB_FLOAT32_APPLE; // or GL_RGB
+						_format = GL_RGBA;
+						_type = GL_FLOAT;						
+						break;
+					case GL_HALF_APPLE:
+						_internalFormat = GL_RGB_FLOAT16_APPLE; // or GL_RGB
+						_format = GL_RGBA;
+						_type = GL_HALF_APPLE;
+					case GL_UNSIGNED_INT_8_8_8_8_REV:
+					default:
+						_internalFormat = GL_RGB8;
+						_format = GL_BGRA;
+						_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+						break;
 				}
 			}
 			/*
@@ -283,19 +371,23 @@ static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *ext
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatLuminanceAlpha32])
 			{
-				if (SyphonOpenGLSupportsExtension(context, "APPLE_float_pixels")
-					|| SyphonOpenGLSupportsExtension(context, "GL_ARB_texture_float"))
-				{
-					_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGBA
-					_format = GL_RGBA;
-					_type = GL_FLOAT;
-				}
-				else
-				{
-					_internalFormat = GL_RGBA8;
-					_format = GL_BGRA;
-					_type = GL_UNSIGNED_INT_8_8_8_8_REV;
-				}
+				switch (SyphonOpenGLBestFloatType(context)) {
+					case GL_FLOAT:
+						_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGBA
+						_format = GL_RGBA;
+						_type = GL_FLOAT;						
+						break;
+					case GL_HALF_APPLE:
+						_internalFormat = GL_RGBA_FLOAT16_APPLE; // or GL_RGBA
+						_format = GL_RGBA;
+						_type = GL_HALF_APPLE;
+					case GL_UNSIGNED_INT_8_8_8_8_REV:
+					default:
+						_internalFormat = GL_RGBA8;
+						_format = GL_BGRA;
+						_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+						break;
+				}	
 				/*
 				 // IOSurface doesn't support a 32-bit luminance-alpha except GL_LUMINANCE_ALPHA_INTEGER_EXT, which has poor support on current cards
 				 // If you can spot a better combination than this, which is a complete fail (same as LA8), then change it.
@@ -307,22 +399,23 @@ static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *ext
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatLuminance32])
 			{
-				if (SyphonOpenGLSupportsExtension(context, "APPLE_float_pixels")
-					|| SyphonOpenGLSupportsExtension(context, "GL_ARB_texture_float"))
-				{
-					_internalFormat = GL_RGB_FLOAT32_APPLE; // or GL_RGB
-					_format = GL_RGBA;
-					_type = GL_FLOAT;
+				switch (SyphonOpenGLBestFloatType(context)) {
+					case GL_FLOAT:
+						_internalFormat = GL_RGB_FLOAT32_APPLE; // or GL_RGB
+						_format = GL_RGBA;
+						_type = GL_FLOAT;						
+						break;
+					case GL_HALF_APPLE:
+						_internalFormat = GL_RGB_FLOAT16_APPLE; // or GL_RGB
+						_format = GL_RGBA;
+						_type = GL_HALF_APPLE;
+					case GL_UNSIGNED_INT_8_8_8_8_REV:
+					default:
+						_internalFormat = GL_RGB8;
+						_format = GL_BGRA;
+						_type = GL_UNSIGNED_INT_8_8_8_8_REV;
+						break;
 				}
-				else
-				{
-					_internalFormat = GL_RGB8;
-					_format = GL_BGRA;
-					_type = GL_UNSIGNED_INT_8_8_8_8_REV;
-				}
-				_internalFormat = GL_RGB_FLOAT32_APPLE;
-				_format = GL_RGBA;
-				_type = GL_FLOAT;
 				/*
 				 // IOSurface doesn't support a 32-bit luminance except GL_LUMINANCE_INTEGER_EXT, which has poor support on current cards
 				 // We use unsigned short as the closest match
@@ -335,7 +428,7 @@ static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *ext
 			}
 		}
 		
-		SYPHONLOG(@"Using a%@-bit pixel-format", (_type == GL_FLOAT ? @" 32" : @"n 8"));
+		SYPHONLOG(@"Using a%@-bit pixel-format", (_type == GL_FLOAT ? @" 32" : (_type == GL_HALF_APPLE ? @" 16" : @"n 8")));
 		
 		// We stuff the options we chose into the options dictionary for the connection-manager to pass around
 		NSMutableDictionary *extendedDictionary = [NSMutableDictionary dictionaryWithDictionary:options];
