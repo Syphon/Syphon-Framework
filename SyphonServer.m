@@ -622,6 +622,10 @@ static GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
 #endif
 	if (_pushPending)
 	{
+		// Our IOSurface won't update until the next glFlush(). Usually we rely on our host doing this, but
+		// we must do it for the first frame on a new surface to avoid sending surface details for a surface
+		// which has no clean image.
+		glFlush();
 		// Push the new surface ID to clients
 		[(SyphonServerConnectionManager *)_connectionManager setSurfaceID:IOSurfaceGetID(_surfaceRef)];
 		_pushPending = NO;
