@@ -66,7 +66,8 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 @implementation SyphonMessageQueue
 - (id)init
 {
-	if (self = [super init])
+    self = [super init];
+	if (self)
 	{
 		// These are the values of OS_ATOMIC_QUEUE_INIT
 		_pool.opaque1 = NULL;

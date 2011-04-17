@@ -73,7 +73,8 @@
 
 - (id)initWithUUID:(NSString *)uuid options:(NSDictionary *)options
 {
-	if (self = [super init])
+    self = [super init];
+    if (self)
 	{
 		SyphonSafeBoolSet(&_hasClients, NO);
 		_uuid = [uuid copy];

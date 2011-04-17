@@ -44,14 +44,15 @@ static CFDataRef MessageReturnCallback (
 	} else {
 		decoded = nil;
 	}
-	[(SyphonMessageReceiver *)info receiveData:decoded type:msgid];
+	[(SyphonMessageReceiver *)info receiveMessageWithPayload:decoded ofType:msgid];
 	return NULL;
 }
 
 @implementation SyphonCFMessageReceiver
-- (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id <NSCoding> data, uint32_t type))handler
+- (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id data, uint32_t type))handler
 {
-	if (self = [super initForName:name protocol:protocolName handler:handler])
+    self = [super initForName:name protocol:protocolName handler:handler];
+	if (self)
 	{
 		if ([protocolName isEqualToString:SyphonMessagingProtocolCFMessage])
 		{

@@ -41,7 +41,8 @@ typedef struct {
 @implementation SyphonMachMessageSender
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler
 {
-	if (self = [super initForName:name protocol:protocolName invalidationHandler:handler])
+    self = [super initForName:name protocol:protocolName invalidationHandler:handler];
+	if (self)
 	{
 		_port = [[[NSMachBootstrapServer sharedInstance] portForName:name] retain];
 	}

@@ -39,7 +39,8 @@
 @implementation SyphonCFMessageSender
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler;
 {
-	if (self = [super initForName:name protocol:protocolName invalidationHandler:handler])
+    self = [super initForName:name protocol:protocolName invalidationHandler:handler];
+	if (self)
 	{
 		_port = CFMessagePortCreateRemote(kCFAllocatorDefault, (CFStringRef)name);
 		if (_port == NULL)
@@ -126,12 +127,12 @@
 	return (_port != NULL ? CFMessagePortIsValid(_port) : NO);
 }
 
-- (void)send:(id <NSCoding>)data ofType:(uint32_t)type
+- (void)send:(id <NSCoding>)payload ofType:(uint32_t)type
 {
 	NSData *encoded;
-	if (data)
+	if (payload)
 	{
-		encoded = [NSKeyedArchiver archivedDataWithRootObject:data];
+		encoded = [NSKeyedArchiver archivedDataWithRootObject:payload];
 	}
 	else
 	{

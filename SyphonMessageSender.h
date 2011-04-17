@@ -39,7 +39,7 @@
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler;
 @property (readonly) NSString *name;
 @property (readonly) BOOL isValid;
-- (void)send:(id <NSCoding>)data ofType:(uint32_t)type;
+- (void)send:(id <NSCoding>)payload ofType:(uint32_t)type;
 @end
 @interface SYPHON_MESSAGE_SENDER_UNIQUE_CLASS_NAME (Subclassing)
 - (void)invalidate;

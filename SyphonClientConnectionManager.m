@@ -81,7 +81,8 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 
 - (id)initWithServerDescription:(NSDictionary *)description
 {
-	if(self = [super init])
+    self = [super init];
+	if (self)
 	{
 		NSString *serverUUID = [description objectForKey:SyphonServerDescriptionUUIDKey];
 		

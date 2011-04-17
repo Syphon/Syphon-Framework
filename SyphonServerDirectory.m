@@ -118,7 +118,8 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 
 - (id)initOnce
 {
-    if (self = [super init])
+    self = [super init];
+    if (self)
 	{
 		if (pthread_mutex_init(&_generalLock, NULL) != 0
 			|| pthread_mutex_init(&_mutateLock, NULL) != 0)

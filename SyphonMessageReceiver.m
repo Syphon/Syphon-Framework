@@ -33,9 +33,10 @@
 //#import "SyphonMachMessageReceiver.h"
 
 @implementation SyphonMessageReceiver
-- (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id data, uint32_t type))handler
+- (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id payload, uint32_t type))handler
 {
-	if (self = [super init])
+    self = [super init];
+    if (self)
 	{
 		if ([self class] == [SyphonMessageReceiver class])
 		{
@@ -87,8 +88,8 @@
 	return _name;
 }
 
-- (void)receiveData:(id <NSCoding>)data type:(uint32_t)type
+- (void)receiveMessageWithPayload:(id)payload ofType:(uint32_t)type
 {
-	_handler(data, type);
+	_handler(payload, type);
 }
 @end

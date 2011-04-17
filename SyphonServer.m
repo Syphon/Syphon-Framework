@@ -240,7 +240,8 @@ static GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
 
 - (id)initWithName:(NSString*)serverName context:(CGLContextObj)context options:(NSDictionary *)options
 {
-	if((self = [super init]))
+    self = [super init];
+	if(self)
 	{
 		if (context == NULL)
 		{
