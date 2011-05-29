@@ -106,7 +106,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
     return NSUIntegerMax;  //denotes an object that cannot be released
 }
 
-- (void)release
+- (oneway void)release
 {
     //do nothing
 }
@@ -193,7 +193,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 
 - (void)requestServerAnnounce
 {
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounceRequest object:nil userInfo:nil];
+	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounceRequest object:nil userInfo:nil deliverImmediately:YES];
 }
 
 #pragma mark Notification Handling
