@@ -31,168 +31,13 @@
 #import "SyphonServer.h"
 #import "SyphonIOSurfaceImage.h"
 #import "SyphonPrivate.h"
+#import "SyphonOpenGLFunctions.h"
 #import "SyphonServerConnectionManager.h"
 
 #import <IOSurface/IOSurface.h>
 #import <OpenGL/CGLMacro.h>
 
 #import <libkern/OSAtomic.h>
-
-static NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
-{
-	/*
-	 This is what IOSurface will tolerate, based on when we use certain internal formats
-	 rather than anything meaningful...
-	 */
-	switch (format) {
-		case GL_RGBA8:
-		case GL_RGB8:
-			return 4U;
-			break;
-		case GL_RGBA_FLOAT16_APPLE:
-		case GL_RGB_FLOAT16_APPLE:
-			return 8U;
-			break;			
-		case GL_RGBA_FLOAT32_APPLE:
-		case GL_RGB_FLOAT32_APPLE:
-			return 16U;
-			break;
-			/*
-		case GL_LUMINANCE8_ALPHA8:
-			return 2U;
-			break;
-		case GL_LUMINANCE8:
-			return 1U;
-			break;
-		case GL_LUMINANCE16:
-			return 2U;
-			break;
-		case GL_R8:
-			return 1U;
-			break;
-			 */
-		default:
-			NSLog(@"Unexpected internal format in SyphonBytesPerElementForSizedInternalFormat()");
-			return 0U;
-			break;
-	}
-}
-
-static BOOL SyphonOpenGLSupportsExtension(CGLContextObj cgl_ctx, const char *extension)
-{
-	const GLubyte *extensions = NULL;
-	const GLubyte *start;
-	GLubyte *where, *terminator;
-	
-	// Check for illegal spaces in extension name
-	where = (GLubyte *) strchr(extension, ' ');
-	if (where || *extension == '\0')
-		return NO;
-	
-	extensions = glGetString(GL_EXTENSIONS);
-	
-	start = extensions;
-	for (;;) {
-		
-		where = (GLubyte *) strstr((const char *) start, extension);
-		
-		if (!where)
-			break;
-		
-		terminator = where + strlen(extension);
-		
-		if (where == start || *(where - 1) == ' ')
-			if (*terminator == ' ' || *terminator == '\0')
-				return YES;
-		
-		start = terminator;
-	}
-	return NO;
-}
-
-/*
- GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
- 
- Returns one of GL_UNSIGNED_INT_8_8_8_8_REV, GL_HALF_APPLE, GL_FLOAT to the best capabilities of the renderer
- 
- */
-static GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
-{	
-	/*
-	 Check for support for float pixels
-	 Based on http://www.opengl.org/registry/specs/APPLE/float_pixels.txt
-	 
-	 */
-	// any Floating Point Support at all?
-	BOOL supportsFloatColorBuffers = NO;
-	BOOL supportsFloatTextures     = NO;
-	
-	// 16 bit/component Floating Point Blend/Filter Support?
-	BOOL supportsFloat16ColorBufferBlending = NO;
-	BOOL supportsFloat16TextureFiltering    = NO;
-	
-	// 32 bit/component Floating Point Blend/Filter Support?
-	BOOL supportsFloat32ColorBufferBlending = NO;
-	BOOL supportsFloat32TextureFiltering    = NO;
-	
-	// ===============================================
-	// Check for floating point texture support
-	// 
-	// * First check for full ARB_texture_float
-	//   extension and only then check for more
-	//   limited APPLE and APPLEX texture extensions
-	// ===============================================
-	if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_ARB_texture_float"))
-	{
-		supportsFloatTextures           = YES;
-		supportsFloat16TextureFiltering = YES;
-		supportsFloat32TextureFiltering = YES;            
-	}
-	else if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
-	{
-		supportsFloatTextures = YES;
-		
-		if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLEX_texture_float_16_filter"))
-		{
-			supportsFloat16TextureFiltering = YES;
-		}
-	}
-	
-	// ===============================================
-	// Check for floating point color buffer support
-	// 
-	// * First check for full ARB_color_buffer_float
-	//   extension and only then check for more
-	//   limited APPLE and APPLEX color buffer extensions
-	// ===============================================
-	if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_ARB_color_buffer_float"))
-	{
-		supportsFloatColorBuffers          = YES;
-		supportsFloat16ColorBufferBlending = YES;
-		supportsFloat32ColorBufferBlending = YES;            
-	}
-	else if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
-	{
-		supportsFloatColorBuffers = YES;
-		
-		if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLEX_color_buffer_float_16_blend"))
-		{
-			supportsFloat16ColorBufferBlending = YES;
-		}
-	}
-	if (supportsFloat32TextureFiltering && supportsFloat32ColorBufferBlending)
-	{
-		return GL_FLOAT;
-	}
-	else if (supportsFloat16TextureFiltering && supportsFloat16ColorBufferBlending)
-	{
-		return GL_HALF_APPLE;
-	}
-	else
-	{
-		return GL_UNSIGNED_INT_8_8_8_8_REV;
-	}
-}
 
 @interface SyphonServer (Private)
 // IOSurface
@@ -283,7 +128,7 @@ static GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
 			else if ([imageFormat isEqualToString:SyphonImageFormatRGBA32])
 			{
 				// check support for this (doesn't work on GMA X3100, GMA 950)
-				switch (SyphonOpenGLBestFloatType(context)) {
+				switch (SyphonOpenGLBestFloatTypeForContext(context)) {
 					case GL_FLOAT:
 						_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGBA
 						_format = GL_RGBA;
@@ -304,7 +149,7 @@ static GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
 			else if ([imageFormat isEqualToString:SyphonImageFormatRGB32])
 			{
 				// This is the same as RGBA32 except alpha is ignored
-				switch (SyphonOpenGLBestFloatType(context)) {
+				switch (SyphonOpenGLBestFloatTypeForContext(context)) {
 					case GL_FLOAT:
 						_internalFormat = GL_RGB_FLOAT32_APPLE; // or GL_RGB
 						_format = GL_RGBA;
@@ -372,7 +217,7 @@ static GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatLuminanceAlpha32])
 			{
-				switch (SyphonOpenGLBestFloatType(context)) {
+				switch (SyphonOpenGLBestFloatTypeForContext(context)) {
 					case GL_FLOAT:
 						_internalFormat = GL_RGBA_FLOAT32_APPLE; // or GL_RGBA
 						_format = GL_RGBA;
@@ -400,7 +245,7 @@ static GLenum SyphonOpenGLBestFloatType(CGLContextObj cgl_ctx)
 			}
 			else if ([imageFormat isEqualToString:SyphonImageFormatLuminance32])
 			{
-				switch (SyphonOpenGLBestFloatType(context)) {
+				switch (SyphonOpenGLBestFloatTypeForContext(context)) {
 					case GL_FLOAT:
 						_internalFormat = GL_RGB_FLOAT32_APPLE; // or GL_RGB
 						_format = GL_RGBA;

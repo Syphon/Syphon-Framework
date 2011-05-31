@@ -81,6 +81,12 @@ void SyphonSafeBoolSet(SyphonSafeBool *b, BOOL value);
 
 #endif
 
+enum {
+    SyphonFloatTypeFloat = 0,
+    SyphonFloatTypeHalfFloat = 1,
+    SyphonFloatTypeByte = 2
+};
+
 #pragma mark Communication Constants
 /*
  

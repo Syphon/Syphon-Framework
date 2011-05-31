@@ -34,6 +34,8 @@
 		BD038877122EAB1A007725FF /* SyphonIOSurfaceImage.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038875122EAB1A007725FF /* SyphonIOSurfaceImage.h */; };
 		BD038878122EAB1A007725FF /* SyphonIOSurfaceImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038876122EAB1A007725FF /* SyphonIOSurfaceImage.m */; };
 		BD038887122EABE2007725FF /* SyphonImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038886122EABE2007725FF /* SyphonImage.m */; };
+		BD124C3B135B45030080B656 /* SyphonOpenGLFunctions.c in Sources */ = {isa = PBXBuildFile; fileRef = BD124C39135B45030080B656 /* SyphonOpenGLFunctions.c */; };
+		BD124C3C135B45030080B656 /* SyphonOpenGLFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = BD124C3A135B45030080B656 /* SyphonOpenGLFunctions.h */; };
 		BD27307611D2B85E0084BB5E /* SyphonPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = BD27307511D2B85E0084BB5E /* SyphonPrivate.h */; };
 		BD3796D211DD470D0042870B /* SyphonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD3796CF11DD470D0042870B /* SyphonPrivate.m */; };
 		BD45586211DF6BD300F15521 /* SyphonServerConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BD45585C11DF6BD300F15521 /* SyphonServerConnectionManager.h */; };
@@ -86,6 +88,8 @@
 		BD038875122EAB1A007725FF /* SyphonIOSurfaceImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonIOSurfaceImage.h; sourceTree = "<group>"; };
 		BD038876122EAB1A007725FF /* SyphonIOSurfaceImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonIOSurfaceImage.m; sourceTree = "<group>"; };
 		BD038886122EABE2007725FF /* SyphonImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonImage.m; sourceTree = "<group>"; };
+		BD124C39135B45030080B656 /* SyphonOpenGLFunctions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonOpenGLFunctions.c; sourceTree = "<group>"; };
+		BD124C3A135B45030080B656 /* SyphonOpenGLFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLFunctions.h; sourceTree = "<group>"; };
 		BD1718201224308200CB2E18 /* Exported_Symbols.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Exported_Symbols.exp; sourceTree = "<group>"; };
 		BD27307511D2B85E0084BB5E /* SyphonPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonPrivate.h; sourceTree = "<group>"; };
 		BD3796CF11DD470D0042870B /* SyphonPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonPrivate.m; sourceTree = "<group>"; };
@@ -285,6 +289,8 @@
 				BD3796CF11DD470D0042870B /* SyphonPrivate.m */,
 				BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */,
 				BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */,
+				BD124C3A135B45030080B656 /* SyphonOpenGLFunctions.h */,
+				BD124C39135B45030080B656 /* SyphonOpenGLFunctions.c */,
 			);
 			name = "Private Shared";
 			sourceTree = "<group>";
@@ -360,6 +366,7 @@
 				BD038877122EAB1A007725FF /* SyphonIOSurfaceImage.h in Headers */,
 				E2DE7FD312495BF50081453B /* SyphonMessageQueue.h in Headers */,
 				BDFBD77D126F4D8800075A23 /* SyphonDispatch.h in Headers */,
+				BD124C3C135B45030080B656 /* SyphonOpenGLFunctions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,6 +519,7 @@
 				BD038887122EABE2007725FF /* SyphonImage.m in Sources */,
 				E2DE7FD412495BF50081453B /* SyphonMessageQueue.m in Sources */,
 				BDFBD77E126F4D8800075A23 /* SyphonDispatch.c in Sources */,
+				BD124C3B135B45030080B656 /* SyphonOpenGLFunctions.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
