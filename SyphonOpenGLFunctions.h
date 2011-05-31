@@ -29,12 +29,10 @@
  */
 
 #import <OpenGL/OpenGL.h>
-#import <Foundation/Foundation.h>
 
+GLuint SyphonBytesPerElementForSizedInteralFormat(GLenum format);
 
-NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format);
-
-BOOL SyphonOpenGLContextSupportsExtension(CGLContextObj cgl_ctx, const char *extension);
+GLboolean SyphonOpenGLContextSupportsExtension(CGLContextObj cgl_ctx, const char *extension);
 
 /*
  GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)

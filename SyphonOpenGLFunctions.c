@@ -30,8 +30,10 @@
 
 #include "SyphonOpenGLFunctions.h"
 #import <OpenGL/CGLMacro.h>
+#import <stdlib.h>
+#import <string.h>
 
-NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
+GLuint SyphonBytesPerElementForSizedInteralFormat(GLenum format)
 {
 	/*
 	 This is what IOSurface will tolerate, based on when we use certain internal formats
@@ -65,13 +67,13 @@ NSUInteger SyphonBytesPerElementForSizedInteralFormat(GLenum format)
              break;
 			 */
 		default:
-			NSLog(@"Unexpected internal format in SyphonBytesPerElementForSizedInternalFormat()");
+//			NSLog(@"Unexpected internal format in SyphonBytesPerElementForSizedInternalFormat()");
 			return 0U;
 			break;
 	}
 }
 
-BOOL SyphonOpenGLContextSupportsExtension(CGLContextObj cgl_ctx, const char *extension)
+GLboolean SyphonOpenGLContextSupportsExtension(CGLContextObj cgl_ctx, const char *extension)
 {
 	const GLubyte *extensions = NULL;
 	const GLubyte *start;
@@ -80,7 +82,7 @@ BOOL SyphonOpenGLContextSupportsExtension(CGLContextObj cgl_ctx, const char *ext
 	// Check for illegal spaces in extension name
 	where = (GLubyte *) strchr(extension, ' ');
 	if (where || *extension == '\0')
-		return NO;
+		return GL_FALSE;
 	
 	extensions = glGetString(GL_EXTENSIONS);
 	
@@ -96,11 +98,11 @@ BOOL SyphonOpenGLContextSupportsExtension(CGLContextObj cgl_ctx, const char *ext
 		
 		if (where == start || *(where - 1) == ' ')
 			if (*terminator == ' ' || *terminator == '\0')
-				return YES;
+				return GL_TRUE;
 		
 		start = terminator;
 	}
-	return NO;
+	return GL_FALSE;
 }
 
 GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)
@@ -111,16 +113,16 @@ GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)
 	 
 	 */
 	// any Floating Point Support at all?
-	BOOL supportsFloatColorBuffers = NO;
-	BOOL supportsFloatTextures     = NO;
+	GLboolean supportsFloatColorBuffers = GL_FALSE;
+	GLboolean supportsFloatTextures     = GL_FALSE;
 	
 	// 16 bit/component Floating Point Blend/Filter Support?
-	BOOL supportsFloat16ColorBufferBlending = NO;
-	BOOL supportsFloat16TextureFiltering    = NO;
+	GLboolean supportsFloat16ColorBufferBlending = GL_FALSE;
+	GLboolean supportsFloat16TextureFiltering    = GL_FALSE;
 	
 	// 32 bit/component Floating Point Blend/Filter Support?
-	BOOL supportsFloat32ColorBufferBlending = NO;
-	BOOL supportsFloat32TextureFiltering    = NO;
+	GLboolean supportsFloat32ColorBufferBlending = GL_FALSE;
+	GLboolean supportsFloat32TextureFiltering    = GL_FALSE;
 	
 	// ===============================================
 	// Check for floating point texture support
@@ -129,19 +131,19 @@ GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)
 	//   extension and only then check for more
 	//   limited APPLE and APPLEX texture extensions
 	// ===============================================
-	if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_ARB_texture_float"))
+	if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_ARB_texture_float"))
 	{
-		supportsFloatTextures           = YES;
-		supportsFloat16TextureFiltering = YES;
-		supportsFloat32TextureFiltering = YES;            
+		supportsFloatTextures           = GL_TRUE;
+		supportsFloat16TextureFiltering = GL_TRUE;
+		supportsFloat32TextureFiltering = GL_TRUE;            
 	}
-	else if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
+	else if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
 	{
-		supportsFloatTextures = YES;
+		supportsFloatTextures = GL_TRUE;
 		
-		if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLEX_texture_float_16_filter"))
+		if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_APPLEX_texture_float_16_filter"))
 		{
-			supportsFloat16TextureFiltering = YES;
+			supportsFloat16TextureFiltering = GL_TRUE;
 		}
 	}
 	
@@ -152,19 +154,19 @@ GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)
 	//   extension and only then check for more
 	//   limited APPLE and APPLEX color buffer extensions
 	// ===============================================
-	if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_ARB_color_buffer_float"))
+	if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_ARB_color_buffer_float"))
 	{
-		supportsFloatColorBuffers          = YES;
-		supportsFloat16ColorBufferBlending = YES;
-		supportsFloat32ColorBufferBlending = YES;            
+		supportsFloatColorBuffers          = GL_TRUE;
+		supportsFloat16ColorBufferBlending = GL_TRUE;
+		supportsFloat32ColorBufferBlending = GL_TRUE;            
 	}
-	else if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
+	else if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
 	{
-		supportsFloatColorBuffers = YES;
+		supportsFloatColorBuffers = GL_TRUE;
 		
-		if (SyphonOpenGLSupportsExtension(cgl_ctx, "GL_APPLEX_color_buffer_float_16_blend"))
+		if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_APPLEX_color_buffer_float_16_blend"))
 		{
-			supportsFloat16ColorBufferBlending = YES;
+			supportsFloat16ColorBufferBlending = GL_TRUE;
 		}
 	}
 	if (supportsFloat32TextureFiltering && supportsFloat32ColorBufferBlending)
