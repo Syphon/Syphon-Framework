@@ -44,7 +44,6 @@
 			[self release];
 			return nil;
 		}
-		SYPHONLOG(@"internal: %04X format: %04X type: %04X", internal, format, type);
 		_surface = (IOSurfaceRef)CFRetain(surfaceRef);
 		cgl_ctx = CGLRetainContext(context);
 		_size.width = IOSurfaceGetWidth(surfaceRef);
