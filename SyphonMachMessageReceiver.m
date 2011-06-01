@@ -35,7 +35,8 @@
 @implementation SyphonMachMessageReceiver
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id <NSCoding> data, uint32_t type))handler
 {
-	if (self = [super initForName:name protocol:protocolName handler:handler])
+    self = [super initForName:name protocol:protocolName handler:handler];
+	if (self)
 	{
 		mach_port_t port;
 		kern_return_t result = bootstrap_check_in(bootstrap_port, [name cStringUsingEncoding:NSUTF8StringEncoding], &port);
@@ -67,6 +68,6 @@
 - (void)handleMachMessage:(void *)msg
 {
 	// TODO: handle data in messages
-	[self receiveData:nil type:0];
+	[self receiveMessageWithPayload:nil ofType:0];
 }
 @end

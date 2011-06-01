@@ -106,7 +106,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
     return NSUIntegerMax;  //denotes an object that cannot be released
 }
 
-- (void)release
+- (oneway void)release
 {
     //do nothing
 }
@@ -118,7 +118,8 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 
 - (id)initOnce
 {
-    if (self = [super init])
+    self = [super init];
+    if (self)
 	{
 		if (pthread_mutex_init(&_generalLock, NULL) != 0
 			|| pthread_mutex_init(&_mutateLock, NULL) != 0)
@@ -192,7 +193,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 
 - (void)requestServerAnnounce
 {
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounceRequest object:nil userInfo:nil];
+	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounceRequest object:nil userInfo:nil deliverImmediately:YES];
 }
 
 #pragma mark Notification Handling

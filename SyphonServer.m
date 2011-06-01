@@ -84,7 +84,8 @@
 
 - (id)initWithName:(NSString*)serverName context:(CGLContextObj)context options:(NSDictionary *)options
 {
-	if((self = [super init]))
+    self = [super init];
+	if(self)
 	{
 		if (context == NULL)
 		{
@@ -286,6 +287,10 @@
 #endif
 	if (_pushPending)
 	{
+		// Our IOSurface won't update until the next glFlush(). Usually we rely on our host doing this, but
+		// we must do it for the first frame on a new surface to avoid sending surface details for a surface
+		// which has no clean image.
+		glFlush();
 		// Push the new surface ID to clients
 		[(SyphonServerConnectionManager *)_connectionManager setSurfaceID:IOSurfaceGetID(_surfaceRef)];
 		_pushPending = NO;
@@ -341,6 +346,12 @@
 		
 		if(target == GL_TEXTURE_2D)
 		{
+            // Cannot assume mip-mapping and repeat modes are ok & will work, so we:
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);	// Linear Filtering
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);	// Linear Filtering
+                        
 			GLfloat texOriginX = region.origin.x / size.width;
 			GLfloat texOriginY = region.origin.y / size.height;
 			GLfloat texExtentX = (region.size.width + region.origin.x) / size.width;
@@ -348,7 +359,7 @@
 			
 			if(!isFlipped)
 			{
-				// X																// Y
+				// X							// Y
 				tex_coords[0] = texOriginX;		tex_coords[1] = texOriginY;
 				tex_coords[2] = texOriginX;		tex_coords[3] = texExtentY;
 				tex_coords[4] = texExtentX;		tex_coords[5] = texExtentY;

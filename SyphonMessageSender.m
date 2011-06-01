@@ -35,7 +35,8 @@
 @implementation SyphonMessageSender
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler;
 {
-	if (self = [super init])
+    self = [super init];
+	if (self)
 	{
 		if ([self class] == [SyphonMessageSender class])
 		{
@@ -82,7 +83,7 @@
 	return NO;
 }
 
-- (void)send:(id <NSCoding>)data ofType:(uint32_t)type
+- (void)send:(id <NSCoding>)payload ofType:(uint32_t)type
 {
 	// subclasses override this
 }

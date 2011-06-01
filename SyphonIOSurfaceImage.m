@@ -36,13 +36,15 @@
 @implementation SyphonIOSurfaceImage
 - (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context
 {
-	if (self = [super init])
+    self = [super init];
+	if (self)
 	{
 		if (context == nil || surfaceRef == nil)
 		{
 			[self release];
 			return nil;
 		}
+		SYPHONLOG(@"internal: %04X format: %04X type: %04X", internal, format, type);
 		_surface = (IOSurfaceRef)CFRetain(surfaceRef);
 		cgl_ctx = CGLRetainContext(context);
 		_size.width = IOSurfaceGetWidth(surfaceRef);
