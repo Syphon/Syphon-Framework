@@ -545,7 +545,8 @@
 		NSDictionary *description = self.serverDescription;
 		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounce 
 																	   object:[description objectForKey:SyphonServerDescriptionUUIDKey]
-																	 userInfo:description];
+																	 userInfo:description
+                                                           deliverImmediately:YES];
 	}
 }
 
@@ -554,7 +555,8 @@
 	NSDictionary *description = self.serverDescription;
 	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerUpdate
 																   object:[description objectForKey:SyphonServerDescriptionUUIDKey]
-																 userInfo:description];
+																 userInfo:description
+                                                       deliverImmediately:YES];
 }
 
 - (void)stopBroadcasts
@@ -563,7 +565,8 @@
 	NSDictionary *description = self.serverDescription;
 	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerRetire 
 																   object:[description objectForKey:SyphonServerDescriptionUUIDKey]
-																 userInfo:description];	
+																 userInfo:description
+                                                       deliverImmediately:YES];	
 }
 
 @end
