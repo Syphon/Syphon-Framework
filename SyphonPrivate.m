@@ -42,7 +42,7 @@ NSString * const SyphonSurfaceTypeIOSurface = @"SyphonSurfaceTypeIOSurface";
 
 NSString * const SyphonServerOptionIsPrivate = @"SyphonServerOptionIsPrivate";
 
-NSString *SyphonCreateUUIDString()
+NSString *SyphonCreateUUIDString(void)
 {
 	// generate UUID
 	CFUUIDRef	uuidObj = CFUUIDCreate(nil);

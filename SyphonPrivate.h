@@ -57,7 +57,7 @@ extern NSString * const SyphonSurfaceTypeIOSurface;
 extern NSString * const SyphonServerOptionIsPrivate;
 
 
-NSString *SyphonCreateUUIDString() NS_RETURNS_RETAINED;
+NSString *SyphonCreateUUIDString(void) NS_RETURNS_RETAINED;
 
 typedef volatile int32_t SyphonSafeBool;
 
