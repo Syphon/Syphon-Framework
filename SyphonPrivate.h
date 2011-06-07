@@ -72,7 +72,7 @@ extern NSString * const SyphonImageFormatLuminanceAlpha8;
 extern NSString * const SyphonImageFormatLuminance32;
 extern NSString * const SyphonImageFormatLuminanceAlpha32;
 
-NSString *SyphonCreateUUIDString() NS_RETURNS_RETAINED;
+NSString *SyphonCreateUUIDString(void) NS_RETURNS_RETAINED;
 
 typedef volatile int32_t SyphonSafeBool;
 

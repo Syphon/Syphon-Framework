@@ -58,7 +58,7 @@ NSString * const SyphonServerIOSurfaceInternalFormatKey = @"SyphonServerIOSurfac
 NSString * const SyphonServerIOSurfaceFormatKey = @"SyphonServerIOSurfaceFormatKey";
 NSString * const SyphonServerIOSurfaceTypeKey = @"SyphonServerIOSurfaceTypeKey";
 
-NSString *SyphonCreateUUIDString()
+NSString *SyphonCreateUUIDString(void)
 {
 	// generate UUID
 	CFUUIDRef	uuidObj = CFUUIDCreate(nil);
