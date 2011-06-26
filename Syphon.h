@@ -62,15 +62,15 @@
  
  <ol>
  <li><h4>Add the framework to your Xcode project.</h4>
- <p>The simplest way is to drag it to the Linked Frameworks group in the project window.</p></li>
+ <p>The simplest way is to drag it to the Frameworks group in the project window.</p></li>
  <li><h4>Link your application with Syphon at build time.</h4>
- <p>Add the framework to the Link Binary With Libraries build stage of your application's target.</p></li>
+ <p>Add the framework to the Link Binary With Libraries build phase of your application's target.</p></li>
  <li><h4>Copy the framework into your application's bundle.</h4>
  <p>Add a new Copy Files build phase to your application's target.<br/>
- Get Info on the build phase and select Frameworks as the destination.<br/>
+ Select Frameworks as the destination.<br/>
  Drag the Syphon framework into the build phase.</p></li>
  <li><h4>Import the headers.</h4>
- <p>#import &lt;Syphon/Syphon.h&gt; in any file where you want to use Syphon classes.</p></li>
+ <p>\#import &lt;Syphon/Syphon.h&gt; in any file where you want to use Syphon classes.</p></li>
  </ol>
  
  @section servers Servers
@@ -160,7 +160,7 @@
  </li>
  <li><h4>Define SYPHON_UNIQUE_CLASS_NAME_PREFIX using the Preprocessor Macros build setting.</h4>
  <p>Select the Syphon target in the project window.<br/>
- Get Info on the target, and click the Build tab to display the build settings.<br/>
+ Click the Build Settings tab to display the build settings.<br/>
  Scroll down (or use the search field) to find the Preprocessor Macros (GCC_PREPROCESSOR_DEFINITIONS) setting.<br/>
  Double click the setting to add SYPHON_UNIQUE_CLASS_NAME_PREFIX=MyPluginName as a macro.
  </p></li>
