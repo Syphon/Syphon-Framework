@@ -393,11 +393,21 @@ static void finalizer()
 {
 	NSDictionary *surface = ((SyphonServerConnectionManager *)_connectionManager).surfaceDescription;
 	if (!surface) surface = [NSDictionary dictionary];
+    /*
+     Getting the app name: helper tasks, command-line tools, etc, don't have a NSRunningApplication instance,
+     so fall back to NSProcessInfo in those cases, then use an empty string as a last resort.
+     
+     http://developer.apple.com/library/mac/qa/qa1544/_index.html
+     
+     */
+    NSString *appName = [[NSRunningApplication currentApplication] localizedName];
+    if (!appName) appName = [[NSProcessInfo processInfo] processName];
+    if (!appName) appName = [NSString string];
 	return [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSNumber numberWithUnsignedInt:kSyphonDictionaryVersion], SyphonServerDescriptionDictionaryVersionKey,
 			self.name, SyphonServerDescriptionNameKey,
 			_uuid, SyphonServerDescriptionUUIDKey,
-			[[NSRunningApplication currentApplication] localizedName], SyphonServerDescriptionAppNameKey,
+			appName, SyphonServerDescriptionAppNameKey,
 			[NSArray arrayWithObject:surface], SyphonServerDescriptionSurfacesKey,
 			nil];
 }
