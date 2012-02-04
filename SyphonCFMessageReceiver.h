@@ -35,6 +35,7 @@
 @interface SYPHON_CFMESSAGE_RECEIVER_UNIQUE_CLASS_NAME : SyphonMessageReceiver {
 @private
 	CFMessagePortRef _port;
+	CFRunLoopSourceRef _runLoopSource;
 }
 
 @end

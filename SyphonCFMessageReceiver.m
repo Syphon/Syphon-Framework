@@ -29,38 +29,6 @@
 
 #import "SyphonCFMessageReceiver.h"
 #import "SyphonMessaging.h"
-#import "SyphonPrivate.h"
-#import <dispatch/dispatch.h>
-#import <libkern/OSAtomic.h>
-
-static OSSpinLock mLock = OS_SPINLOCK_INIT;
-static NSUInteger mQueueCount = 0;
-static dispatch_queue_t mQueue = NULL;
-
-static dispatch_queue_t SyphonCFMessageGetSharedQueue(void)
-{
-    OSSpinLockLock(&mLock);
-    if (mQueue == NULL)
-    {
-        NSString *identifier = [kSyphonIdentifier stringByAppendingString:@".CFMessaging"];
-        mQueue = dispatch_queue_create([identifier cStringUsingEncoding:NSASCIIStringEncoding], NULL);
-    }
-    mQueueCount++;
-    OSSpinLockUnlock(&mLock);
-    return mQueue;
-}
-
-static void SyphonCFMessageReturnSharedQueue(void)
-{
-    OSSpinLockLock(&mLock);
-    mQueueCount--;
-    if (mQueueCount == 0)
-    {
-        dispatch_release(mQueue);
-        mQueue = NULL;
-    }
-    OSSpinLockUnlock(&mLock);
-}
 
 static CFDataRef MessageReturnCallback (
 								 CFMessagePortRef local,
@@ -96,28 +64,31 @@ static CFDataRef MessageReturnCallback (
 			[self release];
 			return nil;
 		}
-        CFMessagePortSetDispatchQueue(_port, SyphonCFMessageGetSharedQueue());
+		_runLoopSource = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _port, 0);
+		// TODO: Think about which run loop we want to be in (current thread, our own private, main, or what?)
+		CFRunLoopAddSource(CFRunLoopGetMain(), _runLoopSource, kCFRunLoopCommonModes);
 	}
 	return self;
 }
 
 - (void)finalize
 {
-	if (_port) CFRelease(_port);
-    SyphonCFMessageReturnSharedQueue();
+	CFRelease(_runLoopSource);
+	CFRelease(_port);
 	[super finalize];
 }
 
 - (void)dealloc
 {
-	if (_port) CFRelease(_port);
-    SyphonCFMessageReturnSharedQueue();
+	CFRelease(_runLoopSource);
+	CFRelease(_port);
 	[super dealloc];
 }
 
 - (void)invalidate
 {
-	if (_port) CFMessagePortInvalidate(_port);
+	CFMessagePortInvalidate(_port);
+	CFRunLoopSourceInvalidate(_runLoopSource);
 	[super invalidate];
 }
 @end
