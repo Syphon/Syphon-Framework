@@ -49,6 +49,8 @@
 		BDB8DA381211F59A0028D250 /* SyphonCFMessageSender.m in Sources */ = {isa = PBXBuildFile; fileRef = BDB8DA2A1211F59A0028D250 /* SyphonCFMessageSender.m */; };
 		BDB8DAF51211FA7F0028D250 /* SyphonMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = BDB8DAF31211FA7F0028D250 /* SyphonMessaging.h */; };
 		BDB8DAF61211FA7F0028D250 /* SyphonMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = BDB8DAF41211FA7F0028D250 /* SyphonMessaging.m */; };
+		BDFAE527148CDA84008C9E6F /* SyphonOpenGLFunctions.c in Sources */ = {isa = PBXBuildFile; fileRef = BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */; };
+		BDFAE528148CDA84008C9E6F /* SyphonOpenGLFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */; };
 		BDFBD77D126F4D8800075A23 /* SyphonDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */; };
 		BDFBD77E126F4D8800075A23 /* SyphonDispatch.c in Sources */ = {isa = PBXBuildFile; fileRef = BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */; };
 		E2DE7FD312495BF50081453B /* SyphonMessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = E2DE7FD112495BF50081453B /* SyphonMessageQueue.h */; };
@@ -113,6 +115,8 @@
 		BDCB92B0127A3C9A00C9E06E /* footer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = footer.html; sourceTree = "<group>"; };
 		BDCB92B1127A3C9A00C9E06E /* header.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = header.html; sourceTree = "<group>"; };
 		BDCB9399127ADEBF00C9E06E /* DoxygenLayout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = DoxygenLayout.xml; sourceTree = "<group>"; };
+		BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonOpenGLFunctions.c; sourceTree = "<group>"; };
+		BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLFunctions.h; sourceTree = "<group>"; };
 		BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonDispatch.h; sourceTree = "<group>"; };
 		BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonDispatch.c; sourceTree = "<group>"; };
 		BDFE68091228684F009C2E21 /* SyphonBuildMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonBuildMacros.h; sourceTree = "<group>"; };
@@ -285,6 +289,8 @@
 				BD3796CF11DD470D0042870B /* SyphonPrivate.m */,
 				BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */,
 				BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */,
+				BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */,
+				BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */,
 			);
 			name = "Private Shared";
 			sourceTree = "<group>";
@@ -360,6 +366,7 @@
 				BD038877122EAB1A007725FF /* SyphonIOSurfaceImage.h in Headers */,
 				E2DE7FD312495BF50081453B /* SyphonMessageQueue.h in Headers */,
 				BDFBD77D126F4D8800075A23 /* SyphonDispatch.h in Headers */,
+				BDFAE528148CDA84008C9E6F /* SyphonOpenGLFunctions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,7 +400,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0410;
+				LastUpgradeCheck = 0420;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Syphon" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -515,6 +522,7 @@
 				BD038887122EABE2007725FF /* SyphonImage.m in Sources */,
 				E2DE7FD412495BF50081453B /* SyphonMessageQueue.m in Sources */,
 				BDFBD77E126F4D8800075A23 /* SyphonDispatch.c in Sources */,
+				BDFAE527148CDA84008C9E6F /* SyphonOpenGLFunctions.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,7 +602,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Debug;
@@ -609,7 +617,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
@@ -630,7 +638,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = "Debug Messaging Only";

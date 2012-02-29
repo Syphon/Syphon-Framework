@@ -55,7 +55,9 @@ extern NSString * const SyphonSurfaceTypeIOSurface;
 
 // SyphonServer options
 extern NSString * const SyphonServerOptionIsPrivate;
-
+extern NSString * const SyphonServerOptionAntialiasSampleCount;
+extern NSString * const SyphonServerOptionDepthBufferResolution;
+extern NSString * const SyphonServerOptionStencilBufferResolution;
 
 NSString *SyphonCreateUUIDString(void) NS_RETURNS_RETAINED;
 

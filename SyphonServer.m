@@ -31,6 +31,7 @@
 #import "SyphonServer.h"
 #import "SyphonIOSurfaceImage.h"
 #import "SyphonPrivate.h"
+#import "SyphonOpenGLFunctions.h"
 #import "SyphonServerConnectionManager.h"
 
 #import <IOSurface/IOSurface.h>
@@ -42,7 +43,11 @@
 + (void)addServerToRetireList:(NSString *)serverUUID;
 + (void)removeServerFromRetireList:(NSString *)serverUUID;
 + (void)retireRemainingServers;
-// IOSurface
+// IOSurface and FBO
+#if !SYPHON_DEBUG_NO_DRAWING
+- (GLuint)newRenderbufferForSize:(NSSize)size internalFormat:(GLenum)format;
+#endif
+- (BOOL)capabilitiesDidChange;
 - (void) setupIOSurfaceForSize:(NSSize)size;
 - (void) destroyIOSurface;
 // Broadcast and Discovery
@@ -140,6 +145,42 @@ static void finalizer()
 			[self startBroadcasts];
 		}
 		
+        // We check for changes to the context's virtual screen, so set it to an invalid value
+        // so our first binding counts as a change
+        _virtualScreen = -1;
+        
+		NSNumber *aaQuality = [options objectForKey:SyphonServerOptionAntialiasSampleCount];
+		if ([aaQuality respondsToSelector:@selector(unsignedIntegerValue)]
+			&& [aaQuality unsignedIntegerValue] > 0)
+		{
+            _wantedMSAASampleCount = [aaQuality unsignedIntegerValue];
+            _wantsContextChanges = YES;
+        }
+        
+        NSNumber *depthBufferResolution = [options objectForKey:SyphonServerOptionDepthBufferResolution];
+        if ([depthBufferResolution respondsToSelector:@selector(unsignedIntegerValue)]
+            && [depthBufferResolution unsignedIntegerValue] > 0)
+        {
+            _depthBufferResolution = [depthBufferResolution unsignedIntegerValue];
+            if (_depthBufferResolution < 20) _depthBufferResolution = GL_DEPTH_COMPONENT16;
+            else if (_depthBufferResolution < 28) _depthBufferResolution = GL_DEPTH_COMPONENT24;
+            else _depthBufferResolution = GL_DEPTH_COMPONENT32;
+        }
+        
+        NSNumber *stencilBufferResolution = [options objectForKey:SyphonServerOptionStencilBufferResolution];
+        if ([stencilBufferResolution respondsToSelector:@selector(unsignedIntegerValue)]
+            && [stencilBufferResolution unsignedIntegerValue] > 0)
+        {
+            // In fact this will almost always be ignored other than to check it is non-zero
+            _stencilBufferResolution = [stencilBufferResolution unsignedIntegerValue];
+            if (_stencilBufferResolution < 3) _stencilBufferResolution = GL_STENCIL_INDEX1;
+            else if (_stencilBufferResolution < 6) _stencilBufferResolution = GL_STENCIL_INDEX4;
+            else if (_stencilBufferResolution < 12) _stencilBufferResolution = GL_STENCIL_INDEX8;
+            else _stencilBufferResolution = GL_STENCIL_INDEX16;
+            // If we have a stencil buffer we will try to use the GL_EXT_packed_depth_stencil extension
+            // so we need to know about changes to the context's abilities
+            _wantsContextChanges = YES;
+        }
 	}
 	return self;
 }
@@ -212,11 +253,22 @@ static void finalizer()
 {
 	NSDictionary *surface = ((SyphonServerConnectionManager *)_connectionManager).surfaceDescription;
 	if (!surface) surface = [NSDictionary dictionary];
+    /*
+     Getting the app name: helper tasks, command-line tools, etc, don't have a NSRunningApplication instance,
+     so fall back to NSProcessInfo in those cases, then use an empty string as a last resort.
+     
+     http://developer.apple.com/library/mac/qa/qa1544/_index.html
+
+     */
+    NSString *appName = [[NSRunningApplication currentApplication] localizedName];
+    if (!appName) appName = [[NSProcessInfo processInfo] processName];
+    if (!appName) appName = [NSString string];
+    
 	return [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSNumber numberWithUnsignedInt:kSyphonDictionaryVersion], SyphonServerDescriptionDictionaryVersionKey,
 			self.name, SyphonServerDescriptionNameKey,
 			_uuid, SyphonServerDescriptionUUIDKey,
-			[[NSRunningApplication currentApplication] localizedName], SyphonServerDescriptionAppNameKey,
+			appName, SyphonServerDescriptionAppNameKey,
 			[NSArray arrayWithObject:surface], SyphonServerDescriptionSurfacesKey,
 			nil];
 }
@@ -258,50 +310,69 @@ static void finalizer()
 	// TODO: we should probably check we're not already bound and raise an exception here
 	// to enforce proper use
 #if !SYPHON_DEBUG_NO_DRAWING
-	// check the images bounds, compare with our cached rect, if they dont match, rebuild the IOSurface/FBO/Texture combo.
-	if(! NSEqualSizes(_surfaceTexture.textureSize, size)) 
+    // If we have changed screens, we need to check we can still use any extensions we rely on
+	// If the dimensions of the image have changed, rebuild the IOSurface/FBO/Texture combo.
+	if((_wantsContextChanges && [self capabilitiesDidChange]) || ! NSEqualSizes(_surfaceTexture.textureSize, size)) 
 	{
 		[self destroyIOSurface];
 		[self setupIOSurfaceForSize:size];
 		_pushPending = YES;
 	}
 	
+    if (_surfaceTexture == nil)
+    {
+        return NO;
+    }
+    
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &_previousFBO);
 	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &_previousReadFBO);
 	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &_previousDrawFBO);
 	
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _surfaceFBO);
 	
-	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
+	if(_msaaSampleCount)
 	{
-		// restore state
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _previousFBO);	
-		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, _previousReadFBO);
-		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, _previousDrawFBO);
-		return NO;
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _msaaFBO);
 	}
-#endif
+	else
+	{		
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _surfaceFBO);
+	}
+#endif // SYPHON_DEBUG_NO_DRAWING
 	return YES;
 }
 
 - (void)unbindAndPublish
 {
 #if !SYPHON_DEBUG_NO_DRAWING
+	
+	// we now have to blit from our MSAA to our IOSurface normal texture 
+	if(_msaaSampleCount)
+	{
+		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, _msaaFBO);
+		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, _surfaceFBO);
+		
+		// blit the whole extent from read to draw 
+		NSSize size = _surfaceTexture.textureSize;
+		glBlitFramebufferEXT(0, 0, (GLsizei)size.width, (GLsizei)size.height, 0, 0, (GLsizei)size.width, (GLsizei)size.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	}
+	
+	
 	// flush to make sure IOSurface updates are seen globally.
 	glFlushRenderAPPLE();
-	
+		
 	// restore state
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _previousFBO);	
 	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, _previousReadFBO);
 	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, _previousDrawFBO);
-#endif
+#endif // SYPHON_DEBUG_NO_DRAWING
 	if (_pushPending)
 	{
-		// Our IOSurface won't update until the next glFlush(). Usually we rely on our host doing this, but
+#if !SYPHON_DEBUG_NO_DRAWING
+        // Our IOSurface won't update until the next glFlush(). Usually we rely on our host doing this, but
 		// we must do it for the first frame on a new surface to avoid sending surface details for a surface
 		// which has no clean image.
 		glFlush();
+#endif // SYPHON_DEBUG_NO_DRAWING
 		// Push the new surface ID to clients
 		[(SyphonServerConnectionManager *)_connectionManager setSurfaceID:IOSurfaceGetID(_surfaceRef)];
 		_pushPending = NO;
@@ -315,8 +386,6 @@ static void finalizer()
 	{
 #if !SYPHON_DEBUG_NO_DRAWING
 		// render to our FBO with an IOSurface backed texture attachment (whew!)
-		//	GLint matrixMode;
-		//	glGetIntegerv(GL_MATRIX_MODE, &matrixMode);
 		
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		glPushClientAttrib(GL_CLIENT_ALL_ATTRIB_BITS);
@@ -336,11 +405,11 @@ static void finalizer()
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glLoadIdentity();
-		
 				
 		// dont bother clearing. we dont have any alpha so we just write over the buffer contents. saves us a write.
 		// via GL_REPLACE TEX_ENV
 		glActiveTexture(GL_TEXTURE0);
+		glClientActiveTexture(GL_TEXTURE0);
 		glEnable(target);
 		glBindTexture(target, texID);
 		
@@ -417,7 +486,7 @@ static void finalizer()
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
+
 		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 		glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -445,7 +514,6 @@ static void finalizer()
 #endif // SYPHON_DEBUG_NO_DRAWING
 		[self unbindAndPublish];
 	}
-//	glMatrixMode(matrixMode);
 }
 
 - (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage
@@ -456,7 +524,87 @@ static void finalizer()
 #pragma mark -
 #pragma mark Private methods
 
-#pragma mark IOSurface handling
+#pragma mark FBO & IOSurface handling
+- (BOOL)capabilitiesDidChange
+{
+    BOOL didChange = NO;
+#if !SYPHON_DEBUG_NO_DRAWING
+    GLint screen;
+    CGLGetVirtualScreen(cgl_ctx, &screen);
+    if (screen != _virtualScreen)
+    {
+        GLuint newMSAASampleCount = 0;
+        BOOL newCombinedDepthStencil = NO;
+        
+        if (_wantedMSAASampleCount != 0)
+        {
+            if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_EXT_framebuffer_multisample"))
+            {
+                newMSAASampleCount = _wantedMSAASampleCount;
+                
+                GLint maxSamples;
+                glGetIntegerv(GL_MAX_SAMPLES_EXT, &maxSamples);
+                
+                if (newMSAASampleCount > maxSamples) newMSAASampleCount = maxSamples;
+            }
+        }
+        if (newMSAASampleCount != _msaaSampleCount)
+        {
+            didChange = YES;
+            _msaaSampleCount = newMSAASampleCount;
+        }
+        
+        /*
+         No current cards support FBOs with seperate depth and stencil buffers, so if both are
+         requested, we have to use GL_DEPTH24_STENCIL8.
+         If any stencil buffer is requested at all, we also have to use a combi buffer.
+         The exception is the software renderer under 10.6, which only works with distinct
+         depth and stencil buffers and does not support GL_EXT_packed_depth_stencil.
+         */
+        if (_stencilBufferResolution != 0
+            && SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_EXT_packed_depth_stencil"))
+        {
+            newCombinedDepthStencil = YES;
+        }
+        if (newCombinedDepthStencil != _combinedDepthStencil)
+        {
+            didChange = YES;
+            _combinedDepthStencil = newCombinedDepthStencil;
+        }
+        _virtualScreen = screen;
+        SYPHONLOG(@"SyphonServer: renderer change, required capabilities %@", didChange ? @"changed" : @"did not change");
+    }
+#endif // SYPHON_DEBUG_NO_DRAWING
+    return didChange;
+}
+
+#if !SYPHON_DEBUG_NO_DRAWING
+- (GLuint)newRenderbufferForSize:(NSSize)size internalFormat:(GLenum)format
+{
+    GLuint buffer;
+    glGenRenderbuffersEXT(1, &buffer);
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, buffer);
+    GLenum error = GL_NO_ERROR;
+    do {
+        // Most cards won't complain as long as the sample count is not more than the maximum they support, but the spec allows 
+        // them to emit a GL_OUT_OF_MEMORY error if they don't support a particular sample count, so we check for that and attempt
+        // to recover by trying a smaller count
+        if (error == GL_OUT_OF_MEMORY)
+        {
+            _msaaSampleCount--;
+            SYPHONLOG(@"SyphonServer: reducing MSAA sample count due to GL_OUT_OF_MEMORY (now %u)", _msaaSampleCount);
+        }
+        glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER_EXT,
+                                            _msaaSampleCount,
+                                            format,
+                                            (GLsizei)size.width,
+                                            (GLsizei)size.height);
+        error = glGetError();
+    } while (error == GL_OUT_OF_MEMORY && _msaaSampleCount > 0);
+    return buffer;
+}
+#endif // SYPHON_DEBUG_NO_DRAWING
+
 - (void) setupIOSurfaceForSize:(NSSize)size
 {	
 #if !SYPHON_DEBUG_NO_DRAWING
@@ -468,15 +616,17 @@ static void finalizer()
 	
 	_surfaceRef =  IOSurfaceCreate((CFDictionaryRef) surfaceAttributes);
 	[surfaceAttributes release];
-	
-	// make a new texture.
-	
+		
 	// save state
+    GLint previousRBO;
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &_previousFBO);
 	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &_previousReadFBO);
 	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &_previousDrawFBO);
-	
+	glGetIntegerv(GL_RENDERBUFFER_BINDING_EXT, &previousRBO);
+    
+    // make a new texture.
+    
 	_surfaceTexture = [[SyphonIOSurfaceImage alloc] initWithSurface:_surfaceRef forContext:cgl_ctx];
 	if(_surfaceTexture == nil)
 	{
@@ -484,30 +634,136 @@ static void finalizer()
 	}
 	else
 	{
-		// no error
-		glGenFramebuffersEXT(1, &_surfaceFBO);
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _surfaceFBO);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_EXT, _surfaceTexture.textureName, 0);
-		
-		GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+        // no error
+        GLenum status;
+        
+        if (_combinedDepthStencil == YES)
+        {
+            _depthBuffer = [self newRenderbufferForSize:size internalFormat:GL_DEPTH24_STENCIL8_EXT];
+        }
+        else
+        {
+            if (_depthBufferResolution != 0)
+            {
+                _depthBuffer = [self newRenderbufferForSize:size internalFormat:_depthBufferResolution];
+            }
+            
+            if (_stencilBufferResolution != 0)
+            {
+                _stencilBuffer = [self newRenderbufferForSize:size internalFormat:_stencilBufferResolution];
+            }
+        }
+        
+		if(_msaaSampleCount > 0)
+		{            
+			// Color MSAA Attachment
+            _msaaColorBuffer = [self newRenderbufferForSize:size internalFormat:GL_RGBA];
+            
+			// attach color, depth and stencil to our MSAA FBO
+			glGenFramebuffersEXT(1, &_msaaFBO);
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _msaaFBO);
+			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, _msaaColorBuffer);
+            if (_combinedDepthStencil)
+            {
+                glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER_EXT, _depthBuffer);
+            }
+            else
+            {
+                if (_depthBuffer != 0)
+                {
+                    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, _depthBuffer);
+                }
+                if (_stencilBuffer != 0)
+                {
+                    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, _stencilBuffer);
+                }
+            }
+			
+			status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+			if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
+			{
+				SYPHONLOG(@"SyphonServer: Cannot create MSAA FBO (OpenGL Error %04X), falling back to non-antialiased FBO", status);
+                
+                glDeleteFramebuffersEXT(1, &_msaaFBO);
+                _msaaFBO = 0;
+                
+                glDeleteRenderbuffersEXT(1, &_msaaColorBuffer);
+                _msaaColorBuffer = 0;
+                
+				_msaaSampleCount = 0;
+			}			
+		}
+        
+        glGenFramebuffersEXT(1, &_surfaceFBO);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _surfaceFBO);
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE_EXT, _surfaceTexture.textureName, 0);
+        if (_msaaSampleCount == 0)
+        {
+            // If we're not doing MSAA, attach depth and stencil buffers to our FBO
+            if (_combinedDepthStencil)
+            {
+                glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER_EXT, _depthBuffer);
+            }
+            else
+            {
+                if (_depthBuffer != 0)
+                {
+                    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, _depthBuffer);
+                }
+                if (_stencilBuffer != 0)
+                {
+                    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, _stencilBuffer);
+                }
+            }
+        }
+
+        status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+        
 		if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
 		{
-			NSLog(@"Syphon Server: Cannot create FBO (OpenGL Error %04X)", status);
+			SYPHONLOG(@"SyphonServer: Cannot create FBO (OpenGL Error %04X)", status);
 			[self destroyIOSurface];
 		}
 	}
 	
 	// restore state
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, previousRBO);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _previousFBO);	
 	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, _previousReadFBO);
 	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, _previousDrawFBO);
 	glPopAttrib();
+	
 #endif // SYPHON_DEBUG_NO_DRAWING
 }
 
 - (void) destroyIOSurface
 {
 #if !SYPHON_DEBUG_NO_DRAWING
+	
+	if(_msaaFBO != 0)
+	{
+		glDeleteFramebuffersEXT(1, &_msaaFBO);
+        _msaaFBO = 0;
+	}
+	
+	if(_msaaColorBuffer != 0)
+	{
+		glDeleteRenderbuffersEXT(1, &_msaaColorBuffer);
+        _msaaColorBuffer = 0;
+	}
+
+	if(_depthBuffer != 0)
+	{
+		glDeleteRenderbuffersEXT(1, &_depthBuffer);
+        _depthBuffer = 0;
+	}
+	
+    if (_stencilBuffer != 0)
+    {
+        glDeleteRenderbuffersEXT(1, &_stencilBuffer);
+        _stencilBuffer = 0;
+    }
+    
 	if (_surfaceFBO != 0)
 	{
 		glDeleteFramebuffersEXT(1, &_surfaceFBO);
@@ -522,7 +778,7 @@ static void finalizer()
 	
 	[_surfaceTexture release];
 	_surfaceTexture = nil;
-#endif
+#endif // SYPHON_DEBUG_NO_DRAWING
 }
 
 #pragma mark Notification Handling for Server Presence
