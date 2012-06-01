@@ -30,6 +30,7 @@
 
 #import "SyphonClientConnectionManager.h"
 #import "SyphonPrivate.h"
+#import <OpenGL/gl.h>
 
 #pragma mark Shared Instances
 
