@@ -112,9 +112,6 @@ GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)
 	 Based on http://www.opengl.org/registry/specs/APPLE/float_pixels.txt
 	 
 	 */
-	// any Floating Point Support at all?
-	GLboolean supportsFloatColorBuffers = GL_FALSE;
-	GLboolean supportsFloatTextures     = GL_FALSE;
 	
 	// 16 bit/component Floating Point Blend/Filter Support?
 	GLboolean supportsFloat16ColorBufferBlending = GL_FALSE;
@@ -133,14 +130,11 @@ GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)
 	// ===============================================
 	if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_ARB_texture_float"))
 	{
-		supportsFloatTextures           = GL_TRUE;
 		supportsFloat16TextureFiltering = GL_TRUE;
 		supportsFloat32TextureFiltering = GL_TRUE;            
 	}
 	else if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
-	{
-		supportsFloatTextures = GL_TRUE;
-		
+	{		
 		if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_APPLEX_texture_float_16_filter"))
 		{
 			supportsFloat16TextureFiltering = GL_TRUE;
@@ -156,14 +150,11 @@ GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)
 	// ===============================================
 	if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_ARB_color_buffer_float"))
 	{
-		supportsFloatColorBuffers          = GL_TRUE;
 		supportsFloat16ColorBufferBlending = GL_TRUE;
 		supportsFloat32ColorBufferBlending = GL_TRUE;            
 	}
 	else if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_APPLE_float_pixels"))
-	{
-		supportsFloatColorBuffers = GL_TRUE;
-		
+	{		
 		if (SyphonOpenGLContextSupportsExtension(cgl_ctx, "GL_APPLEX_color_buffer_float_16_blend"))
 		{
 			supportsFloat16ColorBufferBlending = GL_TRUE;
