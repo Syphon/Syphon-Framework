@@ -400,7 +400,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Syphon" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -567,6 +567,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -588,6 +589,7 @@
 				GCC_PREFIX_HEADER = Syphon_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -597,6 +599,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -604,6 +610,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -615,11 +622,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
@@ -630,6 +642,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -640,6 +656,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -666,6 +683,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
