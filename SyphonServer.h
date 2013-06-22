@@ -36,67 +36,28 @@
 
 /*!
  @relates SyphonServer
- If this key is present and matched with a NSNumber with a BOOL value YES, then the server will be invisible to other Syphon users. You are then responsible for passing the NSDictionary returned by serverDescription to processes which require it to create a SyphonClient. Default is NO.
+ If this key is matched with a NSNumber with a BOOL value YES, then the server will be invisible to other Syphon users. You are then responsible for passing the NSDictionary returned by serverDescription to processes which require it to create a SyphonClient. Default is NO.
  */
 extern NSString * const SyphonServerOptionIsPrivate;
 
 /*!
  @relates SyphonServer
- If this key is present and matched with one of the NSString constants below, it describes the image format of the texture being published. The server may use this information to select its internal representation of your frames. If this key is not present the default is SyphonImageFormatRGBA8.
-
+ If this key is matched with a NSNumber with a NSUInteger value greater than zero, the server will, when using the bindToDrawFrameOfSize / unbindAndPublish API, render to an antialiased render buffer with the requested multisample count (via the FBO MSAA and BLIT extensions). Default sample count is 0 should this key be ommited, indicating no antialiased buffers will be used. If the requested sample count is not supported by the GL context, the nearest supported sample count will be used instead. If MSAA is not supported at all, this key will be ignored and the server will render without the antialiasing stage.
+ 
  */
-extern NSString* const SyphonServerOptionImageFormat;
-
-/*! @} */
-/*! @name Image Format Constants */
+extern NSString * const SyphonServerOptionAntialiasSampleCount;
 
 /*!
  @relates SyphonServer
-  This constant is used with the SyphonServerOptionImageFormat option key to specify an RGB image with alpha with 8 bits per component.
+ If this key is matched with a NSNumber with an integer value greater than zero, the server will render to an FBO with a depth buffer attached. The value provided should indicate the desired resolution of the buffer: 16, 24 or 32. The server will always attempt to attach a depth buffer when one is requested, however it may create one of a resolution other than that requested. This has useful effect only when using the bindToDrawFrameOfSize / unbindAndPublish API.
  */
-extern NSString* const SyphonImageFormatRGBA8;
+extern NSString * const SyphonServerOptionDepthBufferResolution;
 
 /*!
  @relates SyphonServer
- This constant is used with the SyphonServerOptionImageFormat option key to specify an RGB image with 8 bits per component.
+ If this key is matched with a NSNumber with an integer value greater than zero, the server will render to an FBO with a stencil buffer attached. The value provided should indicate the desired resolution of the buffer: 1, 4, 8 or 16. The server will always attempt to attach a stencil buffer when one is requested, however it may create one of a resolution other than that requested.
  */
-extern NSString* const SyphonImageFormatRGB8;
-
-/*!
- @relates SyphonServer
- This constant is used with the SyphonServerOptionImageFormat option key to specify an RGB image with alpha with 32 bits per component.
- */
-extern NSString* const SyphonImageFormatRGBA32;
-
-/*!
- @relates SyphonServer
- This constant is used with the SyphonServerOptionImageFormat option key to specify an RGB image with 32 bits per component.
- */
-extern NSString* const SyphonImageFormatRGB32;
-
-/*!
- @relates SyphonServer
- This constant is used with the SyphonServerOptionImageFormat option key to specify a luminance image with 8 bits per component.
- */
-extern NSString* const SyphonImageFormatLuminance8;
-
-/*!
- @relates SyphonServer
- This constant is used with the SyphonServerOptionImageFormat option key to specify an intensity or luminance image with alpha with 8 bits per component.
- */
-extern NSString* const SyphonImageFormatLuminanceAlpha8;
-
-/*!
- @relates SyphonServer
- This constant is used with the SyphonServerOptionImageFormat option key to specify an intensity or luminance image with 32 bits per component.
- */
-extern NSString* const SyphonImageFormatLuminance32;
-
-/*!
- @relates SyphonServer
- This constant is used with the SyphonServerOptionImageFormat option key to specify an intensity or luminance image with alpha with 32 bits per component.
- */
-extern NSString* const SyphonImageFormatLuminanceAlpha32;
+extern NSString * const SyphonServerOptionStencilBufferResolution;
 
 /*! @} */
 
@@ -120,11 +81,7 @@ extern NSString* const SyphonImageFormatLuminanceAlpha32;
 	NSString *_name;
 	NSString *_uuid;
 	BOOL _broadcasts;
-    
-    GLenum _internalFormat;
-    GLenum _format;
-    GLenum _type;    
-    
+	
 	id _connectionManager;
 	
 	CGLContextObj cgl_ctx;
@@ -134,19 +91,34 @@ extern NSString* const SyphonImageFormatLuminanceAlpha32;
 	SYPHON_IMAGE_UNIQUE_CLASS_NAME *_surfaceTexture;
 	GLuint _surfaceFBO;
 	
+    BOOL _wantsContextChanges;
+    GLuint _wantedMSAASampleCount;
+    
+    GLint _virtualScreen;
+    GLenum _depthBufferResolution;
+    GLenum _stencilBufferResolution;
+    GLuint _depthBuffer;
+    GLuint _stencilBuffer;
+    BOOL _combinedDepthStencil;
+	GLuint _msaaSampleCount;
+	GLuint _msaaFBO;
+	GLuint _msaaColorBuffer;
+	
 	GLint _previousReadFBO;
 	GLint _previousDrawFBO;
 	GLint _previousFBO;
-	
+    
 	int32_t _mdLock;
 }
 /** @name Instantiation */
 /** @{ */
 /*!
  Creates a new server with the specified human-readable name (which need not be unique), CGLContext and options. The server will be started immediately. Init may fail and return nil if the server could not be started.
+ 
+ This method does not lock the CGL context. If there is a chance other threads may use the context during calls to this method, bracket it with calls to CGLLockContext() and CGLUnlockContext().
  @param serverName Non-unique human readable server name. This is not required and may be nil, but is usually used by clients in their UI to aid identification.
  @param context The CGLContextObj context that textures will be valid and available on for publishing.
- @param options A dictionary containing key-value pairs to specify options for the server. Currently the only option is SyphonServerOptionIsPrivate. See its description for details.
+ @param options A dictionary containing key-value pairs to specify options for the server. Currently supported options are SyphonServerOptionIsPrivate, SyphonServerOptionAntialiasQuality and SyphonServerOptionHasDepthBuffer. See their descriptions for details.
  @returns A newly intialized SyphonServer. Nil on failure.
 */
 
@@ -223,7 +195,7 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 - (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage;
 
 /*! 
- Stops the server instance. In garbage-collected applications you must call this method prior to removing strong references to the server. In non-garbage-collected applications, use of this method is optional but encouraged.
+ Stops the server instance. In garbage-collected applications you must call this method prior to removing strong references to the server. In non-garbage-collected applications, use of this method is optional.
 */
 
 - (void)stop;

@@ -30,14 +30,4 @@
 
 #import <OpenGL/OpenGL.h>
 
-GLuint SyphonBytesPerElementForSizedInteralFormat(GLenum format);
-
 GLboolean SyphonOpenGLContextSupportsExtension(CGLContextObj cgl_ctx, const char *extension);
-
-/*
- GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx)
- 
- Returns one of GL_UNSIGNED_INT_8_8_8_8_REV, GL_HALF_APPLE, GL_FLOAT to the best capabilities of the renderer
- 
- */
-GLenum SyphonOpenGLBestFloatTypeForContext(CGLContextObj cgl_ctx);

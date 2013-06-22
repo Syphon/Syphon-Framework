@@ -34,8 +34,6 @@
 		BD038877122EAB1A007725FF /* SyphonIOSurfaceImage.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038875122EAB1A007725FF /* SyphonIOSurfaceImage.h */; };
 		BD038878122EAB1A007725FF /* SyphonIOSurfaceImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038876122EAB1A007725FF /* SyphonIOSurfaceImage.m */; };
 		BD038887122EABE2007725FF /* SyphonImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038886122EABE2007725FF /* SyphonImage.m */; };
-		BD124C3B135B45030080B656 /* SyphonOpenGLFunctions.c in Sources */ = {isa = PBXBuildFile; fileRef = BD124C39135B45030080B656 /* SyphonOpenGLFunctions.c */; };
-		BD124C3C135B45030080B656 /* SyphonOpenGLFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = BD124C3A135B45030080B656 /* SyphonOpenGLFunctions.h */; };
 		BD27307611D2B85E0084BB5E /* SyphonPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = BD27307511D2B85E0084BB5E /* SyphonPrivate.h */; };
 		BD3796D211DD470D0042870B /* SyphonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD3796CF11DD470D0042870B /* SyphonPrivate.m */; };
 		BD45586211DF6BD300F15521 /* SyphonServerConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BD45585C11DF6BD300F15521 /* SyphonServerConnectionManager.h */; };
@@ -51,6 +49,8 @@
 		BDB8DA381211F59A0028D250 /* SyphonCFMessageSender.m in Sources */ = {isa = PBXBuildFile; fileRef = BDB8DA2A1211F59A0028D250 /* SyphonCFMessageSender.m */; };
 		BDB8DAF51211FA7F0028D250 /* SyphonMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = BDB8DAF31211FA7F0028D250 /* SyphonMessaging.h */; };
 		BDB8DAF61211FA7F0028D250 /* SyphonMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = BDB8DAF41211FA7F0028D250 /* SyphonMessaging.m */; };
+		BDFAE527148CDA84008C9E6F /* SyphonOpenGLFunctions.c in Sources */ = {isa = PBXBuildFile; fileRef = BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */; };
+		BDFAE528148CDA84008C9E6F /* SyphonOpenGLFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */; };
 		BDFBD77D126F4D8800075A23 /* SyphonDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */; };
 		BDFBD77E126F4D8800075A23 /* SyphonDispatch.c in Sources */ = {isa = PBXBuildFile; fileRef = BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */; };
 		E2DE7FD312495BF50081453B /* SyphonMessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = E2DE7FD112495BF50081453B /* SyphonMessageQueue.h */; };
@@ -88,8 +88,6 @@
 		BD038875122EAB1A007725FF /* SyphonIOSurfaceImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonIOSurfaceImage.h; sourceTree = "<group>"; };
 		BD038876122EAB1A007725FF /* SyphonIOSurfaceImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonIOSurfaceImage.m; sourceTree = "<group>"; };
 		BD038886122EABE2007725FF /* SyphonImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonImage.m; sourceTree = "<group>"; };
-		BD124C39135B45030080B656 /* SyphonOpenGLFunctions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonOpenGLFunctions.c; sourceTree = "<group>"; };
-		BD124C3A135B45030080B656 /* SyphonOpenGLFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLFunctions.h; sourceTree = "<group>"; };
 		BD1718201224308200CB2E18 /* Exported_Symbols.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Exported_Symbols.exp; sourceTree = "<group>"; };
 		BD27307511D2B85E0084BB5E /* SyphonPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonPrivate.h; sourceTree = "<group>"; };
 		BD3796CF11DD470D0042870B /* SyphonPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonPrivate.m; sourceTree = "<group>"; };
@@ -117,6 +115,8 @@
 		BDCB92B0127A3C9A00C9E06E /* footer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = footer.html; sourceTree = "<group>"; };
 		BDCB92B1127A3C9A00C9E06E /* header.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = header.html; sourceTree = "<group>"; };
 		BDCB9399127ADEBF00C9E06E /* DoxygenLayout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = DoxygenLayout.xml; sourceTree = "<group>"; };
+		BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonOpenGLFunctions.c; sourceTree = "<group>"; };
+		BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLFunctions.h; sourceTree = "<group>"; };
 		BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonDispatch.h; sourceTree = "<group>"; };
 		BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonDispatch.c; sourceTree = "<group>"; };
 		BDFE68091228684F009C2E21 /* SyphonBuildMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonBuildMacros.h; sourceTree = "<group>"; };
@@ -289,8 +289,8 @@
 				BD3796CF11DD470D0042870B /* SyphonPrivate.m */,
 				BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */,
 				BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */,
-				BD124C3A135B45030080B656 /* SyphonOpenGLFunctions.h */,
-				BD124C39135B45030080B656 /* SyphonOpenGLFunctions.c */,
+				BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */,
+				BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */,
 			);
 			name = "Private Shared";
 			sourceTree = "<group>";
@@ -366,7 +366,7 @@
 				BD038877122EAB1A007725FF /* SyphonIOSurfaceImage.h in Headers */,
 				E2DE7FD312495BF50081453B /* SyphonMessageQueue.h in Headers */,
 				BDFBD77D126F4D8800075A23 /* SyphonDispatch.h in Headers */,
-				BD124C3C135B45030080B656 /* SyphonOpenGLFunctions.h in Headers */,
+				BDFAE528148CDA84008C9E6F /* SyphonOpenGLFunctions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,7 +400,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0420;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Syphon" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -522,7 +522,7 @@
 				BD038887122EABE2007725FF /* SyphonImage.m in Sources */,
 				E2DE7FD412495BF50081453B /* SyphonMessageQueue.m in Sources */,
 				BDFBD77E126F4D8800075A23 /* SyphonDispatch.c in Sources */,
-				BD124C3B135B45030080B656 /* SyphonOpenGLFunctions.c in Sources */,
+				BDFAE527148CDA84008C9E6F /* SyphonOpenGLFunctions.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,14 +552,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXPORTED_SYMBOLS_FILE = $DERIVED_FILE_DIR/Exported_Symbols.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_GC = supported;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -567,7 +565,6 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -577,19 +574,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXPORTED_SYMBOLS_FILE = $DERIVED_FILE_DIR/Exported_Symbols.exp;
 				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_OBJC_GC = supported;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Syphon_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -599,10 +593,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -610,7 +600,6 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -622,16 +611,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
@@ -642,10 +626,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -656,7 +636,6 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -668,14 +647,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXPORTED_SYMBOLS_FILE = $DERIVED_FILE_DIR/Exported_Symbols.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_GC = supported;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -683,7 +660,6 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -692,7 +668,6 @@
 		BD909C9712785ADE00CC898A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -703,7 +678,6 @@
 		BD909C9812785ADE00CC898A /* Debug Messaging Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = "Syphon Documentation";
 			};
 			name = "Debug Messaging Only";
@@ -711,7 +685,6 @@
 		BD909C9912785ADE00CC898A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				PRODUCT_NAME = "Syphon Documentation";

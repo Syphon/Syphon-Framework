@@ -1,5 +1,5 @@
 /*
-    SyphonPrivate.m
+    SyphonConstants.c
     Syphon
 
      Copyright 2010-2011 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -40,23 +40,9 @@ NSString * const SyphonSurfaceType = @"SyphonSurfaceType";
 NSString * const SyphonSurfaceTypeIOSurface = @"SyphonSurfaceTypeIOSurface";
 
 NSString * const SyphonServerOptionIsPrivate = @"SyphonServerOptionIsPrivate";
-NSString * const SyphonServerOptionImageFormat = @"SyphonServerOptionImageFormat";
-
-NSString * const SyphonImageFormatRGBA8 = @"SyphonImageFormatRGBA8";
-NSString * const SyphonImageFormatRGB8 = @"SyphonImageFormatRGB8";
-NSString * const SyphonImageFormatRGBA32 = @"SyphonImageFormatRGBA32";
-NSString * const SyphonImageFormatRGB32 = @"SyphonImageFormatRGB32";
-NSString * const SyphonImageFormatLuminance8 = @"SyphonImageFormatLuminance8";
-NSString * const SyphonImageFormatLuminanceAlpha8 = @"SyphonImageFormatLuminanceAlpha8";
-NSString * const SyphonImageFormatLuminance32 = @"SyphonImageFormatLuminance32";
-NSString * const SyphonImageFormatLuminanceAlpha32 = @"SyphonImageFormatLuminanceAlpha32";
-
-NSString * const SyphonServerIOSurfaceDescriptionKey = @"SyphonServerIOSurfaceDescriptionKey";
-
-NSString * const SyphonServerIOSurfaceIDKey = @"SyphonServerIOSurfaceIDKey";
-NSString * const SyphonServerIOSurfaceInternalFormatKey = @"SyphonServerIOSurfaceInternalFormatKey";
-NSString * const SyphonServerIOSurfaceFormatKey = @"SyphonServerIOSurfaceFormatKey";
-NSString * const SyphonServerIOSurfaceTypeKey = @"SyphonServerIOSurfaceTypeKey";
+NSString * const SyphonServerOptionAntialiasSampleCount = @"SyphonServerOptionAntialiasSampleCount";
+NSString * const SyphonServerOptionDepthBufferResolution = @"SyphonServerOptionDepthBufferResolution";
+NSString * const SyphonServerOptionStencilBufferResolution = @"SyphonServerOptionStencilBufferResolution";
 
 NSString *SyphonCreateUUIDString(void)
 {

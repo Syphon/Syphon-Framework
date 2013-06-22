@@ -40,7 +40,7 @@
 	GLuint _texture;
 	NSSize _size;
 }
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context internalFormat:(GLenum)internal format:(GLenum)format type:(GLenum)type;
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context;
 @end
 
 #if defined(SYPHON_USE_CLASS_ALIAS)

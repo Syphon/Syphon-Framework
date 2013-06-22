@@ -34,7 +34,7 @@
 #import <OpenGL/CGLIOSurface.h>
 
 @implementation SyphonIOSurfaceImage
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context internalFormat:(GLenum)internal format:(GLenum)format type:(GLenum)type
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context
 {
     self = [super init];
 	if (self)
@@ -44,21 +44,20 @@
 			[self release];
 			return nil;
 		}
-		SYPHONLOG(@"internal: %04X format: %04X type: %04X", internal, format, type);
 		_surface = (IOSurfaceRef)CFRetain(surfaceRef);
 		cgl_ctx = CGLRetainContext(context);
 		_size.width = IOSurfaceGetWidth(surfaceRef);
 		_size.height = IOSurfaceGetHeight(surfaceRef);
-        
+		
 		CGLLockContext(cgl_ctx);
 		glPushAttrib(GL_TEXTURE_BIT);
-
+		
 		// create the surface backed texture
 		glGenTextures(1, &_texture);
 		glEnable(GL_TEXTURE_RECTANGLE_ARB);
 		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, _texture);
 		
-		CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, internal, _size.width, _size.height, format, type, _surface, 0);
+		CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, GL_RGBA8, _size.width, _size.height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, _surface, 0);
 		
 		glPopAttrib();
 		CGLUnlockContext(cgl_ctx);

@@ -52,7 +52,6 @@
 	void			(^_handler)(id);
 	int32_t			_status;
 	int32_t			_lock;
-
 }
 /*! 
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.

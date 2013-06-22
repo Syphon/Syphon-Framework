@@ -30,7 +30,6 @@
 
 #import "SyphonClientConnectionManager.h"
 #import "SyphonPrivate.h"
-#import <OpenGL/gl.h>
 
 #pragma mark Shared Instances
 
@@ -74,7 +73,6 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 - (void)setServerName:(NSString *)name;
 - (void)publishNewFrame;
 - (void)setSurfaceID:(IOSurfaceID)surfaceID;
-- (void)updateSurface:(NSDictionary *)description;
 - (IOSurfaceRef)surfaceHavingLock;
 - (void)endConnectionHavingLock:(BOOL)hasLock;
 @end
@@ -87,11 +85,6 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	{
 		NSString *serverUUID = [description objectForKey:SyphonServerDescriptionUUIDKey];
 		
-        // for newFrame Handler, default values for now.
-        _internalFormat = GL_RGBA8;
-        _format = GL_BGRA;
-        _type = GL_UNSIGNED_INT_8_8_8_8_REV;
-        
 		// Return an existing instance for this server if we have one
 		id existing = SyphonClientPrivateCopyInstance(serverUUID);
 		if (existing)
@@ -99,7 +92,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 			[self release];
 			return existing;
 		}
-        
+		
 		NSArray *surfaces = [description objectForKey:SyphonServerDescriptionSurfacesKey];
 		BOOL hasIOSurface = NO;
 		for (NSDictionary *surface in surfaces)
@@ -192,9 +185,6 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 				case SyphonMessageTypeRetireServer:
 					[self endConnectionHavingLock:NO];
 					break;
-                case SyphonMessageTypeUpdateSurfaceDescription:
-					[self updateSurface:(NSDictionary *)data];
-                    break;
 				default:
 					SYPHONLOG(@"Unknown message type #%u received", type);
 					break;
@@ -354,7 +344,6 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 
 - (void)setSurfaceID:(IOSurfaceID)surfaceID
 {
-	SYPHONLOG(@"Updating ID");
 	OSSpinLockLock(&_lock);
 	_surfaceID = surfaceID;
 	_frameID++; // new surface means a new frame
@@ -365,32 +354,6 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		[_frames removeAllObjects];
 	}
 	OSSpinLockUnlock(&_lock);
-}
-
-- (void)updateSurface:(NSDictionary *)description
-{	
-	// assign our new image formats.
-	NSNumber *internalFormat = [description valueForKey:SyphonServerIOSurfaceInternalFormatKey];
-	NSNumber *format = [description valueForKey:SyphonServerIOSurfaceFormatKey];
-	NSNumber *type = [description valueForKey:SyphonServerIOSurfaceTypeKey];
-	NSNumber *surfaceID = [description valueForKey:SyphonServerIOSurfaceIDKey];
-
-	if(internalFormat && format && type) // it's OK if surfaceID is missing (might be getting these before a surface has been created)
-	{
-		SYPHONLOG(@"Updating surface");
-		OSSpinLockLock(&_lock);
-		_internalFormat = [internalFormat unsignedIntValue];
-		_format = [format unsignedIntValue];
-		_type = [type unsignedIntValue];
-		_surfaceID = [surfaceID unsignedIntValue];
-		if (_surface)
-		{
-			CFRelease(_surface);
-			_surface = NULL;
-			[_frames removeAllObjects];
-		}
-		OSSpinLockUnlock(&_lock);
-	}
 }
 
 - (SyphonImage *)newFrameForContext:(CGLContextObj)context
@@ -404,7 +367,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	}
 	else
 	{
-		result = [[SyphonIOSurfaceImage alloc] initWithSurface:[self surfaceHavingLock] forContext:context internalFormat:_internalFormat format:_format type:_type];
+		result = [[SyphonIOSurfaceImage alloc] initWithSurface:[self surfaceHavingLock] forContext:context];
 		NSMapInsertKnownAbsent(_frames, context, result);
 	}
 	OSSpinLockUnlock(&_lock);

@@ -73,11 +73,6 @@
 	NSHashTable *_frameClients;
 	dispatch_queue_t _frameQueue;
 	OSSpinLock _lock;
-        
-    // for handling specified / optional image formats
-    GLenum _internalFormat;
-    GLenum _format;
-    GLenum _type;    
 }
 - (id)initWithServerDescription:(NSDictionary *)description;
 @property (readonly) BOOL isValid;

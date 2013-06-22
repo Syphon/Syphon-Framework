@@ -29,6 +29,7 @@
 
 #import "SyphonCFMessageReceiver.h"
 #import "SyphonMessaging.h"
+#import <libkern/OSAtomic.h>
 
 static CFDataRef MessageReturnCallback (
 								 CFMessagePortRef local,
@@ -49,6 +50,7 @@ static CFDataRef MessageReturnCallback (
 }
 
 @implementation SyphonCFMessageReceiver
+
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id data, uint32_t type))handler
 {
     self = [super initForName:name protocol:protocolName handler:handler];
@@ -73,22 +75,22 @@ static CFDataRef MessageReturnCallback (
 
 - (void)finalize
 {
-	CFRelease(_runLoopSource);
-	CFRelease(_port);
+	if (_runLoopSource) CFRelease(_runLoopSource);
+	if (_port) CFRelease(_port);
 	[super finalize];
 }
 
 - (void)dealloc
 {
-	CFRelease(_runLoopSource);
-	CFRelease(_port);
+	if (_runLoopSource) CFRelease(_runLoopSource);
+	if (_port) CFRelease(_port);
 	[super dealloc];
 }
 
 - (void)invalidate
 {
-	CFMessagePortInvalidate(_port);
-	CFRunLoopSourceInvalidate(_runLoopSource);
+	if (_port) CFMessagePortInvalidate(_port);
+	if (_runLoopSource) CFRunLoopSourceInvalidate(_runLoopSource);
 	[super invalidate];
 }
 @end
