@@ -393,6 +393,11 @@ static void finalizer()
 		NSSize surfaceSize = _surfaceTexture.textureSize;
 		glViewport(0, 0, surfaceSize.width,  surfaceSize.height);
 		
+        // We need to ensure we set this before changing our texture matrix
+        glActiveTexture(GL_TEXTURE0);
+        // ensure we act on the proper client texture as well
+        glClientActiveTexture(GL_TEXTURE0);
+        
 		glMatrixMode(GL_TEXTURE);
 		glPushMatrix();
 		glLoadIdentity();
@@ -408,8 +413,6 @@ static void finalizer()
 				
 		// dont bother clearing. we dont have any alpha so we just write over the buffer contents. saves us a write.
 		// via GL_REPLACE TEX_ENV
-		glActiveTexture(GL_TEXTURE0);
-		glClientActiveTexture(GL_TEXTURE0);
 		glEnable(target);
 		glBindTexture(target, texID);
 		
