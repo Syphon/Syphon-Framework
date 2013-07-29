@@ -146,7 +146,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	_active = NO;
 	surface = _surface;
 	_surface = NULL;
-	[_frames removeAllObjects];
+    _framesDeletePending = YES;
 	if (!hasLock) OSSpinLockUnlock(&_lock);
 	[connection invalidate];
 	[connection release];
@@ -351,7 +351,8 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	{
 		CFRelease(_surface);
 		_surface = NULL;
-		[_frames removeAllObjects];
+        // Because this causes a glDelete we postpone deletion until we are using that context
+        _framesDeletePending = YES;
 	}
 	OSSpinLockUnlock(&_lock);
 }
@@ -360,6 +361,13 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 {
 	SyphonImage *result;
 	OSSpinLockLock(&_lock);
+    if (_framesDeletePending)
+    {
+        // TODO: this isn't safe, we can only safely remove context's entry
+        // we need to rethink clients and contexts, probably tie clients to a context
+        [_frames removeAllObjects];
+        _framesDeletePending = NO;
+    }
 	result = NSMapGet(_frames, context);
 	if (result)
 	{
