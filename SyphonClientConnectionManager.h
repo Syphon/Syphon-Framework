@@ -64,7 +64,7 @@
 	IOSurfaceRef _surface;
 	uint32_t _lastSeed;
 	NSMapTable *_frames;
-    BOOL _framesDeletePending;
+    NSMapTable *_invalidFrames;
 	NSUInteger _frameID;
 	NSMutableDictionary *_serverDescription;
 	BOOL _active;
