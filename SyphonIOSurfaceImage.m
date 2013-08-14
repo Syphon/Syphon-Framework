@@ -48,8 +48,7 @@
 		cgl_ctx = CGLRetainContext(context);
 		_size.width = IOSurfaceGetWidth(surfaceRef);
 		_size.height = IOSurfaceGetHeight(surfaceRef);
-		
-		CGLLockContext(cgl_ctx);
+
 		glPushAttrib(GL_TEXTURE_BIT);
 		
 		// create the surface backed texture
@@ -60,7 +59,6 @@
 		CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, GL_RGBA8, _size.width, _size.height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, _surface, 0);
 		
 		glPopAttrib();
-		CGLUnlockContext(cgl_ctx);
 		
 		if(err != kCGLNoError)
 		{
@@ -77,9 +75,7 @@
 	// TODO: think about exposing this so it can be destroyed straight away in a GC app
 	if (_texture != 0)
 	{
-		CGLLockContext(cgl_ctx);
 		glDeleteTextures(1, &_texture);
-		CGLUnlockContext(cgl_ctx);
 	}
 	if (_surface) CFRelease(_surface);
 	if (cgl_ctx) CGLReleaseContext(cgl_ctx);
