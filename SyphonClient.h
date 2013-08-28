@@ -41,7 +41,7 @@
  
  SyphonClient allows for lazy drawing by the use of a new-frame-handler. Using a handler you can perform drawing without using a timer or polling, achieving frame-accuracy with the minimum of overhead. Alternatively, if your application uses a traditional display link or timer, you can use the hasNewFrame property to make decisions about work you may need to do. Irrespective of the presence of new frames, you can draw with a SyphonClient at any time.
  
- It is safe to access instances of this class across threads.
+ It is safe to access instances of this class across threads, with the usual limitatiions related to OpenGL. The calls to SyphonClient which may cause work to be done in a GL context are: -newFrameImageForContext:, -stop and -release.
  */
 
 @interface SYPHON_CLIENT_UNIQUE_CLASS_NAME : NSObject
@@ -84,7 +84,7 @@
 /*!
  Returns a SyphonImage representing the current output from the server. The texture associated with the image may continue to update when you draw with it, but you should not depend on that behaviour: call this method every time you wish to access the current server frame. This object may have GPU resources associated with it and you should release it as soon as you are finished drawing with it.
  
- This method does not lock the CGL context. If there is a chance other threads may use the context during calls to this method, bracket it with calls to CGLLockContext() and CGLUnlockContext().
+ This method may perform work in the OpenGL context. As with any other OpenGL calls, you must ensure no other threads use the context during calls to this method.
  @param cgl_ctx The CGL context in which the SyphonImage will be valid.
  @returns A SyphonImage representing the live output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it.
  */
@@ -92,6 +92,8 @@
 
 /*!
  Stops the client from receiving any further frames from the server. In garbage-collected applications you must call this method prior to removing strong references to the client. In non-garbage-collected applications, use of this method is optional and releasing all references to the client has the same effect.
+
+ This method may perform work in any OpenGL context previously passed to newFrameImageForContext:. As with any other OpenGL calls, you must ensure no other threads use those contexts during calls to this method.
  */
 
 - (void)stop;

@@ -75,6 +75,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 - (void)setSurfaceID:(IOSurfaceID)surfaceID;
 - (IOSurfaceRef)surfaceHavingLock;
 - (void)endConnectionHavingLock:(BOOL)hasLock;
+- (void)invalidateFramesHavingLock;
 @end
 @implementation SyphonClientConnectionManager
 
@@ -113,6 +114,8 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		SyphonClientPrivateInsertInstance(self, serverUUID);
 		_frames = [[NSMapTable mapTableWithKeyOptions:(NSPointerFunctionsOpaquePersonality | NSPointerFunctionsOpaqueMemory)
 										 valueOptions:(NSPointerFunctionsObjectPersonality | NSPointerFunctionsStrongMemory)] retain];
+        _invalidFrames = [[NSMapTable mapTableWithKeyOptions:(NSPointerFunctionsOpaquePersonality | NSPointerFunctionsOpaqueMemory)
+                                                valueOptions:(NSPointerFunctionsObjectPersonality | NSPointerFunctionsStrongMemory)] retain];
 	}
 	return self;
 }
@@ -127,6 +130,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 {
 	SyphonClientPrivateRemoveInstance(self, [_serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);
 	[_frames release];
+    [_invalidFrames release];
 	if (_frameQueue) dispatch_release(_frameQueue);
 	[_frameClients release];
 	[_serverDescription release];
@@ -138,19 +142,48 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 {
 	SYPHONLOG(@"Ending connection");
 	SyphonMessageReceiver *connection;
-	IOSurfaceRef surface;
 	// we copy and clear ivars inside the lock, release them outside it
 	if (!hasLock) OSSpinLockLock(&_lock);
 	connection = _connection;
 	_connection = nil;
 	_active = NO;
-	surface = _surface;
-	_surface = NULL;
-	[_frames removeAllObjects];
+    [self invalidateFramesHavingLock];
 	if (!hasLock) OSSpinLockUnlock(&_lock);
 	[connection invalidate];
 	[connection release];
-	if (surface) CFRelease(surface);
+}
+
+- (void)invalidateFramesHavingLock
+{
+    if (_surface)
+	{
+		CFRelease(_surface);
+		_surface = NULL;
+    }
+    
+    /*
+     Because releasing a SyphonImage causes a glDelete we postpone deletion until we are using that context
+     */
+    NSMapEnumerator enumerator = NSEnumerateMapTable(_frames);
+    
+    void *key, *value;
+    BOOL success;
+    
+    do {
+        success = NSNextMapEnumeratorPair(&enumerator, &key, &value);
+        if (success)
+        {
+            /*
+             Keys are known absent because we always delete any item from _invalidFrames
+             prior to inserting a new one in _frames
+             */
+            NSMapInsertKnownAbsent(_invalidFrames, key, value);
+        }
+    } while (success);
+    
+    NSEndMapTableEnumeration(&enumerator);
+
+    NSResetMapTable(_frames);
 }
 
 - (BOOL)isValid
@@ -347,12 +380,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	OSSpinLockLock(&_lock);
 	_surfaceID = surfaceID;
 	_frameID++; // new surface means a new frame
-	if (_surface) 
-	{
-		CFRelease(_surface);
-		_surface = NULL;
-		[_frames removeAllObjects];
-	}
+    [self invalidateFramesHavingLock];
 	OSSpinLockUnlock(&_lock);
 }
 
@@ -360,6 +388,15 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 {
 	SyphonImage *result;
 	OSSpinLockLock(&_lock);
+    
+    /*
+     While we are permitted to do work in the context remove any invalid frame
+     */
+    NSMapRemove(_invalidFrames, context);
+    
+    /*
+     Check for a cached frame
+     */
 	result = NSMapGet(_frames, context);
 	if (result)
 	{
@@ -367,6 +404,9 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	}
 	else
 	{
+        /*
+         No cached frame was available, create a new one and cache it
+         */
 		result = [[SyphonIOSurfaceImage alloc] initWithSurface:[self surfaceHavingLock] forContext:context];
 		NSMapInsertKnownAbsent(_frames, context, result);
 	}
