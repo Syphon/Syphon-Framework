@@ -48,7 +48,7 @@
 {
 @private
 	id				_connectionManager;
-	uint32_t		_lastFrameID;
+	NSUInteger		_lastFrameID;
 	void			(^_handler)(id);
 	int32_t			_status;
 	int32_t			_lock;

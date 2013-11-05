@@ -153,7 +153,7 @@ static void finalizer()
 		if ([aaQuality respondsToSelector:@selector(unsignedIntegerValue)]
 			&& [aaQuality unsignedIntegerValue] > 0)
 		{
-            _wantedMSAASampleCount = [aaQuality unsignedIntegerValue];
+            _wantedMSAASampleCount = [aaQuality unsignedIntValue];
             _wantsContextChanges = YES;
         }
         
@@ -161,7 +161,7 @@ static void finalizer()
         if ([depthBufferResolution respondsToSelector:@selector(unsignedIntegerValue)]
             && [depthBufferResolution unsignedIntegerValue] > 0)
         {
-            _depthBufferResolution = [depthBufferResolution unsignedIntegerValue];
+            _depthBufferResolution = [depthBufferResolution unsignedIntValue];
             if (_depthBufferResolution < 20) _depthBufferResolution = GL_DEPTH_COMPONENT16;
             else if (_depthBufferResolution < 28) _depthBufferResolution = GL_DEPTH_COMPONENT24;
             else _depthBufferResolution = GL_DEPTH_COMPONENT32;
@@ -172,7 +172,7 @@ static void finalizer()
             && [stencilBufferResolution unsignedIntegerValue] > 0)
         {
             // In fact this will almost always be ignored other than to check it is non-zero
-            _stencilBufferResolution = [stencilBufferResolution unsignedIntegerValue];
+            _stencilBufferResolution = [stencilBufferResolution unsignedIntValue];
             if (_stencilBufferResolution < 3) _stencilBufferResolution = GL_STENCIL_INDEX1;
             else if (_stencilBufferResolution < 6) _stencilBufferResolution = GL_STENCIL_INDEX4;
             else if (_stencilBufferResolution < 12) _stencilBufferResolution = GL_STENCIL_INDEX8;
