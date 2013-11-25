@@ -53,10 +53,10 @@
 		BDFAE528148CDA84008C9E6F /* SyphonOpenGLFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */; };
 		BDFBD77D126F4D8800075A23 /* SyphonDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */; };
 		BDFBD77E126F4D8800075A23 /* SyphonDispatch.c in Sources */ = {isa = PBXBuildFile; fileRef = BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */; };
-		E2896D76182916CC008A0259 /* SyphonServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906BE11CBB0F500BCBE41 /* SyphonServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E2896D77182916CE008A0259 /* SyphonClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C411CBB1C100BCBE41 /* SyphonClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E2896D78182916D1008A0259 /* SyphonImage.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038870122EA9FF007725FF /* SyphonImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E2896D79182916D4008A0259 /* SyphonServerDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = BD606D6611D2842D00E02702 /* SyphonServerDirectory.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E218B67618436D38004FD9E3 /* SyphonServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906BE11CBB0F500BCBE41 /* SyphonServer.h */; };
+		E218B67718436D3B004FD9E3 /* SyphonClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C411CBB1C100BCBE41 /* SyphonClient.h */; };
+		E218B67818436D3F004FD9E3 /* SyphonImage.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038870122EA9FF007725FF /* SyphonImage.h */; };
+		E218B67918436D41004FD9E3 /* SyphonServerDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = BD606D6611D2842D00E02702 /* SyphonServerDirectory.h */; };
 		E2DE7FD312495BF50081453B /* SyphonMessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = E2DE7FD112495BF50081453B /* SyphonMessageQueue.h */; };
 		E2DE7FD412495BF50081453B /* SyphonMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DE7FD212495BF50081453B /* SyphonMessageQueue.m */; };
 /* End PBXBuildFile section */
@@ -359,10 +359,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B0906C911CBB1CE00BCBE41 /* Syphon.h in Headers */,
-				E2896D76182916CC008A0259 /* SyphonServer.h in Headers */,
-				E2896D77182916CE008A0259 /* SyphonClient.h in Headers */,
-				E2896D78182916D1008A0259 /* SyphonImage.h in Headers */,
-				E2896D79182916D4008A0259 /* SyphonServerDirectory.h in Headers */,
+				E218B67618436D38004FD9E3 /* SyphonServer.h in Headers */,
+				E218B67718436D3B004FD9E3 /* SyphonClient.h in Headers */,
+				E218B67818436D3F004FD9E3 /* SyphonImage.h in Headers */,
+				E218B67918436D41004FD9E3 /* SyphonServerDirectory.h in Headers */,
 				1B09098711CD9A1C00BCBE41 /* SyphonClientConnectionManager.h in Headers */,
 				BD27307611D2B85E0084BB5E /* SyphonPrivate.h in Headers */,
 				BD45586211DF6BD300F15521 /* SyphonServerConnectionManager.h in Headers */,
@@ -482,10 +482,10 @@
 			);
 			name = "Generate Public Headers";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/SyphonClient.h",
-				"$(DERIVED_FILE_DIR)/SyphonServer.h",
-				"$(DERIVED_FILE_DIR)/SyphonServerDirectory.h",
-				"$(DERIVED_FILE_DIR)/SyphonImage.h",
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonClient.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonServer.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonServerDirectory.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonImage.h,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
