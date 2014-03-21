@@ -181,6 +181,10 @@ static void finalizer()
             // so we need to know about changes to the context's abilities
             _wantsContextChanges = YES;
         }
+
+        // Prevent this app from being suspended or terminated eg if it goes off-screen
+        NSActivityOptions options = NSActivityAutomaticTerminationDisabled | NSActivityBackground;
+        _activityToken = [[[NSProcessInfo processInfo] beginActivityWithOptions:options reason:_uuid] retain];
 	}
 	return self;
 }
@@ -208,6 +212,13 @@ static void finalizer()
 		CGLReleaseContext(cgl_ctx);
 		cgl_ctx = NULL;
 	}
+
+    if (_activityToken)
+    {
+        [[NSProcessInfo processInfo] endActivity:_activityToken];
+        [_activityToken release];
+        _activityToken = nil;
+    }
 }
 
 - (void)finalize

@@ -109,6 +109,8 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
 	GLint _previousFBO;
     
 	int32_t _mdLock;
+
+    id<NSObject> _activityToken;
 }
 /** @name Instantiation */
 /** @{ */
