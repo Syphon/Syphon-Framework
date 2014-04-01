@@ -182,9 +182,13 @@ static void finalizer()
             _wantsContextChanges = YES;
         }
 
-        // Prevent this app from being suspended or terminated eg if it goes off-screen
-        NSActivityOptions options = NSActivityAutomaticTerminationDisabled | NSActivityBackground;
-        _activityToken = [[[NSProcessInfo processInfo] beginActivityWithOptions:options reason:_uuid] retain];
+        // Prevent this app from being suspended or terminated eg if it goes off-screen (MacOS 10.9+ only)
+        NSProcessInfo *processInfo = [NSProcessInfo processInfo];
+        if ([processInfo respondsToSelector:@selector(beginActivityWithOptions:reason:)])
+        {
+            NSActivityOptions options = NSActivityAutomaticTerminationDisabled | NSActivityBackground;
+            _activityToken = [[processInfo beginActivityWithOptions:options reason:_uuid] retain];
+        }
 	}
 	return self;
 }
