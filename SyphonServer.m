@@ -433,8 +433,8 @@ static void finalizer()
 		
 		// do a nearest interp.
 		// ROGER -- uncommented GL_NEAREST
-		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glColor4f(1.0, 1.0, 1.0, 1.0);
 		
