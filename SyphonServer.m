@@ -475,17 +475,17 @@ static void finalizer()
 		{
 			if(!isFlipped)
 			{	// X													// Y
-				tex_coords[0] = region.origin.x;						tex_coords[1] = 0.0;
+				tex_coords[0] = region.origin.x;						tex_coords[1] = region.origin.y;
 				tex_coords[2] = region.origin.x;						tex_coords[3] = region.size.height + region.origin.y;
 				tex_coords[4] = region.size.width + region.origin.x;	tex_coords[5] = region.size.height + region.origin.y;
-				tex_coords[6] = region.size.width + region.origin.x;	tex_coords[7] = 0.0;
+				tex_coords[6] = region.size.width + region.origin.x;	tex_coords[7] = region.origin.y;
 			}
 			else 
 			{
 				tex_coords[0] = region.origin.x;						tex_coords[1] = region.size.height + region.origin.y;
 				tex_coords[2] = region.origin.x;						tex_coords[3] = region.origin.y;
-				tex_coords[4] = surfaceSize.width;						tex_coords[5] = region.origin.y;
-				tex_coords[6] = surfaceSize.width;						tex_coords[7] = region.size.height + region.origin.y;
+				tex_coords[4] = region.size.width + region.origin.x;	tex_coords[5] = region.origin.y;
+				tex_coords[6] = region.size.width + region.origin.x;	tex_coords[7] = region.size.height + region.origin.y;
 			}
 		}
 		
