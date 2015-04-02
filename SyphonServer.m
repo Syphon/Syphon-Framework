@@ -139,7 +139,7 @@ static void finalizer()
 			_broadcasts = YES;
 		}
 
-		if (_broadcasts)
+		//if (_broadcasts)	// ROGER
 		{
             [[self class] addServerToRetireList:_uuid];
 			[self startBroadcasts];
@@ -205,7 +205,7 @@ static void finalizer()
 	
 	[self destroyIOSurface];
 	
-	if (_broadcasts)
+	//if (_broadcasts)	// ROGER
 	{
 		[self stopBroadcasts];
         [[self class] removeServerFromRetireList:_uuid];
@@ -304,7 +304,7 @@ static void finalizer()
 	_name = newName;
 	OSSpinLockUnlock(&_mdLock);
 	[(SyphonServerConnectionManager *)_connectionManager setName:newName];
-	if (_broadcasts)
+	//if (_broadcasts)	// ROGER
 	{
 		[self broadcastServerUpdate];
 	}
@@ -432,8 +432,9 @@ static void finalizer()
 		glBindTexture(target, texID);
 		
 		// do a nearest interp.
-//		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//		glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		// ROGER -- uncommented GL_NEAREST
+		//glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glColor4f(1.0, 1.0, 1.0, 1.0);
 		
