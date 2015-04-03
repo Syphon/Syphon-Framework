@@ -438,48 +438,42 @@ static void finalizer()
 		glDisable(GL_BLEND);
 		
 		GLfloat tex_coords[8];
-		
+
+        GLfloat texOriginX = region.origin.x;
+        GLfloat texOriginY = region.origin.y;
+        GLfloat texExtentX = region.size.width + region.origin.x;
+        GLfloat texExtentY = region.size.height + region.origin.y;
+
 		if(target == GL_TEXTURE_2D)
 		{
-			GLfloat texOriginX = region.origin.x / size.width;
-			GLfloat texOriginY = region.origin.y / size.height;
-			GLfloat texExtentX = (region.size.width + region.origin.x) / size.width;
-			GLfloat texExtentY = (region.size.height + region.origin.y) / size.height;
-			
-			if(!isFlipped)
-			{
-				// X							// Y
-				tex_coords[0] = texOriginX;		tex_coords[1] = texOriginY;
-				tex_coords[2] = texOriginX;		tex_coords[3] = texExtentY;
-				tex_coords[4] = texExtentX;		tex_coords[5] = texExtentY;
-				tex_coords[6] = texExtentX;		tex_coords[7] = texOriginY;
-			}
-			else 
-			{
-				tex_coords[0] = texOriginX;		tex_coords[1] = texExtentY;
-				tex_coords[2] = texOriginX;		tex_coords[3] = texOriginY;
-				tex_coords[4] = texExtentX;		tex_coords[5] = texOriginY;
-				tex_coords[6] = texExtentX;		tex_coords[7] = texExtentY;
-			}
+            texOriginX /= size.width;
+            texOriginY /= size.height;
+            texExtentX /= size.width;
+            texExtentY /= size.height;
 		}
-		else
-		{
-			if(!isFlipped)
-			{	// X													// Y
-				tex_coords[0] = region.origin.x;						tex_coords[1] = region.origin.y;
-				tex_coords[2] = region.origin.x;						tex_coords[3] = region.size.height + region.origin.y;
-				tex_coords[4] = region.size.width + region.origin.x;	tex_coords[5] = region.size.height + region.origin.y;
-				tex_coords[6] = region.size.width + region.origin.x;	tex_coords[7] = region.origin.y;
-			}
-			else 
-			{
-				tex_coords[0] = region.origin.x;						tex_coords[1] = region.size.height + region.origin.y;
-				tex_coords[2] = region.origin.x;						tex_coords[3] = region.origin.y;
-				tex_coords[4] = region.size.width + region.origin.x;	tex_coords[5] = region.origin.y;
-				tex_coords[6] = region.size.width + region.origin.x;	tex_coords[7] = region.size.height + region.origin.y;
-			}
-		}
-		
+
+        // X
+        tex_coords[0] = texOriginX;
+        tex_coords[2] = texOriginX;
+        tex_coords[4] = texExtentX;
+        tex_coords[6] = texExtentX;
+
+        // Y
+        if(!isFlipped)
+        {
+            tex_coords[1] = texOriginY;
+            tex_coords[3] = texExtentY;
+            tex_coords[5] = texExtentY;
+            tex_coords[7] = texOriginY;
+        }
+        else
+        {
+            tex_coords[1] = texExtentY;
+            tex_coords[3] = texOriginY;
+            tex_coords[5] = texOriginY;
+            tex_coords[7] = texExtentY;
+        }
+
 		GLfloat verts[] = 
 		{
 			0.0f, 0.0f,
