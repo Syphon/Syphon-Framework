@@ -431,9 +431,6 @@ static void finalizer()
 		glEnable(target);
 		glBindTexture(target, texID);
 		
-		// do a nearest interp.
-//		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//		glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glColor4f(1.0, 1.0, 1.0, 1.0);
 		
@@ -444,12 +441,6 @@ static void finalizer()
 		
 		if(target == GL_TEXTURE_2D)
 		{
-            // Cannot assume mip-mapping and repeat modes are ok & will work, so we:
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);	// Linear Filtering
-            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);	// Linear Filtering
-                        
 			GLfloat texOriginX = region.origin.x / size.width;
 			GLfloat texOriginY = region.origin.y / size.height;
 			GLfloat texExtentX = (region.size.width + region.origin.x) / size.width;
