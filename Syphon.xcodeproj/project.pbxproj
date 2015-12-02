@@ -408,7 +408,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0710;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Syphon" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -573,6 +573,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -592,6 +593,7 @@
 				GCC_PREFIX_HEADER = Syphon_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -610,6 +612,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -671,6 +674,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -710,6 +714,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
 				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
 			};
