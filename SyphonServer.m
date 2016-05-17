@@ -225,12 +225,6 @@ static void finalizer()
     }
 }
 
-- (void)finalize
-{
-	[self shutDownServer];
-	[super finalize];
-}
-
 - (void) dealloc
 {
 	SYPHONLOG(@"Server deallocing, name: %@, UUID: %@", self.name, [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);

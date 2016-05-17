@@ -137,14 +137,6 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
     return self;
 }
 
-- (void)finalize
-{
-	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
-	pthread_mutex_destroy(&_generalLock);
-	pthread_mutex_destroy(&_mutateLock);
-	[super finalize];
-}
-
 - (void)dealloc
 {
 	// This will never get called as long as we're a singleton object,

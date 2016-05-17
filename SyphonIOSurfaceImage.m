@@ -81,12 +81,6 @@
 	if (cgl_ctx) CGLReleaseContext(cgl_ctx);
 }
 
-- (void)finalize
-{
-	[self destroyResources];
-	[super finalize];
-}
-
 - (void)dealloc
 {
 	[self destroyResources];

@@ -94,12 +94,6 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 	} while (m);
 }
 
-- (void)finalize
-{
-	[self drainQueueAndPool];
-	[super finalize];
-}
-
 - (void)dealloc
 {
 	[self drainQueueAndPool];

@@ -81,18 +81,6 @@
 	return self;
 }
 
-- (void)finalize
-{	
-	OSSpinLockLock(&_lock);
-	BOOL alive = (_status != 0);
-	OSSpinLockUnlock(&_lock);
-	if (alive)
-	{
-		[NSException raise:@"SyphonClientException" format:@"finalize called on client that hasn't been stopped."];
-	}
-	[super finalize];
-}
-
 - (void) dealloc
 {
 	[self stop];

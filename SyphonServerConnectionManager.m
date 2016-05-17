@@ -85,17 +85,6 @@
 	return self;
 }
 
-- (void)finalize
-{
-	if (_alive)
-	{
-		[NSException raise:@"SyphonServerConnectionManager" format:@"SyphonServerConnectionManager released while running. Call -stop."];
-	}
-	SYPHONLOG(@"Releasing SyphonServerConnectionManager for server \"%@\"", _uuid);
-	dispatch_release(_queue);
-	[super finalize];
-}
-
 - (void)dealloc
 {
 	if (_alive)

@@ -197,7 +197,7 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 - (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage;
 
 /*! 
- Stops the server instance. In garbage-collected applications you must call this method prior to removing strong references to the server. In non-garbage-collected applications, use of this method is optional.
+ Stops the server instance. Use of this method is optional and releasing all references to the server has the same effect.
 */
 
 - (void)stop;

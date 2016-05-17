@@ -91,7 +91,7 @@
 - (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImageForContext:(CGLContextObj)cgl_ctx;
 
 /*!
- Stops the client from receiving any further frames from the server. In garbage-collected applications you must call this method prior to removing strong references to the client. In non-garbage-collected applications, use of this method is optional and releasing all references to the client has the same effect.
+ Stops the client from receiving any further frames from the server. Use of this method is optional and releasing all references to the client has the same effect.
 
  This method may perform work in any OpenGL context previously passed to newFrameImageForContext:. As with any other OpenGL calls, you must ensure no other threads use those contexts during calls to this method.
  */

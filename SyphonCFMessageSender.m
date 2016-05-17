@@ -116,12 +116,6 @@
 	[super dealloc];
 }
 
-- (void)finalize
-{
-	[self finishPort];
-	[super finalize];
-}
-
 - (BOOL)isValid
 {
 	return (_port != NULL ? CFMessagePortIsValid(_port) : NO);

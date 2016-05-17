@@ -120,12 +120,6 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	return self;
 }
 
-- (void)finalize
-{
-	if (_frameQueue) dispatch_release(_frameQueue);
-	[super finalize];
-}
-
 - (void) dealloc
 {
 	SyphonClientPrivateRemoveInstance(self, [_serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);

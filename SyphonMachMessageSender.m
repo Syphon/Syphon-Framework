@@ -59,12 +59,6 @@ typedef struct {
 	}
 }
 
-- (void)finalize
-{
-	[self finishPort];
-	[super finalize];
-}
-
 - (void)dealloc
 {
 	[self finishPort];

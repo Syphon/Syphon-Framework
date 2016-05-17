@@ -73,13 +73,6 @@ static CFDataRef MessageReturnCallback (
 	return self;
 }
 
-- (void)finalize
-{
-	if (_runLoopSource) CFRelease(_runLoopSource);
-	if (_port) CFRelease(_port);
-	[super finalize];
-}
-
 - (void)dealloc
 {
 	if (_runLoopSource) CFRelease(_runLoopSource);
