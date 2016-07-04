@@ -53,6 +53,9 @@
 @protocol SyphonFrameReceiving
 - (void)receiveNewFrame;
 @end
+@protocol SyphonInfoReceiving
+- (void)invalidateFrame;
+@end
 
 #define SYPHON_CLIENT_CONNECTION_MANAGER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonClientConnectionManager)
 
@@ -63,22 +66,20 @@
 	IOSurfaceID _surfaceID;
 	IOSurfaceRef _surface;
 	uint32_t _lastSeed;
-	NSMapTable *_frames;
-    NSMapTable *_invalidFrames;
 	NSUInteger _frameID;
 	NSMutableDictionary *_serverDescription;
 	BOOL _active;
 	SyphonMessageReceiver *_connection;
-	int32_t _infoClientCount;
 	int32_t _handlerCount;
+    NSHashTable *_infoClients;
 	NSHashTable *_frameClients;
 	dispatch_queue_t _frameQueue;
 	OSSpinLock _lock;
 }
 - (id)initWithServerDescription:(NSDictionary *)description;
 @property (readonly) BOOL isValid;
-- (void)addInfoClient:(id)client;		// Must be
-- (void)removeInfoClient:(id)client;	// paired
+- (void)addInfoClient:(id <SyphonInfoReceiving>)client;		// Must be
+- (void)removeInfoClient:(id <SyphonInfoReceiving>)client;	// paired
 - (void)addFrameClient:(id <SyphonFrameReceiving>)client;		// Must be
 - (void)removeFrameClient:(id <SyphonFrameReceiving>)client;	// paired
 @property (readonly) NSDictionary *serverDescription;

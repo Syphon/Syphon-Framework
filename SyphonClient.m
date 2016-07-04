@@ -51,7 +51,7 @@
 	return nil;
 }
 
-- (id)initWithServerDescription:(NSDictionary *)description options:(NSDictionary *)options newFrameHandler:(void (^)(SyphonClient *client))handler
+- (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(NSDictionary *)options newFrameHandler:(void (^)(SyphonClient *client))handler
 {
     self = [super init];
 	if (self)
@@ -69,7 +69,7 @@
 			return nil;
 		}
 		
-		[(SyphonClientConnectionManager *)_connectionManager addInfoClient:self];
+		[(SyphonClientConnectionManager *)_connectionManager addInfoClient:(id <SyphonInfoReceiving>)self];
 		
 		if (handler != nil)
 		{
@@ -77,6 +77,7 @@
 			[(SyphonClientConnectionManager *)_connectionManager addFrameClient:(id <SyphonFrameReceiving>)self];
 		}
 		_lock = OS_SPINLOCK_INIT;
+        _context = CGLRetainContext(context);
 	}
 	return self;
 }
@@ -97,11 +98,19 @@
 		{
 			[(SyphonClientConnectionManager *)_connectionManager removeFrameClient:(id <SyphonFrameReceiving>) self];
 		}		
-		[(SyphonClientConnectionManager *)_connectionManager removeInfoClient:self];
+		[(SyphonClientConnectionManager *)_connectionManager removeInfoClient:(id <SyphonInfoReceiving>)self];
 		[(SyphonClientConnectionManager *)_connectionManager release];
 		_connectionManager = nil;
 		_status = 0;
 	}
+    [_frame release];
+    _frame = nil;
+    _frameValid = NO;
+    if (_context)
+    {
+        CGLReleaseContext(_context);
+        _context = NULL;
+    }
 	OSSpinLockUnlock(&_lock);
 }
 
@@ -121,6 +130,16 @@
 	}
 }
 
+- (void)invalidateFrame
+{
+    OSSpinLockLock(&_lock);
+    /*
+     Because releasing a SyphonImage causes a glDelete we postpone deletion until we can do work in the context
+     */
+    _frameValid = NO;
+    OSSpinLockUnlock(&_lock);
+}
+
 #pragma mark Rendering frames
 - (BOOL)hasNewFrame
 {
@@ -131,13 +150,18 @@
 	return result;
 }
 
-- (SyphonImage *)newFrameImageForContext:(CGLContextObj)cgl_ctx
+- (SyphonImage *)newFrameImage
 {
 	OSSpinLockLock(&_lock);
 	_lastFrameID = [(SyphonClientConnectionManager *)_connectionManager frameID];
-	SyphonImage *frame = [(SyphonClientConnectionManager *)_connectionManager newFrameForContext:cgl_ctx];
+    if (_frameValid == NO)
+    {
+        [_frame release];
+        _frame = [(SyphonClientConnectionManager *)_connectionManager newFrameForContext:_context];
+        _frameValid = YES;
+    }
 	OSSpinLockUnlock(&_lock);
-	return frame;
+	return [_frame retain];
 }
 
 - (NSDictionary *)serverDescription
