@@ -96,7 +96,7 @@
 /*!
  Stops the client from receiving any further frames from the server. Use of this method is optional and releasing all references to the client has the same effect.
 
- This method may perform work in any OpenGL context previously passed to newFrameImage. As with any other OpenGL calls, you must ensure no other threads use those contexts during calls to this method.
+ This method may perform work in the OpenGL context. As with any other OpenGL calls, you must ensure no other threads use those contexts during calls to this method.
  */
 
 - (void)stop;
