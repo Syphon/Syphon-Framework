@@ -114,6 +114,11 @@
 	OSSpinLockUnlock(&_lock);
 }
 
+- (CGLContextObj)context
+{
+    return _context;
+}
+
 - (BOOL)isValid
 {
 	OSSpinLockLock(&_lock);

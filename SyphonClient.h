@@ -68,6 +68,11 @@
 - (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(NSDictionary *)options newFrameHandler:(void (^)(SYPHON_CLIENT_UNIQUE_CLASS_NAME *client))handler;
 
 /*!
+ Returns the CGLContextObj associated with the client.
+ */
+@property (readonly) CGLContextObj context;
+
+/*!
  A client is valid if it has a working connection to a server. Once this returns NO, the SyphonClient will not yield any further frames.
  */
 
