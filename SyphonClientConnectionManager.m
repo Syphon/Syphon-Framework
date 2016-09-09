@@ -149,7 +149,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		CFRelease(_surface);
 		_surface = NULL;
     }
-    for (id <SyphonInfoReceiving> obj in _frameClients) {
+    for (id <SyphonInfoReceiving> obj in _infoClients) {
         [obj invalidateFrame];
     }
 }
