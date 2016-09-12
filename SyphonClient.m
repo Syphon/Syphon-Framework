@@ -68,14 +68,12 @@
 			[self release];
 			return nil;
 		}
+
+        _handler = [handler copy]; // copy don't retain
 		
-		[(SyphonClientConnectionManager *)_connectionManager addInfoClient:(id <SyphonInfoReceiving>)self];
+        [(SyphonClientConnectionManager *)_connectionManager addInfoClient:(id <SyphonInfoReceiving>)self
+                                                             isFrameClient:handler != nil ? YES : NO];
 		
-		if (handler != nil)
-		{
-			_handler = [handler copy]; // copy don't retain
-			[(SyphonClientConnectionManager *)_connectionManager addFrameClient:(id <SyphonFrameReceiving>)self];
-		}
 		_lock = OS_SPINLOCK_INIT;
         _context = CGLRetainContext(context);
 	}
@@ -94,11 +92,8 @@
 	OSSpinLockLock(&_lock);
 	if (_status == 1)
 	{
-		if (_handler != nil)
-		{
-			[(SyphonClientConnectionManager *)_connectionManager removeFrameClient:(id <SyphonFrameReceiving>) self];
-		}		
-		[(SyphonClientConnectionManager *)_connectionManager removeInfoClient:(id <SyphonInfoReceiving>)self];
+		[(SyphonClientConnectionManager *)_connectionManager removeInfoClient:(id <SyphonInfoReceiving>)self
+                                                                isFrameClient:_handler != nil ? YES : NO];
 		[(SyphonClientConnectionManager *)_connectionManager release];
 		_connectionManager = nil;
 		_status = 0;

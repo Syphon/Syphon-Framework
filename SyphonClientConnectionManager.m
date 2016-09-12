@@ -163,7 +163,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	return result;
 }
 
-- (void)addInfoClient:(id <SyphonInfoReceiving>)client
+- (void)addInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)isFrameClient
 {
 	OSSpinLockLock(&_lock);
 	if (_infoClients == nil)
@@ -172,7 +172,6 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
     }
     [_infoClients addObject:client];
 	BOOL shouldSendAdd = NO;
-	NSString *serverUUID = nil;
 	if (_infoClients.count == 1)
 	{
 		// set up a connection to receive and deal with messages from the server
@@ -198,15 +197,26 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		
 		if (_connection != nil)
 		{
-			serverUUID = [_serverDescription objectForKey:SyphonServerDescriptionUUIDKey];
 			_active = shouldSendAdd = YES;
 		}
 	}
+    if (isFrameClient && _frameQueue == nil)
+    {
+        _frameQueue = dispatch_queue_create([_myUUID cStringUsingEncoding:NSUTF8StringEncoding], 0);
+        _frameClients = [[NSHashTable hashTableWithWeakObjects] retain];
+    }
 	OSSpinLockUnlock(&_lock);
+    if (isFrameClient)
+    {
+        // only access _frameClients within the queue
+        dispatch_sync(_frameQueue, ^{
+            [_frameClients addObject:client];
+        });
+    }
 	// We can do this outside the lock because we're not using any protected resources
-	if (shouldSendAdd)
+	if (shouldSendAdd || isFrameClient)
 	{
-		SYPHONLOG(@"Registering for info updates");
+        NSString *serverUUID = [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey];
 		SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:serverUUID
 																	  protocol:SyphonMessagingProtocolCFMessage
 														   invalidationHandler:nil];
@@ -216,81 +226,57 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 			SYPHONLOG(@"Failed to create connection to server with uuid:%@", serverUUID);
 			[self endConnectionHavingLock:NO];
 		}
-		[sender send:_myUUID ofType:SyphonMessageTypeAddClientForInfo];
+        if (shouldSendAdd)
+        {
+            SYPHONLOG(@"Registering for info updates");
+            [sender send:_myUUID ofType:SyphonMessageTypeAddClientForInfo];
+        }
+        if (isFrameClient && OSAtomicIncrement32(&_handlerCount) == 1)
+        {
+            SYPHONLOG(@"Registering for frame updates");
+            [sender send:_myUUID ofType:SyphonMessageTypeAddClientForFrames];
+        }
 		[sender release];
 	}
 }
 
-- (void)removeInfoClient:(id <SyphonInfoReceiving>)client
+- (void)removeInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)isFrameClient
 {
+    if (isFrameClient)
+    {
+        dispatch_sync(_frameQueue, ^{
+            [_frameClients removeObject:client];
+        });
+    }
 	OSSpinLockLock(&_lock);
     [_infoClients removeObject:client];
-	if (_infoClients.count == 0)
+    BOOL shouldSendRemove = (_infoClients.count == 0 && _active) ? YES : NO;
+    BOOL shouldSendFrameRemove = (isFrameClient && _active) ? YES : NO;
+	if (shouldSendRemove)
 	{
-		// Remove ourself from the server
-		NSString *serverUUID = [_serverDescription objectForKey:SyphonServerDescriptionUUIDKey];
-		if (_active)
-		{
-			SYPHONLOG(@"De-registering for info updates");
-			SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:serverUUID
-																		  protocol:SyphonMessagingProtocolCFMessage
-															   invalidationHandler:nil];
-			[sender send:_myUUID ofType:SyphonMessageTypeRemoveClientForInfo];
-			[sender release];
-			[self endConnectionHavingLock:YES];
-		}
+        [self endConnectionHavingLock:YES];
 	}
 	OSSpinLockUnlock(&_lock);
-}
+    if (shouldSendRemove || shouldSendFrameRemove)
+    {
+        // Remove ourself from the server
+        NSString *serverUUID = [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey];
+        SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:serverUUID
+                                                                      protocol:SyphonMessagingProtocolCFMessage
+                                                           invalidationHandler:nil];
 
-- (void)addFrameClient:(id)client
-{
-	OSSpinLockLock(&_lock);
-	if (_frameQueue == nil)
-	{
-		_frameQueue = dispatch_queue_create([_myUUID cStringUsingEncoding:NSUTF8StringEncoding], 0);
-		_frameClients = [[NSHashTable hashTableWithWeakObjects] retain];
-	}
-	OSSpinLockUnlock(&_lock);
-	// only access _frameClients within the queue
-	dispatch_sync(_frameQueue, ^{
-		[_frameClients addObject:client];
-	});
-	if (OSAtomicIncrement32(&_handlerCount) == 1)
-	{
-		SYPHONLOG(@"Registering for frame updates");
-		SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:[self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey]
-																	  protocol:SyphonMessagingProtocolCFMessage
-														   invalidationHandler:nil];
-		if (sender == nil)
-		{
-			SYPHONLOG(@"Failed to create connection to server with uuid:%@", [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);
-			[self endConnectionHavingLock:NO];
-		}
-		[sender send:_myUUID ofType:SyphonMessageTypeAddClientForFrames];
-		[sender release];
-	}
-}
-
-- (void)removeFrameClient:(id)client
-{
-	dispatch_sync(_frameQueue, ^{
-		[_frameClients removeObject:client];
-	});
-	if (OSAtomicDecrement32(&_handlerCount) == 0 && self.isValid)
-	{
-		SYPHONLOG(@"De-registering for frame updates");
-		SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:[self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey]
-																	  protocol:SyphonMessagingProtocolCFMessage
-														   invalidationHandler:nil];
-		if (sender == nil)
-		{
-			SYPHONLOG(@"Failed to create connection to server with uuid:%@", [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);
-			[self endConnectionHavingLock:NO];
-		}
-		[sender send:_myUUID ofType:SyphonMessageTypeRemoveClientForFrames];
-		[sender release];
-	}
+        if (shouldSendFrameRemove && OSAtomicDecrement32(&_handlerCount) == 0)
+        {
+            SYPHONLOG(@"De-registering for frame updates");
+            [sender send:_myUUID ofType:SyphonMessageTypeRemoveClientForFrames];
+        }
+        if (shouldSendRemove)
+        {
+            SYPHONLOG(@"De-registering for info updates");
+            [sender send:_myUUID ofType:SyphonMessageTypeRemoveClientForInfo];
+        }
+        [sender release];
+    }
 }
 
 - (NSString*) description

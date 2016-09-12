@@ -78,10 +78,8 @@
 }
 - (id)initWithServerDescription:(NSDictionary *)description;
 @property (readonly) BOOL isValid;
-- (void)addInfoClient:(id <SyphonInfoReceiving>)client;		// Must be
-- (void)removeInfoClient:(id <SyphonInfoReceiving>)client;	// paired
-- (void)addFrameClient:(id <SyphonFrameReceiving>)client;		// Must be
-- (void)removeFrameClient:(id <SyphonFrameReceiving>)client;	// paired
+- (void)addInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;     // Must be
+- (void)removeInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;  // paired
 @property (readonly) NSDictionary *serverDescription;
 - (SyphonImage *)newFrameForContext:(CGLContextObj)context;
 @property (readonly) NSUInteger frameID;
