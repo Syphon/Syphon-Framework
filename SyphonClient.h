@@ -54,7 +54,7 @@
 	int32_t			_lock;
     CGLContextObj   _context;
     SYPHON_IMAGE_UNIQUE_CLASS_NAME *_frame;
-    BOOL            _frameValid;
+    int32_t         _frameValid;
 }
 /*! 
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.

@@ -132,12 +132,11 @@
 
 - (void)invalidateFrame
 {
-    OSSpinLockLock(&_lock);
     /*
      Because releasing a SyphonImage causes a glDelete we postpone deletion until we can do work in the context
+     DO NOT take the lock here, it may already be locked and waiting for the SyphonClientConnectionManager lock
      */
-    _frameValid = NO;
-    OSSpinLockUnlock(&_lock);
+    OSAtomicTestAndClearBarrier(0, &_frameValid);
 }
 
 #pragma mark Rendering frames
@@ -154,11 +153,11 @@
 {
 	OSSpinLockLock(&_lock);
 	_lastFrameID = [(SyphonClientConnectionManager *)_connectionManager frameID];
-    if (_frameValid == NO)
+    if (_frameValid == 0)
     {
         [_frame release];
         _frame = [(SyphonClientConnectionManager *)_connectionManager newFrameForContext:_context];
-        _frameValid = YES;
+        OSAtomicTestAndSetBarrier(0, &_frameValid);
     }
 	OSSpinLockUnlock(&_lock);
 	return [_frame retain];
