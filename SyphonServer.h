@@ -28,7 +28,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 #import <OpenGL/OpenGL.h>
 
 /*! @name Server Options Dictionary Key Constants */

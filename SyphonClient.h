@@ -28,7 +28,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 #import <OpenGL/OpenGL.h>
 
 #define SYPHON_CLIENT_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonClient)
