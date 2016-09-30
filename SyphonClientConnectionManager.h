@@ -32,7 +32,7 @@
 #import <IOSurface/IOSurface.h>
 #import <libkern/OSAtomic.h>
 #import "SyphonMessaging.h"
-#import "SyphonIOSurfaceImage.h"
+#import "SyphonImage.h"
 
 /* This object handles messaging to and from the server.
 
