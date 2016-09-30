@@ -36,4 +36,8 @@
 
 bool SyphonOpenGLContextIsLegacy(CGLContextObj context);
 
+#ifdef SYPHON_CORE_SHARE
+CGLContextObj SyphonOpenGLCreateSharedContext(CGLContextObj context);
+#endif /* SYPHON_CORE_SHARE */
+
 #endif /* SyphonCGL_h */

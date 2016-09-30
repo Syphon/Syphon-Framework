@@ -40,3 +40,19 @@ bool SyphonOpenGLContextIsLegacy(CGLContextObj context)
         return true;
     return false;
 }
+
+#ifdef SYPHON_CORE_SHARE
+
+CGLContextObj SyphonOpenGLCreateSharedContext(CGLContextObj context)
+{
+    CGLPixelFormatObj format = CGLGetPixelFormat(context);
+    CGLContextObj result;
+    CGLError error = CGLCreateContext(format, context, &result);
+    if (error == kCGLNoError)
+    {
+        return result;
+    }
+    return NULL;
+}
+
+#endif
