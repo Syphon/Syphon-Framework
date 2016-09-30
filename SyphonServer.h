@@ -82,30 +82,16 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
 	BOOL _broadcasts;
 	
 	id _connectionManager;
-	
-	CGLContextObj cgl_ctx;
+    id _renderer;
+    CGLContextObj _shareContext; // TODO: delete if unused
 	
 	void  *_surfaceRef;
 	BOOL _pushPending;
 	SYPHON_IMAGE_UNIQUE_CLASS_NAME *_surfaceTexture;
-	GLuint _surfaceFBO;
 	
     BOOL _wantsContextChanges;
-    GLuint _wantedMSAASampleCount;
     
     GLint _virtualScreen;
-    GLenum _depthBufferResolution;
-    GLenum _stencilBufferResolution;
-    GLuint _depthBuffer;
-    GLuint _stencilBuffer;
-    BOOL _combinedDepthStencil;
-	GLuint _msaaSampleCount;
-	GLuint _msaaFBO;
-	GLuint _msaaColorBuffer;
-	
-	GLint _previousReadFBO;
-	GLint _previousDrawFBO;
-	GLint _previousFBO;
     
 	int32_t _mdLock;
 
