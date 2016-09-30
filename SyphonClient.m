@@ -31,6 +31,7 @@
 #import "SyphonClient.h"
 #import "SyphonPrivate.h"
 #import "SyphonClientConnectionManager.h"
+#import "SyphonCGL.h"
 
 #import <libkern/OSAtomic.h>
 
@@ -73,7 +74,19 @@
                                                              isFrameClient:handler != nil ? YES : NO];
 		
 		_lock = OS_SPINLOCK_INIT;
+#ifdef SYPHON_CORE_SHARE
+        _shareContext = CGLRetainContext(context);
+        if (SyphonOpenGLContextIsLegacy(context))
+        {
+            _context = CGLRetainContext(context);
+        }
+        else
+        {
+            _context = SyphonOpenGLCreateSharedContext(context);
+        }
+#else
         _context = CGLRetainContext(context);
+#endif
 	}
 	return self;
 }
@@ -109,7 +122,11 @@
 
 - (CGLContextObj)context
 {
+#ifdef SYPHON_CORE_SHARE
+    return _shareContext;
+#else
     return _context;
+#endif
 }
 
 - (BOOL)isValid

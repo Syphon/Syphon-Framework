@@ -30,6 +30,9 @@
 
 #import "SyphonClientConnectionManager.h"
 #import "SyphonPrivate.h"
+#import "SyphonCGL.h"
+#import "SyphonIOSurfaceImageCore.h"
+#import "SyphonIOSurfaceImageLegacy.h"
 
 #pragma mark Shared Instances
 
@@ -353,8 +356,15 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 {
 	SyphonImage *result;
 	OSSpinLockLock(&_lock);
-    
-    result = [[SyphonIOSurfaceImage alloc] initWithSurface:[self surfaceHavingLock] forContext:context];
+
+    if (SyphonOpenGLContextIsLegacy(context))
+    {
+        result = [[SyphonIOSurfaceImageLegacy alloc] initWithSurface:[self surfaceHavingLock] forContext:context];
+    }
+    else
+    {
+        result = [[SyphonIOSurfaceImageCore alloc] initWithSurface:[self surfaceHavingLock] forContext:context];
+    }
 	
 	OSSpinLockUnlock(&_lock);
 	return result;

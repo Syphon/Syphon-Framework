@@ -28,10 +28,7 @@
 */
 
 #import "SyphonIOSurfaceImage.h"
-#import <OpenGL/CGLMacro.h>
-// For IOSurface
 #import <IOSurface/IOSurface.h>
-#import <OpenGL/CGLIOSurface.h>
 
 @implementation SyphonIOSurfaceImage
 - (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context
@@ -48,48 +45,15 @@
 		cgl_ctx = CGLRetainContext(context);
 		_size.width = IOSurfaceGetWidth(surfaceRef);
 		_size.height = IOSurfaceGetHeight(surfaceRef);
-
-		glPushAttrib(GL_TEXTURE_BIT);
-		
-		// create the surface backed texture
-		glGenTextures(1, &_texture);
-		glEnable(GL_TEXTURE_RECTANGLE_ARB);
-		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, _texture);
-		
-		CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, GL_RGBA8, _size.width, _size.height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, _surface, 0);
-		
-		glPopAttrib();
-		
-		if(err != kCGLNoError)
-		{
-			SYPHONLOG(@"Error creating IOSurface texture: %s & %x", CGLErrorString(err), glGetError());
-			[self release];
-			return nil;
-		}
 	}
 	return self;
 }
 
-- (void)destroyResources
-{
-	// TODO: think about exposing this so it can be destroyed straight away in a GC app
-	if (_texture != 0)
-	{
-		glDeleteTextures(1, &_texture);
-	}
-	if (_surface) CFRelease(_surface);
-	if (cgl_ctx) CGLReleaseContext(cgl_ctx);
-}
-
 - (void)dealloc
 {
-	[self destroyResources];
+    if (_surface) CFRelease(_surface);
+    if (cgl_ctx) CGLReleaseContext(cgl_ctx);
 	[super dealloc];
-}
-
-- (GLuint)textureName
-{
-	return _texture;
 }
 
 - (NSSize)textureSize

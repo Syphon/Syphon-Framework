@@ -52,6 +52,7 @@
 	int32_t			_status;
 	int32_t			_lock;
     CGLContextObj   _context;
+    CGLContextObj   _shareContext; // TODO: delete if not used
     SYPHON_IMAGE_UNIQUE_CLASS_NAME *_frame;
     int32_t         _frameValid;
 }

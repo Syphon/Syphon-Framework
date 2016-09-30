@@ -33,7 +33,7 @@
 #define SYPHON_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonImage)
 
 /** 
- SyphonImage represents an image stored as an OpenGL texture of type GL_TEXTURE_RECTANGLE_ARB.
+ SyphonImage represents an image stored as an OpenGL texture of type GL_TEXTURE_RECTANGLE.
  */
 
 @interface SYPHON_IMAGE_UNIQUE_CLASS_NAME : NSObject {
@@ -41,7 +41,7 @@
 }
 
 /**
- A GLuint representing the texture name. The associated texture is of type GL_TEXTURE_RECTANGLE_ARB.
+ A GLuint representing the texture name. The associated texture is of type GL_TEXTURE_RECTANGLE.
  */
 @property (readonly) GLuint textureName;
 

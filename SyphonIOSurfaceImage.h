@@ -34,11 +34,11 @@
 #define SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonIOSurfaceImage)
 
 @interface SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME : SyphonImage {
-@private
+@protected
 	CGLContextObj cgl_ctx;
-	IOSurfaceRef _surface;
-	GLuint _texture;
 	NSSize _size;
+@private
+    IOSurfaceRef _surface;
 }
 - (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context;
 @end
