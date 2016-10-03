@@ -29,6 +29,7 @@
 
 
 #import "SyphonClient.h"
+#import "SyphonServerDirectory.h"
 #import "SyphonPrivate.h"
 #import "SyphonClientConnectionManager.h"
 
@@ -37,6 +38,9 @@
 #import <OpenGL/CGLMacro.h>
 
 @implementation SyphonClient
+
+static void *SyphonClientServersContext = &SyphonClientServersContext;
+
 #if SYPHON_DEBUG_NO_DRAWING
 + (void)load
 {
@@ -58,9 +62,18 @@
 	{
 		_status = 1;
 
-		NSNumber *dictionaryVersion = [description objectForKey:SyphonServerDescriptionDictionaryVersionKey];
 		_connectionManager = [[SyphonClientConnectionManager alloc] initWithServerDescription:description];
-		
+        _handler = [handler copy]; // copy don't retain
+        _lock = OS_SPINLOCK_INIT;
+        _context = CGLRetainContext(context);
+        _serverDescription = [description retain];
+
+        [[SyphonServerDirectory sharedDirectory] addObserver:self
+                                                  forKeyPath:@"servers"
+                                                     options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                                                     context:SyphonClientServersContext];
+
+        NSNumber *dictionaryVersion = [description objectForKey:SyphonServerDescriptionDictionaryVersionKey];
 		if (dictionaryVersion == nil
 			|| [dictionaryVersion unsignedIntValue] > kSyphonDictionaryVersion
 			|| _connectionManager == nil)
@@ -68,22 +81,19 @@
 			[self release];
 			return nil;
 		}
-
-        _handler = [handler copy]; // copy don't retain
 		
         [(SyphonClientConnectionManager *)_connectionManager addInfoClient:(id <SyphonInfoReceiving>)self
                                                              isFrameClient:handler != nil ? YES : NO];
-		
-		_lock = OS_SPINLOCK_INIT;
-        _context = CGLRetainContext(context);
 	}
 	return self;
 }
 
 - (void) dealloc
 {
+    [[SyphonServerDirectory sharedDirectory] removeObserver:self forKeyPath:@"servers"];
 	[self stop];
 	[_handler release];
+    [_serverDescription release];
 	[super dealloc];
 }
 
@@ -166,9 +176,39 @@
 - (NSDictionary *)serverDescription
 {
 	OSSpinLockLock(&_lock);
-	NSDictionary *description = ((SyphonClientConnectionManager *)_connectionManager).serverDescription;
+	NSDictionary *description = _serverDescription;
 	OSSpinLockUnlock(&_lock);
 	return description;
 }
 
+#pragma mark Changes
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if (context == SyphonClientServersContext)
+    {
+        NSUInteger kind = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
+        if (kind == NSKeyValueChangeSetting || kind == NSKeyValueChangeReplacement)
+        {
+            NSArray *servers = change[NSKeyValueChangeNewKey];
+            NSString *uuid = _serverDescription[SyphonServerDescriptionUUIDKey];
+            for (NSDictionary *description in servers) {
+                if ([description[SyphonServerDescriptionUUIDKey] isEqualToString:uuid] &&
+                    ![_serverDescription isEqualToDictionary:description])
+                {
+                    [self willChangeValueForKey:@"serverDescription"];
+                    description = [description copy];
+                    OSSpinLockLock(&_lock);
+                    [_serverDescription release];
+                    _serverDescription = description;
+                    OSSpinLockUnlock(&_lock);
+                    [self didChangeValueForKey:@"serverDescription"];
+                }
+            }
+        }
+    }
+    else
+    {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
 @end
