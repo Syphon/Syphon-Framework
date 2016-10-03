@@ -73,7 +73,6 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 }
 
 @interface SyphonClientConnectionManager (Private)
-- (void)setServerName:(NSString *)name;
 - (void)publishNewFrame;
 - (void)setSurfaceID:(IOSurfaceID)surfaceID;
 - (IOSurfaceRef)surfaceHavingLock;
@@ -87,10 +86,10 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
     self = [super init];
 	if (self)
 	{
-		NSString *serverUUID = [description objectForKey:SyphonServerDescriptionUUIDKey];
+		_serverUUID = [[description objectForKey:SyphonServerDescriptionUUIDKey] copy];
 		
 		// Return an existing instance for this server if we have one
-		id existing = SyphonClientPrivateCopyInstance(serverUUID);
+		id existing = SyphonClientPrivateCopyInstance(_serverUUID);
 		if (existing)
 		{
 			[self release];
@@ -111,22 +110,21 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		}
 		
 		_lock = OS_SPINLOCK_INIT;
-		_serverDescription = [[NSMutableDictionary alloc] initWithDictionary:description];
 		_myUUID = SyphonCreateUUIDString();
         _serverActive = YES; // Until we know better - SyphonClient has API behaviour depending on this
 
-		SyphonClientPrivateInsertInstance(self, serverUUID);
+		SyphonClientPrivateInsertInstance(self, _serverUUID);
 	}
 	return self;
 }
 
 - (void) dealloc
 {
-	SyphonClientPrivateRemoveInstance(self, [_serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);
+	SyphonClientPrivateRemoveInstance(self, _serverUUID);
 	if (_frameQueue) dispatch_release(_frameQueue);
 	[_frameClients release];
     [_infoClients release];
-	[_serverDescription release];
+	[_serverUUID release];
 	[_myUUID release];
 	[super dealloc];
 }
@@ -192,7 +190,8 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 					[self publishNewFrame];
 					break;
 				case SyphonMessageTypeUpdateServerName:
-					[self setServerName:(NSString *)data];
+                    // Ignore, handled by SyphonClient from SyphonServerDirectory now
+                    // https://github.com/Syphon/Syphon-Framework/issues/34
 					break;
 				case SyphonMessageTypeUpdateSurfaceID:
 					[self setSurfaceID:[(NSNumber *)data unsignedIntValue]];
@@ -227,14 +226,13 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	// We can do this outside the lock because we're not using any protected resources
 	if (shouldSendAdd || isFrameClient)
 	{
-        NSString *serverUUID = [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey];
-		SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:serverUUID
+		SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:_serverUUID
 																	  protocol:SyphonMessagingProtocolCFMessage
 														   invalidationHandler:nil];
 		
 		if (sender == nil)
 		{
-			SYPHONLOG(@"Failed to create connection to server with uuid:%@", serverUUID);
+			SYPHONLOG(@"Failed to create connection to server with uuid:%@", _serverUUID);
 			[self invalidateServerNotHavingLock];
 		}
         if (shouldSendAdd)
@@ -270,8 +268,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
     if (_serverActive && (shouldSendRemove || isFrameClient))
     {
         // Remove ourself from the server
-        NSString *serverUUID = [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey];
-        SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:serverUUID
+        SyphonMessageSender *sender = [[SyphonMessageSender alloc] initForName:_serverUUID
                                                                       protocol:SyphonMessagingProtocolCFMessage
                                                            invalidationHandler:nil];
 
@@ -291,35 +288,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 
 - (NSString*) description
 {
-	OSSpinLockLock(&_lock);
-	NSDictionary *description = [_serverDescription retain];
-	OSSpinLockUnlock(&_lock);
-	NSString *result = [NSString stringWithFormat:@"Server UUID: %@, Server Name: %@, Host Application: %@",
-						[description objectForKey:SyphonServerDescriptionUUIDKey],
-						[description objectForKey:SyphonServerDescriptionNameKey],
-						[description objectForKey:SyphonServerDescriptionAppNameKey], nil];
-	[description release];
-	return result;
-}
-
-- (NSDictionary *)serverDescription
-{
-	OSSpinLockLock(&_lock);
-	NSDictionary *description = [_serverDescription retain];
-	OSSpinLockUnlock(&_lock);
-	NSDictionary *result = [NSDictionary dictionaryWithDictionary:description];
-	[description release];
-	return result;
-}
-
-- (void)setServerName:(NSString *)name
-{
-	if (name)
-	{
-		OSSpinLockLock(&_lock);
-		[_serverDescription setObject:name forKey:SyphonServerDescriptionNameKey];
-		OSSpinLockUnlock(&_lock);
-	}
+	return [NSString stringWithFormat:@"Server UUID: %@", _serverUUID, nil];
 }
 
 - (void)publishNewFrame

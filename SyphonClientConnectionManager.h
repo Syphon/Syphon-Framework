@@ -67,7 +67,7 @@
 	IOSurfaceRef _surface;
 	uint32_t _lastSeed;
 	NSUInteger _frameID;
-	NSMutableDictionary *_serverDescription;
+	NSString *_serverUUID;
 	BOOL _serverActive;
 	SyphonMessageReceiver *_connection;
 	int32_t _handlerCount;
@@ -80,7 +80,6 @@
 @property (readonly) BOOL isValid;
 - (void)addInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;     // Must be
 - (void)removeInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;  // paired
-@property (readonly) NSDictionary *serverDescription;
 - (SyphonImage *)newFrameForContext:(CGLContextObj)context;
 @property (readonly) NSUInteger frameID;
 @end
