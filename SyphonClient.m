@@ -117,7 +117,7 @@
 - (BOOL)isValid
 {
 	OSSpinLockLock(&_lock);
-	BOOL result = (_connectionManager == nil ? NO : YES);
+	BOOL result = ((SyphonClientConnectionManager *)_connectionManager).isValid;
 	OSSpinLockUnlock(&_lock);
 	return result;
 }

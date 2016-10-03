@@ -110,7 +110,8 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		_lock = OS_SPINLOCK_INIT;
 		_serverDescription = [[NSMutableDictionary alloc] initWithDictionary:description];
 		_myUUID = SyphonCreateUUIDString();
-		
+        _serverActive = YES; // Until we know better - SyphonClient has API behaviour depending on this
+
 		SyphonClientPrivateInsertInstance(self, serverUUID);
 	}
 	return self;
@@ -135,11 +136,18 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	if (!hasLock) OSSpinLockLock(&_lock);
 	connection = _connection;
 	_connection = nil;
-	_active = NO;
     [self invalidateFramesHavingLock];
 	if (!hasLock) OSSpinLockUnlock(&_lock);
 	[connection invalidate];
 	[connection release];
+}
+
+- (void)invalidateServerNotHavingLock
+{
+    OSSpinLockLock(&_lock);
+    _serverActive = NO;
+    [self endConnectionHavingLock:YES];
+    OSSpinLockUnlock(&_lock);
 }
 
 - (void)invalidateFramesHavingLock
@@ -158,7 +166,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 {
 	BOOL result;
 	OSSpinLockLock(&_lock);
-	result = _active;
+	result = _serverActive;
 	OSSpinLockUnlock(&_lock);
 	return result;
 }
@@ -187,7 +195,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 					[self setSurfaceID:[(NSNumber *)data unsignedIntValue]];
 					break;
 				case SyphonMessageTypeRetireServer:
-					[self endConnectionHavingLock:NO];
+					[self invalidateServerNotHavingLock];
 					break;
 				default:
 					SYPHONLOG(@"Unknown message type #%u received", type);
@@ -197,7 +205,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		
 		if (_connection != nil)
 		{
-			_active = shouldSendAdd = YES;
+			shouldSendAdd = YES;
 		}
 	}
     if (isFrameClient && _frameQueue == nil)
@@ -224,7 +232,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		if (sender == nil)
 		{
 			SYPHONLOG(@"Failed to create connection to server with uuid:%@", serverUUID);
-			[self endConnectionHavingLock:NO];
+			[self invalidateServerNotHavingLock];
 		}
         if (shouldSendAdd)
         {
@@ -250,14 +258,13 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
     }
 	OSSpinLockLock(&_lock);
     [_infoClients removeObject:client];
-    BOOL shouldSendRemove = (_infoClients.count == 0 && _active) ? YES : NO;
-    BOOL shouldSendFrameRemove = (isFrameClient && _active) ? YES : NO;
+    BOOL shouldSendRemove = _infoClients.count == 0 ? YES : NO;
 	if (shouldSendRemove)
 	{
         [self endConnectionHavingLock:YES];
 	}
 	OSSpinLockUnlock(&_lock);
-    if (shouldSendRemove || shouldSendFrameRemove)
+    if (_serverActive && (shouldSendRemove || isFrameClient))
     {
         // Remove ourself from the server
         NSString *serverUUID = [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey];
@@ -265,7 +272,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
                                                                       protocol:SyphonMessagingProtocolCFMessage
                                                            invalidationHandler:nil];
 
-        if (shouldSendFrameRemove && OSAtomicDecrement32(&_handlerCount) == 0)
+        if (isFrameClient && OSAtomicDecrement32(&_handlerCount) == 0)
         {
             SYPHONLOG(@"De-registering for frame updates");
             [sender send:_myUUID ofType:SyphonMessageTypeRemoveClientForFrames];

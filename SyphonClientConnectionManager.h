@@ -68,7 +68,7 @@
 	uint32_t _lastSeed;
 	NSUInteger _frameID;
 	NSMutableDictionary *_serverDescription;
-	BOOL _active;
+	BOOL _serverActive;
 	SyphonMessageReceiver *_connection;
 	int32_t _handlerCount;
     NSHashTable *_infoClients;
