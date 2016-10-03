@@ -41,6 +41,18 @@
 
 static void *SyphonClientServersContext = &SyphonClientServersContext;
 
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey
+{
+    if ([theKey isEqualToString:@"serverDescription"])
+    {
+        return NO;
+    }
+    else
+    {
+        return [super automaticallyNotifiesObserversForKey:theKey];
+    }
+}
+
 #if SYPHON_DEBUG_NO_DRAWING
 + (void)load
 {
