@@ -247,7 +247,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 			pthread_mutex_unlock(&_generalLock);
 			pthread_mutex_unlock(&_mutateLock);
 			for (NSDictionary *description in retired) {
-				[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerRetireNotification object:description userInfo:nil];
+				[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerRetireNotification object:self userInfo:description];
 			}
 		});		
 	}
@@ -282,7 +282,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 		pthread_mutex_unlock(&_generalLock);
 		[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexSet forKey:@"servers"];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounceNotification object:serverInfo userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounceNotification object:self userInfo:serverInfo];
 	}
 	// unlock mutate lock
 	pthread_mutex_unlock(&_mutateLock);
@@ -312,7 +312,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 		pthread_mutex_unlock(&_generalLock);
 		[self didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexSet forKey:@"servers"];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerRetireNotification object:serverInfo userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerRetireNotification object:self userInfo:serverInfo];
 	}
 	// unlock mutate lock
 	pthread_mutex_unlock(&_mutateLock);
@@ -342,7 +342,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 		pthread_mutex_unlock(&_generalLock);
 		[self didChange:NSKeyValueChangeReplacement valuesAtIndexes:indexSet forKey:@"servers"];
 				
-		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerUpdateNotification object:serverInfo userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerUpdateNotification object:self userInfo:serverInfo];
 	}
 	pthread_mutex_unlock(&_mutateLock);
 }
