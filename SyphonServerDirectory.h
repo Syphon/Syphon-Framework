@@ -41,21 +41,21 @@ extern NSString * const SyphonServerDescriptionUUIDKey;
 
 /*!
  @relates SyphonServerDirectory
- The object for this key is a NSString which is the human-readable non-unique name for the SyphonServer. If this string exists and is non-empty, you should use it in interface elements to identify the server, usually in combination with the name of the server's application (see SyphonServerDescriptionAppNameKey).
+ The object for this key is a NSString which is the human-readable non-unique name for the SyphonServer. If this string exists and is non-empty, you should use it in interface elements to identify the server, usually in combination with the name of the server's application (see SyphonServerDescriptionAppNameKey). This key is not guaranteed to exist in the dictionary. May be nil.
 */
 
 extern NSString * const SyphonServerDescriptionNameKey;
 
 /*!
  @relates SyphonServerDirectory
- The object for this key is a NSString with the localized name of the application in which the SyphonServer is running. Use this in combination with the server's name (if present) to identify the server in interface elements.
+ The object for this key is a NSString with the localized name of the application in which the SyphonServer is running. Use this in combination with the server's name (if present) to identify the server in interface elements.  This key is not guaranteed to exist in the dictionary. May be nil.
 */
 
 extern NSString * const SyphonServerDescriptionAppNameKey;
 
 /*!
  @relates SyphonServerDirectory
- The object for this key is a NSImage representation of the icon of the application in which the SyphonServer is running.
+ The object for this key is a NSImage representation of the icon of the application in which the SyphonServer is running. This key is not guaranteed to exist in the dictionary. May be nil.
 */
 
 extern NSString * const SyphonServerDescriptionIconKey;
