@@ -34,7 +34,8 @@
 
 /*!
  @relates SyphonServerDirectory
- The object for this key is a NSString which uniquely identifies a SyphonServer instance. If two dictionaries contain the same string for this key, they represent the same server. This is provided solely to allow you to programmatically determine the identity of a server, and should never be displayed to users in interface elements.
+ The object for this key is a NSString which uniquely identifies a SyphonServer instance. If two dictionaries contain the same string for this key, they represent the same server. This is provided solely to allow you to programmatically determine the identity of a server, and should never be displayed to users in interface elements. This key is not guaranteed to exist in the dictionary. May be nil.
+
 */
 
 extern NSString * const SyphonServerDescriptionUUIDKey;
@@ -67,21 +68,21 @@ extern NSString * const SyphonServerDescriptionIconKey;
 
 /*!
  @relates SyphonServerDirectory
- A new SyphonServer is available on the system. The notification object is a NSDictionary describing the server.
+ A new SyphonServer is available on the system. The notification user info object is a NSDictionary describing the server which may contain SyphonServerDescription keys.
 */
 
 extern NSString * const SyphonServerAnnounceNotification;
 
 /*!
  @relates SyphonServerDirectory
- An existing SyphonServer instance has changed its description. The notification object is a NSDictionary describing the server.
+ An existing SyphonServer instance has changed its description. The notification user info object is a NSDictionary describing the server which may contain SyphonServerDescription keys.
 */
 
 extern NSString * const SyphonServerUpdateNotification;
 
 /*!
  @relates SyphonServerDirectory
- A SyphonServer instance will no longer be available. The notification object is a NSDictionary describing the retiring server.
+ A SyphonServer instance will no longer be available. The notification user info object is a NSDictionary describing the retiring server which may contain SyphonServerDescription keys.
 */
 
 extern NSString * const SyphonServerRetireNotification;
