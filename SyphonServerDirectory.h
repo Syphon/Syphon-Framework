@@ -34,7 +34,7 @@
 
 /*!
  @relates SyphonServerDirectory
- The object for this key is a NSString which uniquely identifies a SyphonServer instance. If two dictionaries contain the same string for this key, they represent the same server. This is provided solely to allow you to programmatically determine the identity of a server, and should never be displayed to users in interface elements. This key is not guaranteed to exist in the dictionary. May be nil.
+ The object for this key is a NSString which uniquely identifies a SyphonServer instance. If two dictionaries contain the same string for this key, they represent the same server. This is provided solely to allow you to programmatically determine the identity of a server, and should never be displayed to users in interface elements. This key is not guaranteed to exist in the dictionary.
 
 */
 
@@ -42,21 +42,21 @@ extern NSString * const SyphonServerDescriptionUUIDKey;
 
 /*!
  @relates SyphonServerDirectory
- The object for this key is a NSString which is the human-readable non-unique name for the SyphonServer. If this string exists and is non-empty, you should use it in interface elements to identify the server, usually in combination with the name of the server's application (see SyphonServerDescriptionAppNameKey). This key is not guaranteed to exist in the dictionary. May be nil.
+ The object for this key is a NSString which is the human-readable non-unique name for the SyphonServer. If this string exists and is non-empty, you should use it in interface elements to identify the server, usually in combination with the name of the server's application (see SyphonServerDescriptionAppNameKey). This key is not guaranteed to exist in the dictionary.
 */
 
 extern NSString * const SyphonServerDescriptionNameKey;
 
 /*!
  @relates SyphonServerDirectory
- The object for this key is a NSString with the localized name of the application in which the SyphonServer is running. Use this in combination with the server's name (if present) to identify the server in interface elements.  This key is not guaranteed to exist in the dictionary. May be nil.
+ The object for this key is a NSString with the localized name of the application in which the SyphonServer is running. Use this in combination with the server's name (if present) to identify the server in interface elements.  This key is not guaranteed to exist in the dictionary.
 */
 
 extern NSString * const SyphonServerDescriptionAppNameKey;
 
 /*!
  @relates SyphonServerDirectory
- The object for this key is a NSImage representation of the icon of the application in which the SyphonServer is running. This key is not guaranteed to exist in the dictionary. May be nil.
+ The object for this key is a NSImage representation of the icon of the application in which the SyphonServer is running. This key is not guaranteed to exist in the dictionary.
 */
 
 extern NSString * const SyphonServerDescriptionIconKey;
@@ -68,21 +68,21 @@ extern NSString * const SyphonServerDescriptionIconKey;
 
 /*!
  @relates SyphonServerDirectory
- A new SyphonServer is available on the system. The notification user info object is a NSDictionary describing the server which may contain SyphonServerDescription keys.
+ A new SyphonServer is available on the system. The notification object is the shared SyphonServerDirectory instance. The user info dictionary describes the server and may contain SyphonServerDescription keys.
 */
 
 extern NSString * const SyphonServerAnnounceNotification;
 
 /*!
  @relates SyphonServerDirectory
- An existing SyphonServer instance has changed its description. The notification user info object is a NSDictionary describing the server which may contain SyphonServerDescription keys.
+ An existing SyphonServer instance has changed its description. The notification object is the shared SyphonServerDirectory instance. The user info dictionary describes the server and may contain SyphonServerDescription keys.
 */
 
 extern NSString * const SyphonServerUpdateNotification;
 
 /*!
  @relates SyphonServerDirectory
- A SyphonServer instance will no longer be available. The notification user info object is a NSDictionary describing the retiring server which may contain SyphonServerDescription keys.
+ A SyphonServer instance will no longer be available.  The notification object is the shared SyphonServerDirectory instance. The user info dictionary describes the retiring server and may contain SyphonServerDescription keys.
 */
 
 extern NSString * const SyphonServerRetireNotification;
