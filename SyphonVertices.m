@@ -58,12 +58,12 @@
 - (void)setFloats:(GLfloat *)data count:(GLsizei)count
 {
 #ifdef SYPHON_CORE_RESTORE
-    // TODO: stash state
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prevVBO);
 #endif
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), data, GL_STATIC_DRAW);    
 #ifdef SYPHON_CORE_RESTORE
-    // TODO: restore state
+    glBindBuffer(GL_ARRAY_BUFFER, prevVBO);
 #else
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 #endif
@@ -72,14 +72,13 @@
 - (void)setAttributePointer:(GLint)index size:(GLsizei)size stride:(GLsizei)stride offset:(GLsizei)offset
 {
 #ifdef SYPHON_CORE_RESTORE
-    GLint prev;
-    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prev);
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prevVBO);
 #endif
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     glEnableVertexAttribArray(index);
     glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid *)(offset * sizeof(GLfloat)));
 #ifdef SYPHON_CORE_RESTORE
-    glBindBuffer(GL_ARRAY_BUFFER, prev);
+    glBindBuffer(GL_ARRAY_BUFFER, prevVBO);
 #else
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 #endif
@@ -87,11 +86,18 @@
 
 - (void)bind
 {
+#ifdef SYPHON_CORE_RESTORE
+    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &prevVAO);
+#endif
     glBindVertexArray(_vao);
 }
 
 - (void)unbind
 {
-    glBindVertexArray(0); // TODO: stash and restore for SYPHON_CORE_RESTORE
+#ifdef SYPHON_CORE_RESTORE
+    glBindVertexArray(GL_ARRAY_BUFFER, prevVAO);
+#else
+    glBindVertexArray(0);
+#endif
 }
 @end

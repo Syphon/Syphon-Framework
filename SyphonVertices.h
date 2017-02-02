@@ -34,6 +34,8 @@
 @private
     GLuint _vao;
     GLuint _vbo;
+    GLint prevVAO;
+    GLint prevVBO;
 }
 - (void)setFloats:(GLfloat *)data count:(GLsizei)count; // TODO: or similar
 // TODO: better name, clearer size v count naming
