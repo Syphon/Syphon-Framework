@@ -34,8 +34,10 @@
 @private
     GLuint _vao;
     GLuint _vbo;
+#ifdef SYPHON_CORE_RESTORE
     GLint prevVAO;
     GLint prevVBO;
+#endif
 }
 - (void)setFloats:(GLfloat *)data count:(GLsizei)count; // TODO: or similar
 // TODO: better name, clearer size v count naming
