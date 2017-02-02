@@ -383,6 +383,12 @@
     // render to our FBO with an IOSurface backed texture attachment (whew!)
 #ifdef SYPHON_CORE_RESTORE
     // TODO: preserve state
+    GLint prev;
+    if(target == GL_TEXTURE_RECTANGLE)
+        glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &prev);
+    else
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, &prev);
+    
 #endif
     // Setup OpenGL states
 #ifndef SYPHON_CORE_SHARE
@@ -405,6 +411,7 @@
 
 #ifdef SYPHON_CORE_RESTORE
     // TODO: restore state
+    glBindTexture(target, prev);
 #endif
 }
 
