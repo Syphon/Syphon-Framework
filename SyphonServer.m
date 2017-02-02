@@ -339,7 +339,7 @@ static void finalizer()
         return NO;
     }
     [_renderer bind];
-	#endif // SYPHON_DEBUG_NO_DRAWING
+#endif // SYPHON_DEBUG_NO_DRAWING
 	return YES;
 }
 
