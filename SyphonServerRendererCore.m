@@ -164,11 +164,12 @@
 #endif
 #ifdef SYPHON_CORE_RESTORE
     // save state
+    GLint previousReadFBO;
+    GLint previousDrawFBO;
     GLint previousRBO;
     // TODO: capture other state we change
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_previousFBO);
-    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &_previousReadFBO);
-    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &_previousDrawFBO);
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &previousReadFBO);
+    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &previousDrawFBO);
     glGetIntegerv(GL_RENDERBUFFER_BINDING, &previousRBO);
 #endif
     // no error
@@ -266,10 +267,9 @@
     }
 #ifdef SYPHON_CORE_RESTORE
     // restore state
-    glBindRenderbufferEXT(GL_RENDERBUFFER, previousRBO);
-    glBindFramebufferEXT(GL_FRAMEBUFFER, _previousFBO);
-    glBindFramebufferEXT(GL_READ_FRAMEBUFFER, _previousReadFBO);
-    glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER, _previousDrawFBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, previousRBO);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, previousReadFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, previousDrawFBO);
     // TODO: restore other saved state
 #endif
 }
@@ -302,7 +302,6 @@
 - (void)bind
 {
 #ifdef SYPHON_CORE_RESTORE
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_previousFBO);
     glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &_previousReadFBO);
     glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &_previousDrawFBO);
 #endif
@@ -334,7 +333,6 @@
 
 #ifdef SYPHON_CORE_RESTORE
     // restore state
-    glBindFramebuffer(GL_FRAMEBUFFER, _previousFBO);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _previousReadFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _previousDrawFBO);
 #endif

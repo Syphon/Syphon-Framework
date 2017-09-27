@@ -43,5 +43,9 @@
     CGLContextObj   _prevContext;
     SyphonServerShader  *_shader;
     SyphonServerVertices *_vertices;
+#ifdef SYPHON_CORE_RESTORE
+    GLint _previousReadFBO;
+    GLint _previousDrawFBO;
+#endif
 }
 @end
