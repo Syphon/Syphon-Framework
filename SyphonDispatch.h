@@ -52,14 +52,14 @@ typedef struct SyphonDispatchSource *SyphonDispatchSourceRef;
  SyphonDispatchSourceCreate
 	Creates a new dispatch source using the supplied block, which takes no arguments and returns no value.
  */
-SyphonDispatchSourceRef SyphonDispatchSourceCreate(void (^block)());
+SyphonDispatchSourceRef SyphonDispatchSourceCreate(void (^block)(void));
 
 /*
  SyphonDispatchSourceSetCompletionBlock
 	Sets a block to be invoked after the last reference to the source is released and all firings have been executed.
 	The provided block takes no arguments and returns no value.
  */
-void SyphonDispatchSourceSetCompletionBlock(SyphonDispatchSourceRef source, void (^block)());
+void SyphonDispatchSourceSetCompletionBlock(SyphonDispatchSourceRef source, void (^block)(void));
 
 /*
  SyphonDispatchSourceRetain

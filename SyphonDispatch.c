@@ -87,7 +87,7 @@ static void _SyphonDispatchChannelDestroy(SyphonDispatchChannel *channel);
  _SyphonDispatchGetWorkSemaphore()
 	Returns the global work semaphore to signal work done
  */
-static dispatch_semaphore_t _SyphonDispatchGetWorkSemaphore();
+static dispatch_semaphore_t _SyphonDispatchGetWorkSemaphore(void);
 
 typedef struct SyphonDispatchSource
 {
@@ -217,10 +217,10 @@ SyphonDispatchSourceRef SyphonDispatchSourceCreate(void (^block)(void))
 
 }
 
-void SyphonDispatchSourceSetCompletionBlock(SyphonDispatchSourceRef source, void (^block)())
+void SyphonDispatchSourceSetCompletionBlock(SyphonDispatchSourceRef source, void (^block)(void))
 {
-	void (^copied)() = Block_copy(block);
-	void (^old)();
+    void (^copied)(void) = Block_copy(block);
+    void (^old)(void);
 	bool result;
 	do {
 		old = source->cblock;
