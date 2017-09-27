@@ -35,8 +35,7 @@
     GLuint _vao;
     GLuint _vbo;
 #ifdef SYPHON_CORE_RESTORE
-    GLint prevVAO;
-    GLint prevVBO;
+    GLint _prevVAO;
 #endif
 }
 - (void)setFloats:(GLfloat *)data count:(GLsizei)count; // TODO: or similar
