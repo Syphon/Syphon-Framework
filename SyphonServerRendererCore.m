@@ -134,19 +134,19 @@
 
     if(_msaaColorBuffer != 0)
     {
-        glDeleteFramebuffers(1, &_msaaColorBuffer);
+        glDeleteRenderbuffers(1, &_msaaColorBuffer);
         _msaaColorBuffer = 0;
     }
 
     if(_depthBuffer != 0)
     {
-        glDeleteFramebuffers(1, &_depthBuffer);
+        glDeleteRenderbuffers(1, &_depthBuffer);
         _depthBuffer = 0;
     }
 
     if (_stencilBuffer != 0)
     {
-        glDeleteFramebuffers(1, &_stencilBuffer);
+        glDeleteRenderbuffers(1, &_stencilBuffer);
         _stencilBuffer = 0;
     }
 
