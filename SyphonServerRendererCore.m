@@ -280,6 +280,9 @@
     glBindFramebuffer(GL_READ_FRAMEBUFFER, previousReadFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, previousDrawFBO);
     // TODO: restore other saved state
+#else
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
 }
 
@@ -344,6 +347,9 @@
     // restore state
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _previousReadFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _previousDrawFBO);
+#else
+    // restore default FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
 }
 
@@ -419,6 +425,8 @@
 #ifdef SYPHON_CORE_RESTORE
     // TODO: restore state
     glBindTexture(target, prev);
+#else
+    glBindTexture(target, 0);
 #endif
 }
 
