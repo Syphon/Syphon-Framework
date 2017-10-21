@@ -319,19 +319,26 @@ static void finalizer()
 	return ((SyphonServerConnectionManager *)_connectionManager).hasClients;
 }
 
-- (BOOL)bindToDrawFrameOfSize:(NSSize)size
+- (BOOL)bindToDrawFrameOfSize:(NSSize)size inContext:(BOOL)isInContext
 {
 	// TODO: we should probably check we're not already bound and raise an exception here
 	// to enforce proper use
 #if !SYPHON_DEBUG_NO_DRAWING
-    [_renderer beginInContext];
     // If we have changed screens, we need to check we can still use any extensions we rely on
 	// If the dimensions of the image have changed, rebuild the IOSurface/FBO/Texture combo.
 	if((_wantsContextChanges && [self capabilitiesDidChange]) || ! NSEqualSizes(_surfaceTexture.textureSize, size)) 
 	{
-		[self destroyIOSurface];
-		[self setupIOSurfaceForSize:size];
-		_pushPending = YES;
+        if (!isInContext)
+        {
+            [_renderer beginInContext];
+        }
+        [self destroyIOSurface];
+        [self setupIOSurfaceForSize:size];
+        if (!isInContext)
+        {
+            [_renderer endInContext];
+        }
+        _pushPending = YES;
 	}
 	
     if (_surfaceTexture == nil)
@@ -341,6 +348,11 @@ static void finalizer()
     [_renderer bind];
 #endif // SYPHON_DEBUG_NO_DRAWING
 	return YES;
+}
+
+- (BOOL)bindToDrawFrameOfSize:(NSSize)size
+{
+    return [self bindToDrawFrameOfSize:size inContext:NO];
 }
 
 - (void)unbindAndPublish
@@ -360,21 +372,21 @@ static void finalizer()
 		[(SyphonServerConnectionManager *)_connectionManager setSurfaceID:IOSurfaceGetID(_surfaceRef)];
 		_pushPending = NO;
 	}
-#if !SYPHON_DEBUG_NO_DRAWING
-    [_renderer endInContext];
-#endif
 	[(SyphonServerConnectionManager *)_connectionManager publishNewFrame];
 }
 
 - (void)publishFrameTexture:(GLuint)texID textureTarget:(GLenum)target imageRegion:(NSRect)region textureDimensions:(NSSize)size flipped:(BOOL)isFlipped
 {
-	if(texID != 0 && ((target == SYPHON_GL_TEXTURE_2D) || (target == SYPHON_GL_TEXTURE_RECT)) && [self bindToDrawFrameOfSize:region.size])
+    [_renderer beginInContext];
+	if(texID != 0 && ((target == SYPHON_GL_TEXTURE_2D) || (target == SYPHON_GL_TEXTURE_RECT)) &&
+       [self bindToDrawFrameOfSize:region.size inContext:YES])
 	{
 #if !SYPHON_DEBUG_NO_DRAWING
         [_renderer drawFrameTexture:texID textureTarget:target imageRegion:region textureDimensions:size flipped:isFlipped];
 #endif // SYPHON_DEBUG_NO_DRAWING
 		[self unbindAndPublish];
 	}
+    [_renderer endInContext];
 }
 
 - (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage
