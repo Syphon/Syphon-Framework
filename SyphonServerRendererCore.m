@@ -371,8 +371,8 @@
         [_vertices bind];
         GLint vertLoc = _shader.vertexAttribLocation;
         GLint texVertLoc = _shader.textureVertexAttribLocation;
-        [_vertices setAttributePointer:vertLoc size:2 stride:4 offset:0];
-        [_vertices setAttributePointer:texVertLoc size:2 stride:4 offset:2];
+        [_vertices setAttributePointer:vertLoc components:2 stride:4 offset:0];
+        [_vertices setAttributePointer:texVertLoc components:2 stride:4 offset:2];
         [_shader endProgram]; // TODO: could avoid this end/use cycle
         [_vertices unbind];
     }

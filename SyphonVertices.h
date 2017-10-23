@@ -38,9 +38,8 @@
     GLint _prevVAO;
 #endif
 }
-- (void)setFloats:(GLfloat *)data count:(GLsizei)count; // TODO: or similar
-// TODO: better name, clearer size v count naming
-- (void)setAttributePointer:(GLint)index size:(GLsizei)size stride:(GLsizei)stride offset:(GLsizei)offset;
+- (void)setFloats:(GLfloat *)data count:(GLsizei)count;
+- (void)setAttributePointer:(GLint)index components:(GLsizei)components stride:(GLsizei)stride offset:(GLsizei)offset;
 - (void)bind;
 - (void)unbind;
 @end

@@ -70,7 +70,7 @@
 #endif
 }
 
-- (void)setAttributePointer:(GLint)index size:(GLsizei)size stride:(GLsizei)stride offset:(GLsizei)offset
+- (void)setAttributePointer:(GLint)index components:(GLsizei)components stride:(GLsizei)stride offset:(GLsizei)offset
 {
 #ifdef SYPHON_CORE_RESTORE
     GLint prevVBO;
@@ -78,7 +78,7 @@
 #endif
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     glEnableVertexAttribArray(index);
-    glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid *)(offset * sizeof(GLfloat)));
+    glVertexAttribPointer(index, components, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid *)(offset * sizeof(GLfloat)));
 #ifdef SYPHON_CORE_RESTORE
     glBindBuffer(GL_ARRAY_BUFFER, prevVBO);
 #else
