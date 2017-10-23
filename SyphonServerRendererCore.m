@@ -42,7 +42,6 @@
     self = [super initWithContext:context MSAASampleCount:msc depthBufferResolution:dbr stencilBufferResolution:sbr];
     if (self)
     {
-        // TODO: perhaps have a setup method called before use but after init, which does begin/endInContext?
         [self beginInContext];
 #ifdef SYPHON_CORE_SHARE
 #ifdef SYPHON_CORE_RESTORE
@@ -58,7 +57,6 @@
 #else
         SYPHONLOG(@"Neither SYPHON_CORE_RESTORE nor SYPHON_CORE_SHARE are in use");
 #endif
-        _vertices = [[SyphonServerVertices alloc] init];
         [self endInContext];
     }
     return self;
@@ -360,6 +358,11 @@
 
 - (void)drawFrameTexture:(GLuint)texID textureTarget:(GLenum)target imageRegion:(NSRect)region textureDimensions:(NSSize)size flipped:(BOOL)isFlipped
 {
+    if (_vertices == nil)
+    {
+        _vertices = [[SyphonServerVertices alloc] init];
+    }
+
     if (target != _shader.target)
     {
         [_shader release];
