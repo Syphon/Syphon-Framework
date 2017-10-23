@@ -74,8 +74,7 @@ void main() {\
     if (self)
     {
         _target = target;
-        GLint texLoc = [self getUniformLocation:@"tex"];
-        [self setUniform:texLoc integerValue:0]; // TODO: this is the default isn't it?
+        // No need to set tex uniform location, it's default 0
         _vertexAttrib = [self getAttributeLocation:@"vertCoord"];
         _textureVertexAttrib = [self getAttributeLocation:@"texCoord"];
     }

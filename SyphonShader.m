@@ -122,21 +122,9 @@
 
 }
 
-- (GLint)getUniformLocation:(NSString *)name
-{
-    return glGetUniformLocation(_program, [name cStringUsingEncoding:NSASCIIStringEncoding]);
-}
-
-- (void)setUniform:(GLint)location integerValue:(GLint)value
-{
-    glProgramUniform1i(_program, location, value);
-}
-
 - (GLint)getAttributeLocation:(NSString *)name
 {
     return glGetAttribLocation(_program, [name cStringUsingEncoding:NSASCIIStringEncoding]);
 }
-
-// TODO: etc
 
 @end

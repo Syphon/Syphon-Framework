@@ -39,7 +39,5 @@
 - (instancetype)initWithVertexShader:(NSString *)vert fragmentShader:(NSString *)frag;
 - (void)useProgram;
 - (void)endProgram;
-- (GLint)getUniformLocation:(NSString *)uniform; // TODO: or don't expose and roll into setUniform...:
 - (GLint)getAttributeLocation:(NSString *)name;
-- (void)setUniform:(GLint)location integerValue:(GLint)value;
 @end
