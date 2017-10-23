@@ -114,7 +114,7 @@
     return didChange;
 }
 
-- (void)destroyResources
+- (void)destroySizedResources
 {
     if(_msaaFBO != 0)
     {
@@ -146,7 +146,7 @@
         _surfaceFBO = 0;
     }
     // TODO: could destroy shader, vertices at this point too
-    [super destroyResources];
+    [super destroySizedResources];
 }
 
 - (SyphonImage *)newImageForSurface:(IOSurfaceRef)surface
@@ -262,7 +262,7 @@
     if(status != GL_FRAMEBUFFER_COMPLETE)
     {
         SYPHONLOG(@"SyphonServer: Cannot create FBO (OpenGL Error %04X)", status);
-        [self destroyResources];
+        [self destroySizedResources];
     }
 #ifdef SYPHON_CORE_RESTORE
     // restore state

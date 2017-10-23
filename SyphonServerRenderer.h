@@ -51,7 +51,7 @@
 - (void)beginInContext; // Called once before any number of the following are called
 - (void)endInContext; // Called once after any number of the following have been called
 - (BOOL)capabilitiesDidChange; // Called when the context's capabilities have changed, returns YES if the renderer changes its configuration
-- (void)destroyResources; // TODO: OR destroySizedResources or somesuch
+- (void)destroySizedResources;
 - (SyphonImage *)newImageForSurface:(IOSurfaceRef)surface;
 - (void)setupForBackingTexture:(GLuint)backing width:(GLsizei)width height:(GLsizei)height;
 - (void)bind;

@@ -68,7 +68,7 @@
 - (void)dealloc
 {
     [self beginInContext];
-    [self destroyResources];
+    [self destroySizedResources];
     [self endInContext];
     CGLReleaseContext(_context);
     [super dealloc];
@@ -119,7 +119,7 @@
     return NO;
 }
 
-- (void)destroyResources
+- (void)destroySizedResources
 {
 
 }

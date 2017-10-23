@@ -150,7 +150,7 @@ static void finalizer()
         GLuint depthBufferResolution = [[self class] integerValueForKey:SyphonServerOptionDepthBufferResolution fromOptions:options];
         GLuint stencilBufferResolution = [[self class] integerValueForKey:SyphonServerOptionStencilBufferResolution fromOptions:options];
 
-		if (MSAASampleCount > 0 || stencilBufferResolution > 0)
+        if (MSAASampleCount > 0 || stencilBufferResolution > 0)
         {
             // TODO: update comment if these remain for both core and legacy GL
             // If we have a stencil buffer we will try to use the GL_EXT_packed_depth_stencil extension
@@ -435,7 +435,7 @@ static void finalizer()
     }
     else
     {
-        [_renderer destroyResources];
+        [_renderer destroySizedResources];
     }
 #endif // SYPHON_DEBUG_NO_DRAWING
 }
@@ -443,7 +443,7 @@ static void finalizer()
 - (void) destroyIOSurface
 {
 #if !SYPHON_DEBUG_NO_DRAWING
-    [_renderer destroyResources];
+    [_renderer destroySizedResources];
 	if (_surfaceRef != NULL)
 	{		
 		CFRelease(_surfaceRef);

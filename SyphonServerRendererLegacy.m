@@ -96,7 +96,7 @@
     return didChange;
 }
 
-- (void)destroyResources
+- (void)destroySizedResources
 {
     if(_msaaFBO != 0)
     {
@@ -127,7 +127,7 @@
         glDeleteFramebuffersEXT(1, &_surfaceFBO);
         _surfaceFBO = 0;
     }
-    [super destroyResources];
+    [super destroySizedResources];
 }
 
 - (SyphonImage *)newImageForSurface:(IOSurfaceRef)surface
@@ -235,7 +235,7 @@
     if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
     {
         SYPHONLOG(@"SyphonServer: Cannot create FBO (OpenGL Error %04X)", status);
-        [self destroyResources];
+        [self destroySizedResources];
     }
 
     // restore state
