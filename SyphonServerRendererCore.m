@@ -111,9 +111,6 @@
         _actualMSAASampleCount = newMSAASampleCount;
     }
 
-    /*
-     // TODO: check status of separate depth/stencil buffers if needed?
-     */
     return didChange;
 }
 
@@ -176,11 +173,11 @@
 #endif
     // no error
     GLenum status;
-    BOOL combineDepthStencil = self.depthBufferFormat != 0 && self.stencilBufferFormat != 0 ? YES : NO;
-    // TODO: always combine depth/stencil?
+    // If a stencil buffer is requested, always use a combined attachment - support for distinct attachments
+    // is optional
+    BOOL combineDepthStencil = self.stencilBufferFormat != 0 ? YES : NO;
     if (combineDepthStencil)
     {
-        // TODO: check the following
         GLenum format = self.depthBufferFormat == GL_DEPTH_COMPONENT32 ? GL_DEPTH32F_STENCIL8 : GL_DEPTH24_STENCIL8;
         _depthBuffer = [self newRenderbufferForInternalFormat:format];
     }
