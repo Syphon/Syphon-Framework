@@ -29,7 +29,6 @@
 #import "SyphonServerShader.h"
 #import <OpenGL/gl3.h>
 
-// TODO: one to one
 static NSString * const vertSource = @"#version 150\n\
 in vec2 vertCoord;\
 in vec2 texCoord;\

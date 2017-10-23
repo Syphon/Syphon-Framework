@@ -145,7 +145,6 @@
         glDeleteFramebuffers(1, &_surfaceFBO);
         _surfaceFBO = 0;
     }
-    // TODO: could destroy shader, vertices at this point too
     [super destroySizedResources];
 }
 
@@ -365,7 +364,7 @@
         GLint texVertLoc = _shader.textureVertexAttribLocation;
         [_vertices setAttributePointer:vertLoc components:2 stride:4 offset:0];
         [_vertices setAttributePointer:texVertLoc components:2 stride:4 offset:2];
-        [_shader endProgram]; // TODO: could avoid this end/use cycle
+        [_shader endProgram];
         [_vertices unbind];
     }
 
@@ -410,7 +409,6 @@
     // dont bother clearing. we dont have any alpha so we just write over the buffer contents. saves us a write.
     glBindTexture(target, texID);
 
-    // TODO: if our own context, these could always be used/bound?
     [_shader useProgram];
     [_vertices bind];
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
