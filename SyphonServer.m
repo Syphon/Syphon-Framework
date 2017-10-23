@@ -150,11 +150,10 @@ static void finalizer()
         GLuint depthBufferResolution = [[self class] integerValueForKey:SyphonServerOptionDepthBufferResolution fromOptions:options];
         GLuint stencilBufferResolution = [[self class] integerValueForKey:SyphonServerOptionStencilBufferResolution fromOptions:options];
 
-        if (MSAASampleCount > 0 || stencilBufferResolution > 0)
+		if (MSAASampleCount > 0 || (stencilBufferResolution > 0 && SyphonOpenGLContextIsLegacy(context)))
         {
-            // TODO: update comment if these remain for both core and legacy GL
-            // If we have a stencil buffer we will try to use the GL_EXT_packed_depth_stencil extension
-            // so we need to know about changes to the context's abilities
+            // For MSAA we need to check we don't exceed GL_MAX_SAMPLES when the context changes
+            // If we have a stencil buffer in a Legacy context, we rely on the GL_EXT_packed_depth_stencil extension
             _wantsContextChanges = YES;
         }
 
@@ -164,7 +163,7 @@ static void finalizer()
         if (SyphonOpenGLContextIsLegacy(context))
         {
             _renderer = [[SyphonServerRendererLegacy alloc] initWithContext:context
-                                                            MSAASampleCount:MSAASampleCount // TODO: type for this argument?
+                                                            MSAASampleCount:MSAASampleCount
                                                       depthBufferResolution:depthBufferResolution
                                                     stencilBufferResolution:stencilBufferResolution];
         }
@@ -406,7 +405,9 @@ static void finalizer()
     if (screen != _virtualScreen)
     {
         _virtualScreen = screen;
+        [_renderer beginInContext];
         BOOL changed = [_renderer capabilitiesDidChange];
+        [_renderer endInContext];
         SYPHONLOG(@"SyphonServer: renderer change, required capabilities %@", changed ? @"changed" : @"did not change");
         return changed;
     }
