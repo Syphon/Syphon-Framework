@@ -42,22 +42,17 @@
     self = [super initWithContext:context MSAASampleCount:msc depthBufferResolution:dbr stencilBufferResolution:sbr];
     if (self)
     {
-        [self beginInContext];
+        // TODO: delete this logging
 #ifdef SYPHON_CORE_SHARE
 #ifdef SYPHON_CORE_RESTORE
 #error SYPHON_CORE_SHARE and SYPHON_CORE_RESTORE shouldn't both be defined
 #endif
-        // TODO: delete this logging
         SYPHONLOG(@"SYPHON_CORE_SHARE");
-        // Permanently disable this when we are the only user of the context
-        // TODO: and anything else
-        glDisable(GL_BLEND);
 #elif defined(SYPHON_CORE_RESTORE)
         SYPHONLOG(@"SYPHON_CORE_RESTORE");
 #else
         SYPHONLOG(@"Neither SYPHON_CORE_RESTORE nor SYPHON_CORE_SHARE are in use");
 #endif
-        [self endInContext];
     }
     return self;
 }
