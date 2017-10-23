@@ -83,7 +83,7 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
 	
 	id _connectionManager;
     id _renderer;
-    CGLContextObj _shareContext; // TODO: delete if unused
+    CGLContextObj _shareContext;
 	
 	void  *_surfaceRef;
 	BOOL _pushPending;
