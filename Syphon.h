@@ -56,7 +56,7 @@
  
  The Syphon framework provides the classes necessary to add Syphon support to your application. SyphonServer is used to make frames available to other applications. SyphonServerDirectory is used to discover available servers. SyphonClient is used to connect to and receive frames from a SyphonServer.
  
- The framework <em>requires</em> MacOS X 10.6 or later. Syphon makes use of IOSurface, which is a 10.6-only technology. Syphon takes advantage of other 10.6 features such as blocks, and is compatible with garbage-collection.
+ The framework <em>requires</em> MacOS X 10.6 or later.
  
  To include Syphon in your application, follow these steps:
  
