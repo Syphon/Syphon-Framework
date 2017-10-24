@@ -56,7 +56,7 @@
  
  The Syphon framework provides the classes necessary to add Syphon support to your application. SyphonServer is used to make frames available to other applications. SyphonServerDirectory is used to discover available servers. SyphonClient is used to connect to and receive frames from a SyphonServer.
  
- The framework <em>requires</em> MacOS X 10.6 or later. Syphon makes use of IOSurface, which is a 10.6-only technology. Syphon takes advantage of other 10.6 features such as blocks, and is compatible with garbage-collection.
+ The framework <em>requires</em> MacOS X 10.6 or later.
  
  To include Syphon in your application, follow these steps:
  
@@ -122,7 +122,7 @@
  Usually you create a client with a server description dictionary you obtained from SyphonServerDirectory:
  
  @code
- SyphonClient *myClient = [[SyphonClient alloc] initWithServerDescription:description options:nil newFrameHandler:^(SyphonClient *client) {
+ SyphonClient *myClient = [[SyphonClient alloc] initWithServerDescription:description context:cgl_ctx options:nil newFrameHandler:^(SyphonClient *client) {
 	[myView setNeedsDisplay:YES];
  }];
  @endcode
@@ -132,7 +132,7 @@
  When you are ready to draw:
  
  @code
- SyphonImage *myFrame = [myClient newFrameImageForContext:cgl_ctx];
+ SyphonImage *myFrame = [myClient newFrameImage];
  if (myFrame)
  {
 	GLuint tex = myFrame.textureName;
@@ -171,7 +171,7 @@
  
  @section help More examples and help
  
- Example projects implementing a server and client are included with the Syphon SDK. You can also examine the source to the provided Syphon implementations at their <a href="http://code.google.com/p/syphon-implementations/"  target="_blank">Google Code project</a>.
+ Example projects implementing a server and client are included with the Syphon SDK. You can also examine the source to some Syphon implementations on <a href="https://github.com/Syphon">GitHub</a>.
  
  Use the <a href="http://forums.v002.info/forum.php?id=7" target="_blank">Syphon developer forum</a> to ask questions, and for any development related discussion.
  
@@ -179,6 +179,6 @@
  
  @section framework_dev Framework development
  
- If you'd like to examine the framework's source code, report a bug, or get involved in development, head on over to the <a href="http://code.google.com/p/syphon-framework/" target="_blank">Syphon framework Google Code project.</a>
+ If you'd like to examine the framework's source code, report a bug, or get involved in development, head on over to the <a href="https://github.com/Syphon/Syphon-Framework">Syphon framework GitHub project.</a>
  
  */

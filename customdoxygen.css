@@ -1,0 +1,13 @@
+/* The standard CSS for doxygen 1.8.13 */
+
+body, table, div, p, dl {
+    font-family: Lucida Grande, Verdana, Geneva, Arial, sans-serif;
+    font-size: 12px;
+}
+
+p.reference, p.definition {
+	font-family: Lucida Grande, Verdana, Geneva, Arial, sans-serif;
+    font-size: 12px;
+}
+
+/* @end */

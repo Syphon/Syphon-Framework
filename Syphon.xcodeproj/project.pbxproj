@@ -135,9 +135,8 @@
 		BDB8DA2C1211F59A0028D250 /* SyphonMachMessageSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMachMessageSender.m; sourceTree = "<group>"; };
 		BDB8DAF31211FA7F0028D250 /* SyphonMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMessaging.h; sourceTree = "<group>"; };
 		BDB8DAF41211FA7F0028D250 /* SyphonMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMessaging.m; sourceTree = "<group>"; };
-		BDCB92AF127A3C9A00C9E06E /* doxygen.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = doxygen.css; sourceTree = "<group>"; };
+		BDCB92AF127A3C9A00C9E06E /* customdoxygen.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = customdoxygen.css; sourceTree = "<group>"; };
 		BDCB92B0127A3C9A00C9E06E /* footer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = footer.html; sourceTree = "<group>"; };
-		BDCB92B1127A3C9A00C9E06E /* header.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = header.html; sourceTree = "<group>"; };
 		BDCB9399127ADEBF00C9E06E /* DoxygenLayout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = DoxygenLayout.xml; sourceTree = "<group>"; };
 		BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonOpenGLFunctions.c; sourceTree = "<group>"; };
 		BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLFunctions.h; sourceTree = "<group>"; };
@@ -370,10 +369,9 @@
 		BDCB92AE127A3C7200C9E06E /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
-				BDCB92AF127A3C9A00C9E06E /* doxygen.css */,
+				BDCB92AF127A3C9A00C9E06E /* customdoxygen.css */,
 				BDCB9399127ADEBF00C9E06E /* DoxygenLayout.xml */,
 				BDCB92B0127A3C9A00C9E06E /* footer.html */,
-				BDCB92B1127A3C9A00C9E06E /* header.html */,
 				BD909AA21277BF9D00CC898A /* doxygen.config */,
 			);
 			name = Documentation;
@@ -526,9 +524,8 @@
 				"$(SRCROOT)/SyphonServer.h",
 				"$(SRCROOT)/doxygen.config",
 				"$(SRCROOT)/Syphon.h",
-				"$(SRCROOT)/doxygen.css",
+				"$(SRCROOT)/customdoxygen.css",
 				"$(SRCROOT)/footer.html",
-				"$(SRCROOT)/header.html",
 				"$(SRCROOT)/DoxygenLayout.xml",
 			);
 			outputPaths = (
@@ -536,7 +533,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#  Syphon doxygen script based on http://developer.apple.com/tools/creatingdocsetswithdoxygen.html\n#  Build the doxygen documentation for the project and load the docset into Xcode.\n\n#  Use the following to adjust the value of the $DOXYGEN_PATH User-Defined Setting:\n#    Binary install location: /Applications/Doxygen.app/Contents/Resources/doxygen\n#    Source build install location: /usr/local/bin/doxygen\n\n#  If the config file doesn't exist, run 'doxygen -g $SOURCE_ROOT/doxygen.config' to \n#   a get default file.\n\nif ! [ -f \"$SOURCE_ROOT/doxygen.config\" ] \nthen \n  echo doxygen config file does not exist\n  $DOXYGEN_PATH -g \"$SOURCE_ROOT/doxygen.config\"\nfi\n\n# Make the Derived File directory if it doesn't exist, and delete previous output\nmkdir -p \"$DERIVED_FILE_DIR\"\nrm -rf \"$DERIVED_FILE_DIR/DoxygenDocs\"\n\n#  Append the proper input/output directories and docset info to the config file.\n#  This works even though values are assigned higher up in the file. Easier than sed.\n\ncp \"$SOURCE_ROOT/doxygen.config\" \"$TEMP_DIR/doxygen.config\"\n\necho \"INPUT = \\\"$BUILT_PRODUCTS_DIR/Syphon.framework/Headers/\\\" \\\"$SRCROOT/header.html\\\" \\\"$SRCROOT/footer.html\\\" \\\"$SRCROOT/doxygen.css\\\"\" >> \"$TEMP_DIR/doxygen.config\"\necho \"OUTPUT_DIRECTORY = \\\"$DERIVED_FILE_DIR/DoxygenDocs\\\"\" >> \"$TEMP_DIR/doxygen.config\"\necho \"GENERATE_DOCSET        = YES\" >> \"$TEMP_DIR/doxygen.config\"\necho \"DOCSET_BUNDLE_ID       = info.v002.syphon.docs\" >> \"$TEMP_DIR/doxygen.config\"\n\n#  Run doxygen on the updated config file.\n#  Note: doxygen creates a Makefile that does most of the heavy lifting.\n\n$DOXYGEN_PATH \"$TEMP_DIR/doxygen.config\"\n\n#  make will invoke docsetutil. Take a look at the Makefile to see how this is done.\n\nmake -C \"$DERIVED_FILE_DIR/DoxygenDocs/html\" install\n\n# Copy the results back to our Built Products directory\n\nrm -rf \"$BUILT_PRODUCTS_DIR/info.v002.syphon.docs.docset\"\nrm -rf \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation\"\ncp -R \"/Users/$USER/Library/Developer/Shared/Documentation/DocSets/info.v002.syphon.docs.docset\" \"$BUILT_PRODUCTS_DIR/\"\ncp -R \"$DERIVED_FILE_DIR/DoxygenDocs/html\" \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Info.plist\"\nrm -rf \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/info.v002.syphon.docs.docset\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/installdox\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Makefile\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Nodes.xml\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Tokens.xml\"\n\n#  Construct a temporary applescript file to tell Xcode to load a docset.\n\nrm -f \"$TEMP_DIR/loadDocSet.scpt\"\n\necho \"tell application \\\"Xcode\\\"\" >> \"$TEMP_DIR/loadDocSet.scpt\"\necho \"load documentation set with path \\\"/Users/$USER/Library/Developer/Shared/Documentation/DocSets/\\\" display yes\" >> \"$TEMP_DIR/loadDocSet.scpt\"\necho \"end tell\" >> \"$TEMP_DIR/loadDocSet.scpt\"\n\n#  Run the load-docset applescript command.\n\nosascript \"$TEMP_DIR/loadDocSet.scpt\"\n\nexit 0";
+			shellScript = "#  Syphon doxygen script based on http://developer.apple.com/tools/creatingdocsetswithdoxygen.html\n#  Build the doxygen documentation for the project and load the docset into Xcode.\n\n#  Use the following to adjust the value of the $DOXYGEN_PATH User-Defined Setting:\n#    Binary install location: /Applications/Doxygen.app/Contents/Resources/doxygen\n#    Source build install location: /usr/local/bin/doxygen\n\n#  If the config file doesn't exist, run 'doxygen -g $SOURCE_ROOT/doxygen.config' to \n#   a get default file.\n\nif ! [ -f \"$SOURCE_ROOT/doxygen.config\" ] \nthen \n  echo doxygen config file does not exist\n  $DOXYGEN_PATH -g \"$SOURCE_ROOT/doxygen.config\"\nfi\n\n# Make the Derived File directory if it doesn't exist, and delete previous output\nmkdir -p \"$DERIVED_FILE_DIR\"\nrm -rf \"$DERIVED_FILE_DIR/DoxygenDocs\"\n\n#  Append the proper input/output directories and docset info to the config file.\n#  This works even though values are assigned higher up in the file. Easier than sed.\n\ncp \"$SOURCE_ROOT/doxygen.config\" \"$TEMP_DIR/doxygen.config\"\n\necho \"INPUT = \\\"$BUILT_PRODUCTS_DIR/Syphon.framework/Headers/\\\" \\\"$SRCROOT/footer.html\\\"\\\"$SRCROOT/customdoxygen.css\\\"\" >> \"$TEMP_DIR/doxygen.config\"\necho \"OUTPUT_DIRECTORY = \\\"$DERIVED_FILE_DIR/DoxygenDocs\\\"\" >> \"$TEMP_DIR/doxygen.config\"\n\n#  Run doxygen on the updated config file.\n#  Note: doxygen creates a Makefile that does most of the heavy lifting.\n\n$DOXYGEN_PATH \"$TEMP_DIR/doxygen.config\"\n\n#  make will invoke docsetutil. Take a look at the Makefile to see how this is done.\n\nmake -C \"$DERIVED_FILE_DIR/DoxygenDocs/html\" install\n\n# Copy the results back to our Built Products directory\n\nrm -rf \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation\"\ncp -R \"$DERIVED_FILE_DIR/DoxygenDocs/html\" \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Info.plist\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/installdox\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Makefile\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Nodes.xml\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Tokens.xml\"\n\n\nexit 0";
 		};
 		BDE0C5FC1229457900DDF631 /* Generate Public Headers */ = {
 			isa = PBXShellScriptBuildPhase;
