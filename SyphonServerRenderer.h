@@ -29,8 +29,7 @@
  */
 
 #import <Foundation/Foundation.h>
-
-@class SyphonImage;
+#import "SyphonImage.h"
 
 @interface SyphonServerRenderer : NSObject {
 @private
