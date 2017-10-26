@@ -95,6 +95,9 @@
  Returns a SyphonImage representing the current output from the server. The texture associated with the image may continue to update when you draw with it, but you should not depend on that behaviour: call this method every time you wish to access the current server frame. This object may have GPU resources associated with it and you should release it as soon as you are finished drawing with it.
  
  This method may perform work in the OpenGL context. As with any other OpenGL calls, you must ensure no other threads use the context during calls to this method.
+
+ In legacy OpenGL contexts any modified state will be restored. In Core Profile OpenGL contexts work is done in a private shared context, leaving the caller's context untouched.
+
  @returns A SyphonImage representing the live output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it.
  */
 - (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage;
