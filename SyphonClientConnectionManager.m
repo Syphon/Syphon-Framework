@@ -54,7 +54,7 @@ static void SyphonClientPrivateInsertInstance(id instance, NSString *uuid)
 	OSSpinLockLock(&_lookupTableLock);
 	if (uuid)
 	{
-		if (!_lookupTable) _lookupTable = [[NSMapTable alloc] initWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableZeroingWeakMemory capacity:1];
+		if (!_lookupTable) _lookupTable = [[NSMapTable alloc] initWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableWeakMemory capacity:1];
 		[_lookupTable setObject:instance forKey:uuid];
 	}
 	OSSpinLockUnlock(&_lookupTableLock);
@@ -177,7 +177,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	OSSpinLockLock(&_lock);
 	if (_infoClients == nil)
     {
-        _infoClients = [[NSHashTable hashTableWithWeakObjects] retain];
+        _infoClients = [[NSHashTable weakObjectsHashTable] retain];
     }
     [_infoClients addObject:client];
 	BOOL shouldSendAdd = NO;
@@ -213,7 +213,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
     if (isFrameClient && _frameQueue == nil)
     {
         _frameQueue = dispatch_queue_create([_myUUID cStringUsingEncoding:NSUTF8StringEncoding], 0);
-        _frameClients = [[NSHashTable hashTableWithWeakObjects] retain];
+        _frameClients = [[NSHashTable weakObjectsHashTable] retain];
     }
 	OSSpinLockUnlock(&_lock);
     if (isFrameClient)
