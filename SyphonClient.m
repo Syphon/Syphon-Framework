@@ -134,6 +134,11 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
     [_frame release];
     _frame = nil;
     _frameValid = NO;
+    if (_shareContext)
+    {
+        CGLReleaseContext(_shareContext);
+        _shareContext = NULL;
+    }
     if (_context)
     {
         CGLReleaseContext(_context);
