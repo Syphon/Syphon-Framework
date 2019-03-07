@@ -29,6 +29,7 @@
 
 #import "SyphonServerConnectionManager.h"
 #import "SyphonPrivate.h"
+#import "SyphonMessaging.h"
 
 @interface SyphonServerConnectionManager (Private)
 - (void)addInfoClient:(NSString *)clientUUID;
@@ -38,7 +39,17 @@
 - (void)handleDeadConnection;
 @end
 
-@implementation SyphonServerConnectionManager
+@implementation SyphonServerConnectionManager {
+@private
+    SyphonMessageReceiver *_connection;
+    NSMutableDictionary *_infoClients;
+    NSMutableDictionary *_frameClients;
+    BOOL _alive;
+    NSString *_uuid;
+    IOSurfaceID _surfaceID;
+    SyphonSafeBool _hasClients;
+    dispatch_queue_t _queue;
+}
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey
 {
