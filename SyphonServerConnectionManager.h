@@ -29,8 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 #import <Cocoa/Cocoa.h>
-#import "SyphonMessaging.h"
-#import "SyphonPrivate.h"
 
 /*
  This class is not KVO compliant for serverDescription, as changes to name won't raise a notification for serverDescription
@@ -39,17 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define SYPHON_SERVER_CONNECTION_MANAGER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonServerConnectionManager)
 
-@interface SYPHON_SERVER_CONNECTION_MANAGER_UNIQUE_CLASS_NAME : NSObject {
-@private
-	SyphonMessageReceiver *_connection;
-	NSMutableDictionary *_infoClients;
-	NSMutableDictionary *_frameClients;
-	BOOL _alive;
-	NSString *_uuid;
-	IOSurfaceID _surfaceID;
-	SyphonSafeBool _hasClients;
-	dispatch_queue_t _queue;
-}
+@interface SYPHON_SERVER_CONNECTION_MANAGER_UNIQUE_CLASS_NAME : NSObject
 - (id)initWithUUID:(NSString *)uuid options:(NSDictionary *)options;
 @property (readonly) NSDictionary *surfaceDescription;
 /*
