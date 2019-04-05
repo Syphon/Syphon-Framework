@@ -33,6 +33,7 @@
 #import "SyphonCGL.h"
 #import "SyphonIOSurfaceImageCore.h"
 #import "SyphonIOSurfaceImageLegacy.h"
+#import "SyphonMessaging.h"
 
 #pragma mark Shared Instances
 
@@ -80,6 +81,22 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 - (void)invalidateFramesHavingLock;
 @end
 @implementation SyphonClientConnectionManager
+{
+@private
+    NSString *_myUUID;
+    IOSurfaceID _surfaceID;
+    IOSurfaceRef _surface;
+    uint32_t _lastSeed;
+    NSUInteger _frameID;
+    NSString *_serverUUID;
+    BOOL _serverActive;
+    SyphonMessageReceiver *_connection;
+    int32_t _handlerCount;
+    NSHashTable *_infoClients;
+    NSHashTable *_frameClients;
+    dispatch_queue_t _frameQueue;
+    OSSpinLock _lock;
+}
 
 - (id)initWithServerDescription:(NSDictionary *)description
 {
