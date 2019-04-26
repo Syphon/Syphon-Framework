@@ -35,6 +35,7 @@
 #import "SyphonPrivate.h"
 #import "SyphonCGL.h"
 #import "SyphonServerConnectionManager.h"
+#import <Cocoa/Cocoa.h>
 #import <IOSurface/IOSurface.h>
 
 // These are declared in core and legacy headers but this class is profile agnostic

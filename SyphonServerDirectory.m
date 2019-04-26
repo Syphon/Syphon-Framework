@@ -29,6 +29,7 @@
 
 #import "SyphonServerDirectory.h"
 #import "SyphonPrivate.h"
+#import <Cocoa/Cocoa.h>
 #import <pthread.h>
 
 #define kSyphonServerDirectoryAnnounceTimeout 6

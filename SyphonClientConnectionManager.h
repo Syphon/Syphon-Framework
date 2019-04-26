@@ -28,7 +28,7 @@
  */
 
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import "SyphonImage.h"
 
 /* This object handles messaging to and from the server.

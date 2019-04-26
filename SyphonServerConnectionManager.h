@@ -28,7 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
+#import <IOSurface/IOSurface.h>
 
 /*
  This class is not KVO compliant for serverDescription, as changes to name won't raise a notification for serverDescription

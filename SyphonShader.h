@@ -28,6 +28,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <OpenGL/OpenGL.h>
 
 @interface SyphonShader : NSObject
 - (instancetype)initWithVertexShader:(NSString *)vert fragmentShader:(NSString *)frag;
