@@ -31,15 +31,7 @@
 #import <Foundation/Foundation.h>
 #import "SyphonImage.h"
 
-@interface SyphonServerRenderer : NSObject {
-@private
-    CGLContextObj _context;
-    GLuint  _MSAASampleCount;
-    GLenum  _depthBufferFormat;
-    GLenum  _stencilBufferFormat;
-    GLsizei _width;
-    GLsizei _height;
-}
+@interface SyphonServerRenderer : NSObject
 - (instancetype)initWithContext:(CGLContextObj)context MSAASampleCount:(GLuint)msc depthBufferResolution:(GLuint)dbr stencilBufferResolution:(GLuint)sbr;
 @property (readonly) CGLContextObj context;
 @property (readonly) GLuint MSAASampleCount;

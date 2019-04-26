@@ -34,12 +34,7 @@
 
 #define SYPHON_CFMESSAGE_SENDER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonCFMessageSender)
 
-@interface SYPHON_CFMESSAGE_SENDER_UNIQUE_CLASS_NAME : SyphonMessageSender {
-@private
-	CFMessagePortRef _port;
-	SyphonMessageQueue *_queue;
-	SyphonDispatchSourceRef _dispatch;
-}
+@interface SYPHON_CFMESSAGE_SENDER_UNIQUE_CLASS_NAME : SyphonMessageSender
 @end
 
 #if defined(SYPHON_USE_CLASS_ALIAS)

@@ -37,6 +37,13 @@
 @end
 
 @implementation SyphonCFMessageSender
+{
+@private
+    CFMessagePortRef _port;
+    SyphonMessageQueue *_queue;
+    SyphonDispatchSourceRef _dispatch;
+}
+
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler;
 {
     self = [super initForName:name protocol:protocolName invalidationHandler:handler];

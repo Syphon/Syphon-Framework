@@ -32,11 +32,7 @@
 
 #define SYPHON_CFMESSAGE_RECEIVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonCFMessageReceiver)
 
-@interface SYPHON_CFMESSAGE_RECEIVER_UNIQUE_CLASS_NAME : SyphonMessageReceiver {
-@private
-	CFMessagePortRef _port;
-	CFRunLoopSourceRef _runLoopSource;
-}
+@interface SYPHON_CFMESSAGE_RECEIVER_UNIQUE_CLASS_NAME : SyphonMessageReceiver
 
 @end
 

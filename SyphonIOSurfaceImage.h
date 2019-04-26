@@ -37,8 +37,6 @@
 @protected
 	CGLContextObj cgl_ctx;
 	NSSize _size;
-@private
-    IOSurfaceRef _surface;
 }
 - (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context;
 @end

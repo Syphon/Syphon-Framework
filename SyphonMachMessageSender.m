@@ -39,6 +39,11 @@ typedef struct {
 } SyphonMachMessage;
 
 @implementation SyphonMachMessageSender
+{
+@private
+    NSMachPort *_port;
+}
+
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler
 {
     self = [super initForName:name protocol:protocolName invalidationHandler:handler];

@@ -28,7 +28,6 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import <libkern/OSAtomic.h>
 
 /*
  
@@ -41,13 +40,7 @@
 
 #define SYPHON_MESSAGE_QUEUE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMessageQueue)
 
-@interface SYPHON_MESSAGE_QUEUE_UNIQUE_CLASS_NAME : NSObject {
-@private
-	OSSpinLock _lock;
-	void *_head;
-	OSQueueHead _pool; // TODO: or maybe manage our own within the lock as we lock anyway
-	void *_info;
-}
+@interface SYPHON_MESSAGE_QUEUE_UNIQUE_CLASS_NAME : NSObject
 
 - (void)queue:(NSData *)content ofType:(uint32_t)type;
 /*

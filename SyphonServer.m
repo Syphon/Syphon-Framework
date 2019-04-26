@@ -53,6 +53,28 @@ static void finalizer()
 }
 
 @implementation SyphonServer
+{
+@private
+    NSString *_name;
+    NSString *_uuid;
+    BOOL _broadcasts;
+
+    id _connectionManager;
+    id _renderer;
+    CGLContextObj _shareContext;
+
+    void  *_surfaceRef;
+    BOOL _pushPending;
+    SYPHON_IMAGE_UNIQUE_CLASS_NAME *_surfaceTexture;
+
+    BOOL _wantsContextChanges;
+
+    GLint _virtualScreen;
+
+    int32_t _mdLock;
+
+    id<NSObject> _activityToken;
+}
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey
 {

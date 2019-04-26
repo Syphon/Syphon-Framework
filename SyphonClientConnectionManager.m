@@ -34,6 +34,8 @@
 #import "SyphonIOSurfaceImageCore.h"
 #import "SyphonIOSurfaceImageLegacy.h"
 #import "SyphonMessaging.h"
+#import <IOSurface/IOSurface.h>
+#import <libkern/OSAtomic.h>
 
 #pragma mark Shared Instances
 

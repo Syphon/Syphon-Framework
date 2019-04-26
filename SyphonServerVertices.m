@@ -30,6 +30,10 @@
 #import "SyphonServerVertices.h"
 
 @implementation SyphonServerVertices
+{
+@private
+    GLfloat _vertices[16];
+}
 
 - (void)setRegionX:(GLfloat)x Y:(GLfloat)y width:(GLfloat)width height:(GLfloat)height flipped:(BOOL)isFlipped
 {

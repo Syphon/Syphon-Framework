@@ -31,11 +31,7 @@
 
 #define SYPHON_MESSAGE_SENDER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMessageSender)
 
-@interface SYPHON_MESSAGE_SENDER_UNIQUE_CLASS_NAME : NSObject {
-@private
-	NSString *_name;
-	void (^_handler)(void);
-}
+@interface SYPHON_MESSAGE_SENDER_UNIQUE_CLASS_NAME : NSObject
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler;
 @property (readonly) NSString *name;
 @property (readonly) BOOL isValid;

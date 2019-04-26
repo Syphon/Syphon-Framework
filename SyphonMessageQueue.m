@@ -28,6 +28,7 @@
 */
 
 #import "SyphonMessageQueue.h"
+#import <libkern/OSAtomic.h>
 
 /*
  
@@ -64,6 +65,14 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 #define SyphonQMemberDestroy(m)	free((m))
 
 @implementation SyphonMessageQueue
+{
+@private
+    OSSpinLock _lock;
+    void *_head;
+    OSQueueHead _pool; // TODO: or maybe manage our own within the lock as we lock anyway
+    void *_info;
+}
+
 - (id)init
 {
     self = [super init];

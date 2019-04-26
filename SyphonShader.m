@@ -31,6 +31,13 @@
 #import <OpenGL/gl3.h>
 
 @implementation SyphonShader
+{
+@private
+    GLuint _program;
+#ifdef SYPHON_CORE_RESTORE
+    GLint _prev;
+#endif
+}
 
 + (GLuint)createShader:(NSString *)source ofType:(GLenum)type
 {

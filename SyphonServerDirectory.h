@@ -96,13 +96,7 @@ extern NSString * const SyphonServerRetireNotification;
 
 #define SYPHON_SERVER_DIRECTORY_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonServerDirectory)
 
-@interface SYPHON_SERVER_DIRECTORY_UNIQUE_CLASS_NAME : NSObject {
-@private
-	NSMutableArray *_servers;
-	pthread_mutex_t _generalLock;
-	pthread_mutex_t _mutateLock;
-	NSMutableSet *_pings;
-}
+@interface SYPHON_SERVER_DIRECTORY_UNIQUE_CLASS_NAME : NSObject
 
 /*!
  Returns the shared server directory instance. This object is KVO complaint, and can be used to observe changes in server availability, server names and statuses. 

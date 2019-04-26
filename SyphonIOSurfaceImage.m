@@ -31,6 +31,11 @@
 #import <IOSurface/IOSurface.h>
 
 @implementation SyphonIOSurfaceImage
+{
+@private
+    IOSurfaceRef _surface;
+}
+
 - (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context
 {
     self = [super init];

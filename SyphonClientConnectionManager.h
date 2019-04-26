@@ -29,8 +29,6 @@
 
 
 #import <Cocoa/Cocoa.h>
-#import <IOSurface/IOSurface.h>
-#import <libkern/OSAtomic.h>
 #import "SyphonImage.h"
 
 /* This object handles messaging to and from the server.

@@ -29,12 +29,7 @@
 
 #import "SyphonShader.h"
 
-@interface SyphonServerShader : SyphonShader {
-@private
-    GLenum _target;
-    GLint  _vertexAttrib;
-    GLint  _textureVertexAttrib;
-}
+@interface SyphonServerShader : SyphonShader
 - (instancetype)initForTextureTarget:(GLenum)target;
 @property (readonly) GLenum target;
 @property (readonly) GLint vertexAttribLocation;

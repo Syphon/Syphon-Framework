@@ -29,13 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SyphonShader : NSObject {
-@private
-    GLuint _program;
-#ifdef SYPHON_CORE_RESTORE
-    GLint _prev;
-#endif
-}
+@interface SyphonShader : NSObject
 - (instancetype)initWithVertexShader:(NSString *)vert fragmentShader:(NSString *)frag;
 - (void)useProgram;
 - (void)endProgram;

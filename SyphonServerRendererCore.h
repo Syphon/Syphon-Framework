@@ -32,20 +32,5 @@
 
 @class SyphonServerShader, SyphonServerVertices;
 
-@interface SyphonServerRendererCore : SyphonServerRenderer {
-@private
-    GLuint  _depthBuffer;
-    GLuint  _stencilBuffer;
-    GLuint  _surfaceFBO;
-    GLuint  _msaaFBO;
-    GLuint  _msaaColorBuffer;
-    GLuint  _actualMSAASampleCount;
-    CGLContextObj   _prevContext;
-    SyphonServerShader  *_shader;
-    SyphonServerVertices *_vertices;
-#ifdef SYPHON_CORE_RESTORE
-    GLint _previousReadFBO;
-    GLint _previousDrawFBO;
-#endif
-}
+@interface SyphonServerRendererCore : SyphonServerRenderer
 @end

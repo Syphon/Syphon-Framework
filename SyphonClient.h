@@ -44,19 +44,7 @@
  */
 
 @interface SYPHON_CLIENT_UNIQUE_CLASS_NAME : NSObject
-{
-@private
-	id				_connectionManager;
-	NSUInteger		_lastFrameID;
-	void			(^_handler)(id);
-	int32_t			_status;
-	int32_t			_lock;
-    CGLContextObj   _context;
-    CGLContextObj   _shareContext;
-    SYPHON_IMAGE_UNIQUE_CLASS_NAME *_frame;
-    int32_t         _frameValid;
-    NSDictionary    *_serverDescription;
-}
+
 /*! 
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.
  @param description Typically acquired from the shared SyphonServerDirectory, or one of Syphon's notifications.

@@ -31,6 +31,15 @@
 #import <OpenGL/gl3.h>
 
 @implementation SyphonVertices
+{
+@private
+    GLuint _vao;
+    GLuint _vbo;
+#ifdef SYPHON_CORE_RESTORE
+    GLint _prevVAO;
+#endif
+}
+
 - (instancetype)init
 {
     self = [super init];

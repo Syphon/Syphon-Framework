@@ -50,6 +50,11 @@ static CFDataRef MessageReturnCallback (
 }
 
 @implementation SyphonCFMessageReceiver
+{
+@private
+    CFMessagePortRef _port;
+    CFRunLoopSourceRef _runLoopSource;
+}
 
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id data, uint32_t type))handler
 {

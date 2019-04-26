@@ -29,9 +29,6 @@
 
 #import "SyphonIOSurfaceImage.h"
 
-@interface SyphonIOSurfaceImageCore : SyphonIOSurfaceImage {
-@private
-    GLuint _texture;
-}
+@interface SyphonIOSurfaceImageCore : SyphonIOSurfaceImage
 
 @end

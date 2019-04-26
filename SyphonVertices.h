@@ -30,14 +30,7 @@
 #import <Foundation/Foundation.h>
 #import <OpenGL/gltypes.h>
 
-@interface SyphonVertices : NSObject {
-@private
-    GLuint _vao;
-    GLuint _vbo;
-#ifdef SYPHON_CORE_RESTORE
-    GLint _prevVAO;
-#endif
-}
+@interface SyphonVertices : NSObject
 - (void)setFloats:(GLfloat *)data count:(GLsizei)count;
 - (void)setAttributePointer:(GLint)index components:(GLsizei)components stride:(GLsizei)stride offset:(GLsizei)offset;
 - (void)bind;

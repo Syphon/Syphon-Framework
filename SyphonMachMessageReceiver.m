@@ -33,6 +33,11 @@
 #include <mach/mach.h>
 
 @implementation SyphonMachMessageReceiver
+{
+@private
+    NSMachPort *_port;
+}
+
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id <NSCoding> data, uint32_t type))handler
 {
     self = [super initForName:name protocol:protocolName handler:handler];

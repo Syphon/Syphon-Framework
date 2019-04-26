@@ -33,6 +33,12 @@
 //#import "SyphonMachMessageSender.h"
 
 @implementation SyphonMessageSender
+{
+@private
+    NSString *_name;
+    void (^_handler)(void);
+}
+
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler;
 {
     self = [super init];

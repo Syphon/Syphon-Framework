@@ -75,28 +75,7 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
 @class SYPHON_IMAGE_UNIQUE_CLASS_NAME;
 
 @interface SYPHON_SERVER_UNIQUE_CLASS_NAME : NSObject
-{
-@private
-	NSString *_name;
-	NSString *_uuid;
-	BOOL _broadcasts;
-	
-	id _connectionManager;
-    id _renderer;
-    CGLContextObj _shareContext;
-	
-	void  *_surfaceRef;
-	BOOL _pushPending;
-	SYPHON_IMAGE_UNIQUE_CLASS_NAME *_surfaceTexture;
-	
-    BOOL _wantsContextChanges;
-    
-    GLint _virtualScreen;
-    
-	int32_t _mdLock;
 
-    id<NSObject> _activityToken;
-}
 /** @name Instantiation */
 /** @{ */
 /*!

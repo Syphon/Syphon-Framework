@@ -55,6 +55,13 @@ void main() {\
 }";
 
 @implementation SyphonServerShader
+{
+@private
+    GLenum _target;
+    GLint  _vertexAttrib;
+    GLint  _textureVertexAttrib;
+}
+
 - (instancetype)initForTextureTarget:(GLenum)target
 {
     NSString *fragSource;

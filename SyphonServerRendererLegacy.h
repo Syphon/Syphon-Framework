@@ -30,18 +30,5 @@
 
 #import "SyphonServerRenderer.h"
 
-@interface SyphonServerRendererLegacy : SyphonServerRenderer {
-@private
-    CGLContextObj cgl_ctx;
-    BOOL    _combinedDepthStencil;
-    GLuint  _depthBuffer;
-    GLuint  _stencilBuffer;
-    GLuint  _surfaceFBO;
-    GLuint  _msaaFBO;
-    GLuint  _msaaColorBuffer;
-    GLint   _previousReadFBO;
-    GLint   _previousDrawFBO;
-    GLint   _previousFBO;
-    GLuint  _actualMSAASampleCount;
-}
+@interface SyphonServerRendererLegacy : SyphonServerRenderer
 @end

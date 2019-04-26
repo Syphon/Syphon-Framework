@@ -31,11 +31,7 @@
 
 #define SYPHON_MESSAGE_RECEIVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMessageReceiver)
 
-@interface SYPHON_MESSAGE_RECEIVER_UNIQUE_CLASS_NAME : NSObject {
-@private
-	NSString *_name;
-	void (^_handler)(id <NSCoding>, uint32_t);
-}
+@interface SYPHON_MESSAGE_RECEIVER_UNIQUE_CLASS_NAME : NSObject
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id payload, uint32_t type))handler;
 @property (readonly) NSString *name;
 // Always invalidate before release

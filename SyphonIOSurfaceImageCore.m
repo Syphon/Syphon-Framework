@@ -30,6 +30,11 @@
 #import <OpenGL/gl3.h>
 
 @implementation SyphonIOSurfaceImageCore
+{
+@private
+    GLuint _texture;
+}
+
 - (id)initWithSurface:(IOSurfaceRef)surface forContext:(CGLContextObj)context
 {
     self = [super initWithSurface:surface forContext:context];

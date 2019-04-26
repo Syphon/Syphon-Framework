@@ -37,6 +37,19 @@
 #import <libkern/OSAtomic.h>
 
 @implementation SyphonClient
+{
+@private
+    id                _connectionManager;
+    NSUInteger        _lastFrameID;
+    void            (^_handler)(id);
+    int32_t            _status;
+    int32_t            _lock;
+    CGLContextObj   _context;
+    CGLContextObj   _shareContext;
+    SYPHON_IMAGE_UNIQUE_CLASS_NAME *_frame;
+    int32_t         _frameValid;
+    NSDictionary    *_serverDescription;
+}
 
 static void *SyphonClientServersContext = &SyphonClientServersContext;
 

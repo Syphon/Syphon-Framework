@@ -31,6 +31,11 @@
 #import <OpenGL/CGLMacro.h>
 
 @implementation SyphonIOSurfaceImageLegacy
+{
+@private
+    GLuint _texture;
+}
+
 - (id)initWithSurface:(IOSurfaceRef)surface forContext:(CGLContextObj)context
 {
     self = [super initWithSurface:surface forContext:context];

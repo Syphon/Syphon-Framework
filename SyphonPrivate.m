@@ -28,6 +28,7 @@
  */
 
 #import "SyphonPrivate.h"
+#import <libkern/OSAtomic.h> // For SyphonSafeBool
 
 NSString * const SyphonServerDescriptionDictionaryVersionKey = @"SyphonServerDescriptionDictionaryVersionKey";
 NSString * const SyphonServerDescriptionUUIDKey = @"SyphonServerDescriptionUUIDKey";

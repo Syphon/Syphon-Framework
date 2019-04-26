@@ -42,6 +42,15 @@
 #define SYPHON_GL_STENCIL_INDEX16   0x8D49
 
 @implementation SyphonServerRenderer
+{
+@private
+    CGLContextObj _context;
+    GLuint  _MSAASampleCount;
+    GLenum  _depthBufferFormat;
+    GLenum  _stencilBufferFormat;
+    GLsizei _width;
+    GLsizei _height;
+}
 
 - (id)initWithContext:(CGLContextObj)context MSAASampleCount:(GLuint)msc depthBufferResolution:(GLuint)dbr stencilBufferResolution:(GLuint)sbr
 {
