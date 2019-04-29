@@ -318,8 +318,12 @@ static void finalizer()
 }
 
 - (void)setName:(NSString *)newName
-{	
-	[newName retain];
+{
+    if (newName == nil)
+    {
+        newName = @"";
+    }
+	[newName copy];
 	OSSpinLockLock(&_mdLock);
 	[_name release];
 	_name = newName;
