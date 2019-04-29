@@ -30,6 +30,8 @@
 #import <Foundation/Foundation.h>
 #import <OpenGL/OpenGL.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*! @name Server Options Dictionary Key Constants */
 /*! @{ */
 
@@ -89,7 +91,7 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
  @returns A newly intialized SyphonServer. Nil on failure.
 */
 
-- (id)initWithName:(NSString*)serverName context:(CGLContextObj)context options:(NSDictionary *)options;
+- (id)initWithName:(nullable NSString*)serverName context:(CGLContextObj)context options:(nullable NSDictionary *)options;
 
 /** @} */
 
@@ -105,7 +107,7 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
  A string representing the name of the SyphonServer.
 */ 
 
-@property (retain) NSString* name;
+@property (nullable, retain) NSString* name;
 
 /*! 
  A dictionary describing the server. Normally you won't need to access this, however if you created the server as private (using SyphonServerOptionIsPrivate) then you must pass this dictionary to any process in which you wish to create a SyphonClient. You should not rely on the presence of any particular keys in this dictionary. The content will always conform to the \<NSCoding\> protocol.
@@ -167,7 +169,7 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
   
  @returns A SyphonImage representing the current output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it. 
  */
-- (SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage;
+- (nullable SYPHON_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage;
 
 /*! 
  Stops the server instance. Use of this method is optional and releasing all references to the server has the same effect.
@@ -180,3 +182,5 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 #if defined(SYPHON_USE_CLASS_ALIAS)
 @compatibility_alias SyphonServer SYPHON_SERVER_UNIQUE_CLASS_NAME;
 #endif
+
+NS_ASSUME_NONNULL_END

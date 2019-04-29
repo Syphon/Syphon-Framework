@@ -29,6 +29,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*! @name Server Description Dictionary Key Constants */
 /*! @{ */
 
@@ -118,10 +120,12 @@ extern NSString * const SyphonServerRetireNotification;
  @returns An array of NSDictionaries matching the query you specified. 
 */ 
 
-- (NSArray *)serversMatchingName:(NSString *)name appName:(NSString *)appname;
+- (NSArray *)serversMatchingName:(nullable NSString *)name appName:(nullable NSString *)appname;
 
 @end
 
 #if defined(SYPHON_USE_CLASS_ALIAS)
 @compatibility_alias SyphonServerDirectory SYPHON_SERVER_DIRECTORY_UNIQUE_CLASS_NAME;
 #endif
+
+NS_ASSUME_NONNULL_END

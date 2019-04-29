@@ -115,7 +115,13 @@ static void finalizer()
 
 - (id)init
 {
-	return [self initWithName:nil context:NULL options:nil];
+    self = [super init];
+    if (self)
+    {
+        [self release];
+        self = nil;
+    }
+    return self;
 }
 
 - (id)initWithName:(NSString*)serverName context:(CGLContextObj)context options:(NSDictionary *)options

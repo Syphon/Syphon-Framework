@@ -32,6 +32,8 @@
 
 #define SYPHON_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonImage)
 
+NS_ASSUME_NONNULL_BEGIN
+
 /** 
  SyphonImage represents an image stored as an OpenGL texture of type GL_TEXTURE_RECTANGLE.
  */
@@ -52,3 +54,5 @@
 #if defined(SYPHON_USE_CLASS_ALIAS)
 @compatibility_alias SyphonImage SYPHON_IMAGE_UNIQUE_CLASS_NAME;
 #endif
+
+NS_ASSUME_NONNULL_END
