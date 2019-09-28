@@ -30,5 +30,5 @@
 #import "SyphonIOSurfaceImage.h"
 
 @interface SyphonIOSurfaceImageCore : SyphonIOSurfaceImage
-
+- (id)initWithSurface:(IOSurfaceRef)surface forContext:(CGLContextObj)context;
 @end

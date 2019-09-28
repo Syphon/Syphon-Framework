@@ -29,6 +29,7 @@
 
 #import <Foundation/Foundation.h>
 #import <OpenGL/OpenGL.h>
+#import <Syphon/SyphonServerBase.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -76,7 +77,7 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
 
 @class SYPHON_IMAGE_UNIQUE_CLASS_NAME;
 
-@interface SYPHON_SERVER_UNIQUE_CLASS_NAME : NSObject
+@interface SYPHON_SERVER_UNIQUE_CLASS_NAME : SyphonServerBase
 
 /** @name Instantiation */
 /** @{ */
@@ -91,7 +92,7 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
  @returns A newly intialized SyphonServer. Nil on failure.
 */
 
-- (id)initWithName:(nullable NSString*)serverName context:(CGLContextObj)context options:(nullable NSDictionary *)options;
+- (instancetype)initWithName:(nullable NSString*)serverName context:(CGLContextObj)context options:(nullable NSDictionary *)options;
 
 /** @} */
 

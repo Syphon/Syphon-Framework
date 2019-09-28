@@ -35,12 +35,16 @@
 
 @interface SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME : SyphonImage {
 @protected
-	CGLContextObj cgl_ctx;
 	NSSize _size;
 }
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context;
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef;
 @end
 
 #if defined(SYPHON_USE_CLASS_ALIAS)
 @compatibility_alias SyphonIOSurfaceImage SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME;
 #endif
+
+@interface SyphonIOSurfaceImage (SyphonSubclassing)
+// TODO: subclasses probably only need this at init, we might not want to expose it here
+@property (readonly) IOSurfaceRef surface;
+@end

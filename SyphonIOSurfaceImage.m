@@ -36,18 +36,18 @@
     IOSurfaceRef _surface;
 }
 
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef
 {
     self = [super init];
 	if (self)
 	{
-		if (context == nil || surfaceRef == nil)
+		if (surfaceRef == nil)
 		{
 			[self release];
 			return nil;
 		}
 		_surface = (IOSurfaceRef)CFRetain(surfaceRef);
-		cgl_ctx = CGLRetainContext(context);
+		
 		_size.width = IOSurfaceGetWidth(surfaceRef);
 		_size.height = IOSurfaceGetHeight(surfaceRef);
 	}
@@ -57,7 +57,6 @@
 - (void)dealloc
 {
     if (_surface) CFRelease(_surface);
-    if (cgl_ctx) CGLReleaseContext(cgl_ctx);
 	[super dealloc];
 }
 
@@ -66,4 +65,8 @@
 	return _size;
 }
 
+- (IOSurfaceRef)surface
+{
+    return _surface;
+}
 @end

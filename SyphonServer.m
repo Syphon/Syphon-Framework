@@ -34,7 +34,6 @@
 #import "SyphonServerRendererCore.h"
 #import "SyphonPrivate.h"
 #import "SyphonCGL.h"
-#import "SyphonServerConnectionManager.h"
 #import <Cocoa/Cocoa.h>
 #import <IOSurface/IOSurface.h>
 
@@ -43,65 +42,25 @@
 #define SYPHON_GL_TEXTURE_RECT  0x84F5
 #define SYPHON_GL_TEXTURE_2D    0x0DE1
 
-@interface SyphonServer (Private)
-+ (void)retireRemainingServers;
-@end
-
-__attribute__((destructor))
-static void finalizer()
-{
-	[SyphonServer retireRemainingServers];
-}
-
 @implementation SyphonServer
 {
 @private
-    NSString *_name;
-    NSString *_uuid;
-    BOOL _broadcasts;
-
-    id _connectionManager;
-    id _renderer;
+    SyphonServerRenderer * _renderer;
     CGLContextObj _shareContext;
 
-    void  *_surfaceRef;
     BOOL _pushPending;
     SYPHON_IMAGE_UNIQUE_CLASS_NAME *_surfaceTexture;
 
     BOOL _wantsContextChanges;
 
     GLint _virtualScreen;
-
-    int32_t _mdLock;
-
-    id<NSObject> _activityToken;
 }
 
-+ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey
-{
-	BOOL automatic;
-    if ([theKey isEqualToString:@"hasClients"])
-	{
-		automatic=NO;
-    }
-	else
-	{
-		automatic=[super automaticallyNotifiesObserversForKey:theKey];
-    }
-    return automatic;
-}
-
-+ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key
-{
-	if ([key isEqualToString:@"serverDescription"])
-	{
-		return [NSSet setWithObject:@"name"];
-	}
-	else
-	{
-		return [super keyPathsForValuesAffectingValueForKey:key];
-	}
-}
+// TODO: delete if we move these out of SyphonServer.h
+// (they are redeclared from SyphonIOSurfaceServer.h)
+@dynamic name;
+@dynamic serverDescription;
+@dynamic hasClients;
 
 + (GLuint)integerValueForKey:(NSString *)key fromOptions:(NSDictionary *)options
 {
@@ -124,51 +83,15 @@ static void finalizer()
     return self;
 }
 
-- (id)initWithName:(NSString*)serverName context:(CGLContextObj)context options:(NSDictionary *)options
+- (instancetype)initWithName:(NSString*)serverName context:(CGLContextObj)context options:(NSDictionary *)options
 {
-    self = [super init];
+    self = [super initWithName:serverName options:options];
 	if(self)
 	{
 		if (context == NULL)
 		{
 			[self release];
 			return nil;
-		}
-		
-		_mdLock = OS_SPINLOCK_INIT;
-		
-		if (serverName == nil)
-		{
-			serverName = @"";
-		}
-		_name = [serverName copy];
-		_uuid = SyphonCreateUUIDString();
-
-		_connectionManager = [[SyphonServerConnectionManager alloc] initWithUUID:_uuid options:options];
-		
-		[(SyphonServerConnectionManager *)_connectionManager addObserver:self forKeyPath:@"hasClients" options:NSKeyValueObservingOptionPrior context:nil];
-		
-		if (![(SyphonServerConnectionManager *)_connectionManager start])
-		{
-			[self release];
-			return nil;
-		}
-				
-		NSNumber *isPrivate = [options objectForKey:SyphonServerOptionIsPrivate];
-		if ([isPrivate respondsToSelector:@selector(boolValue)]
-			&& [isPrivate boolValue] == YES)
-		{
-			_broadcasts = NO;
-		}
-		else
-		{
-			_broadcasts = YES;
-		}
-
-		if (_broadcasts)
-		{
-            [[self class] addServerToRetireList:_uuid];
-			[self startBroadcasts];
 		}
 		
         // We check for changes to the context's virtual screen, so set it to an invalid value
@@ -209,47 +132,17 @@ static void finalizer()
             CGLReleaseContext(context);
 #endif
         }
-
-        // Prevent this app from being suspended or terminated eg if it goes off-screen (MacOS 10.9+ only)
-        NSProcessInfo *processInfo = [NSProcessInfo processInfo];
-        if ([processInfo respondsToSelector:@selector(beginActivityWithOptions:reason:)])
-        {
-            NSActivityOptions options = NSActivityAutomaticTerminationDisabled | NSActivityBackground;
-            _activityToken = [[processInfo beginActivityWithOptions:options reason:_uuid] retain];
-        }
 	}
 	return self;
 }
 
 - (void) shutDownServer
-{
-	if (_connectionManager)
-	{
-		[(SyphonServerConnectionManager *)_connectionManager removeObserver:self forKeyPath:@"hasClients"];
-		[(SyphonServerConnectionManager *)_connectionManager stop];
-		[(SyphonServerConnectionManager *)_connectionManager release];
-		_connectionManager = nil;
-	}
-	
+{	
 	[self destroyIOSurface];
-	
-	if (_broadcasts)
-	{
-		[self stopBroadcasts];
-        [[self class] removeServerFromRetireList:_uuid];
-	}
-
-    if (_activityToken)
-    {
-        [[NSProcessInfo processInfo] endActivity:_activityToken];
-        [_activityToken release];
-        _activityToken = nil;
-    }
 }
 
 - (void) dealloc
 {
-	SYPHONLOG(@"Server deallocing, name: %@, UUID: %@", self.name, [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);
 	[self shutDownServer];
 #ifdef SYPHON_CORE_SHARE
     if (_shareContext)
@@ -258,28 +151,7 @@ static void finalizer()
     }
 #endif
     [_renderer release];
-	[_name release];
-	[_uuid release];
 	[super dealloc];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-	if ([keyPath isEqualToString:@"hasClients"])
-	{
-		if ([[change objectForKey:NSKeyValueChangeNotificationIsPriorKey] boolValue] == YES)
-		{
-			[self willChangeValueForKey:keyPath];
-		}
-		else
-		{
-			[self didChangeValueForKey:keyPath];
-		}
-	}
-	else
-	{
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
 }
 
 - (CGLContextObj)context
@@ -287,68 +159,14 @@ static void finalizer()
 #ifdef SYPHON_CORE_SHARE
     return _shareContext;
 #else
-	return ((SyphonServerRenderer *)_renderer).context;
+	return (_renderer).context;
 #endif
-}
-
-- (NSDictionary *)serverDescription
-{
-	NSDictionary *surface = ((SyphonServerConnectionManager *)_connectionManager).surfaceDescription;
-	if (!surface) surface = [NSDictionary dictionary];
-    /*
-     Getting the app name: helper tasks, command-line tools, etc, don't have a NSRunningApplication instance,
-     so fall back to NSProcessInfo in those cases, then use an empty string as a last resort.
-     
-     http://developer.apple.com/library/mac/qa/qa1544/_index.html
-
-     */
-    NSString *appName = [[NSRunningApplication currentApplication] localizedName];
-    if (!appName) appName = [[NSProcessInfo processInfo] processName];
-    if (!appName) appName = [NSString string];
-    
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithUnsignedInt:kSyphonDictionaryVersion], SyphonServerDescriptionDictionaryVersionKey,
-			self.name, SyphonServerDescriptionNameKey,
-			_uuid, SyphonServerDescriptionUUIDKey,
-			appName, SyphonServerDescriptionAppNameKey,
-			[NSArray arrayWithObject:surface], SyphonServerDescriptionSurfacesKey,
-			nil];
-}
-
-- (NSString*)name
-{
-	OSSpinLockLock(&_mdLock);
-	NSString *result = [_name retain];
-	OSSpinLockUnlock(&_mdLock);
-	return [result autorelease];
-}
-
-- (void)setName:(NSString *)newName
-{
-    if (newName == nil)
-    {
-        newName = @"";
-    }
-	[newName copy];
-	OSSpinLockLock(&_mdLock);
-	[_name release];
-	_name = newName;
-	OSSpinLockUnlock(&_mdLock);
-	[(SyphonServerConnectionManager *)_connectionManager setName:newName];
-	if (_broadcasts)
-	{
-		[self broadcastServerUpdate];
-	}
 }
 
 - (void)stop
 {
 	[self shutDownServer];
-}
-
-- (BOOL)hasClients
-{
-	return ((SyphonServerConnectionManager *)_connectionManager).hasClients;
+    [super stop];
 }
 
 - (BOOL)bindToDrawFrameOfSize:(NSSize)size inContext:(BOOL)isInContext
@@ -400,11 +218,9 @@ static void finalizer()
 		// which has no clean image.
         [_renderer flush];
 #endif // SYPHON_DEBUG_NO_DRAWING
-		// Push the new surface ID to clients
-		[(SyphonServerConnectionManager *)_connectionManager setSurfaceID:IOSurfaceGetID(_surfaceRef)];
 		_pushPending = NO;
 	}
-	[(SyphonServerConnectionManager *)_connectionManager publishNewFrame];
+    [self publish];
 }
 
 - (void)publishFrameTexture:(GLuint)texID textureTarget:(GLenum)target imageRegion:(NSRect)region textureDimensions:(NSSize)size flipped:(BOOL)isFlipped
@@ -434,7 +250,7 @@ static void finalizer()
 {
 #if !SYPHON_DEBUG_NO_DRAWING
     GLint screen;
-    CGLGetVirtualScreen(((SyphonServerRenderer *)_renderer).context, &screen);
+    CGLGetVirtualScreen(_renderer.context, &screen);
     if (screen != _virtualScreen)
     {
         _virtualScreen = screen;
@@ -457,10 +273,19 @@ static void finalizer()
 									   [NSNumber numberWithUnsignedInteger:(NSUInteger)size.height], (NSString*)kIOSurfaceHeight,
 									   [NSNumber numberWithUnsignedInteger:4U], (NSString*)kIOSurfaceBytesPerElement, nil];
 	
-	_surfaceRef =  IOSurfaceCreate((CFDictionaryRef) surfaceAttributes);
+	IOSurfaceRef surface =  IOSurfaceCreate((CFDictionaryRef) surfaceAttributes);
+
+    [self setSurface:surface];
+
 	[surfaceAttributes release];
 
-    _surfaceTexture = [_renderer newImageForSurface:_surfaceRef];
+    _surfaceTexture = [_renderer newImageForSurface:surface];
+
+    if (surface)
+    {
+        CFRelease(surface);
+    }
+
     if (_surfaceTexture)
     {
         [_renderer setupForBackingTexture:_surfaceTexture.textureName
@@ -477,120 +302,11 @@ static void finalizer()
 - (void) destroyIOSurface
 {
 #if !SYPHON_DEBUG_NO_DRAWING
+    [self setSurface:NULL];
     [_renderer destroySizedResources];
-	if (_surfaceRef != NULL)
-	{		
-		CFRelease(_surfaceRef);
-		_surfaceRef = NULL;
-	}
 	[_surfaceTexture release];
 	_surfaceTexture = nil;
 #endif // SYPHON_DEBUG_NO_DRAWING
-}
-
-#pragma mark Notification Handling for Server Presence
-/*
- Broadcast and discovery is done via NSDistributedNotificationCenter. Servers notify announce, change (currently only affects name) and retirement.
- Discovery is done by a discovery-request notification, to which servers respond with an announce.
- 
- If this gets unweildy we could move it into a SyphonBroadcaster class
- 
- */
-
-/*
- We track all instances and send a retirement broadcast for any which haven't been stopped when the code is unloaded. 
- */
-
-static OSSpinLock mRetireListLock = OS_SPINLOCK_INIT;
-static NSMutableSet *mRetireList = nil;
-
-+ (void)addServerToRetireList:(NSString *)serverUUID
-{
-    OSSpinLockLock(&mRetireListLock);
-    if (mRetireList == nil)
-    {
-        mRetireList = [[NSMutableSet alloc] initWithCapacity:1U];
-    }
-    [mRetireList addObject:serverUUID];
-    OSSpinLockUnlock(&mRetireListLock);
-}
-
-+ (void)removeServerFromRetireList:(NSString *)serverUUID
-{
-    OSSpinLockLock(&mRetireListLock);
-    [mRetireList removeObject:serverUUID];
-    if ([mRetireList count] == 0)
-    {
-        [mRetireList release];
-        mRetireList = nil;
-    }
-    OSSpinLockUnlock(&mRetireListLock);
-}
-
-+ (void)retireRemainingServers
-{
-    // take the set out of the global so we don't hold the spin-lock while we send the notifications
-    // even though there should never be contention for this
-    NSMutableSet *mySet = nil;
-    OSSpinLockLock(&mRetireListLock);
-    mySet = mRetireList;
-    mRetireList = nil;
-    OSSpinLockUnlock(&mRetireListLock);
-    for (NSString *uuid in mySet) {
-        SYPHONLOG(@"Retiring a server at code unload time because it was not properly stopped");
-        NSDictionary *fakeServerDescription = [NSDictionary dictionaryWithObject:uuid forKey:SyphonServerDescriptionUUIDKey];
-        [[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerRetire 
-                                                                       object:SyphonServerDescriptionUUIDKey
-                                                                     userInfo:fakeServerDescription
-                                                           deliverImmediately:YES];
-    }
-    [mySet release];
-}
-
-- (void)startBroadcasts
-{
-	// Register for any Announcement Requests.
-	[[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDiscoveryRequest:) name:SyphonServerAnnounceRequest object:nil];
-	
-	[self broadcastServerAnnounce];
-}
-
-- (void) handleDiscoveryRequest:(NSNotification*) aNotification
-{
-	SYPHONLOG(@"Got Discovery Request");
-	
-	[self broadcastServerAnnounce];
-}
-
-- (void)broadcastServerAnnounce
-{
-	if (_broadcasts)
-	{
-		NSDictionary *description = self.serverDescription;
-		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerAnnounce 
-																	   object:[description objectForKey:SyphonServerDescriptionUUIDKey]
-																	 userInfo:description
-                                                           deliverImmediately:YES];
-	}
-}
-
-- (void)broadcastServerUpdate
-{
-	NSDictionary *description = self.serverDescription;
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerUpdate
-																   object:[description objectForKey:SyphonServerDescriptionUUIDKey]
-																 userInfo:description
-                                                       deliverImmediately:YES];
-}
-
-- (void)stopBroadcasts
-{
-	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
-	NSDictionary *description = self.serverDescription;
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:SyphonServerRetire 
-																   object:[description objectForKey:SyphonServerDescriptionUUIDKey]
-																 userInfo:description
-                                                       deliverImmediately:YES];	
 }
 
 @end

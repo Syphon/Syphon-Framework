@@ -29,6 +29,7 @@
 
 #import <Foundation/Foundation.h>
 #import <OpenGL/OpenGL.h>
+#import <Syphon/SyphonClientBase.h>
 
 #define SYPHON_CLIENT_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonClient)
 #define SYPHON_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonImage)
@@ -45,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
  It is safe to access instances of this class across threads, with the usual limitatiions related to OpenGL. The calls to SyphonClient which may cause work to be done in a GL context are: -newFrameImage, -stop and -release.
  */
 
-@interface SYPHON_CLIENT_UNIQUE_CLASS_NAME : NSObject
+@interface SYPHON_CLIENT_UNIQUE_CLASS_NAME : SyphonClientBase
 
 /*! 
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.

@@ -32,14 +32,23 @@
 @implementation SyphonIOSurfaceImageCore
 {
 @private
+    CGLContextObj cgl_ctx;
     GLuint _texture;
 }
 
 - (id)initWithSurface:(IOSurfaceRef)surface forContext:(CGLContextObj)context
 {
-    self = [super initWithSurface:surface forContext:context];
+    self = [super initWithSurface:surface];
     if (self)
     {
+        if (!context)
+        {
+            [self release];
+            return nil;
+        }
+
+        cgl_ctx = CGLRetainContext(context);
+
         CGLContextObj previous = CGLGetCurrentContext();
         if (previous != context)
         {
@@ -90,6 +99,7 @@
             CGLSetCurrentContext(previous);
         }
     }
+    if (cgl_ctx) CGLReleaseContext(cgl_ctx);
     [super dealloc];
 }
 

@@ -29,7 +29,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import "SyphonImage.h"
 
 /* This object handles messaging to and from the server.
 
@@ -61,7 +60,7 @@
 @property (readonly) BOOL isValid;
 - (void)addInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;     // Must be
 - (void)removeInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;  // paired
-- (SyphonImage *)newFrameForContext:(CGLContextObj)context;
+- (IOSurfaceRef)newSurface;
 @property (readonly) NSUInteger frameID;
 @end
 

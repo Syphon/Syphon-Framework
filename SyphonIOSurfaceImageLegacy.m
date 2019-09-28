@@ -33,14 +33,23 @@
 @implementation SyphonIOSurfaceImageLegacy
 {
 @private
+    CGLContextObj cgl_ctx;
     GLuint _texture;
 }
 
 - (id)initWithSurface:(IOSurfaceRef)surface forContext:(CGLContextObj)context
 {
-    self = [super initWithSurface:surface forContext:context];
+    self = [super initWithSurface:surface];
     if (self)
     {
+        if (!context)
+        {
+            [self release];
+            return nil;
+        }
+
+        cgl_ctx = CGLRetainContext(context);
+
         glPushAttrib(GL_TEXTURE_BIT);
 
         // create the surface backed texture
@@ -68,6 +77,7 @@
     {
         glDeleteTextures(1, &_texture);
     }
+    if (cgl_ctx) CGLReleaseContext(cgl_ctx);
     [super dealloc];
 }
 
