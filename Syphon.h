@@ -186,6 +186,8 @@
  3. Implement a client by subclassing SyphonClientBase. Add a method named -newFrameImage which returns an instance of your SyphonImageBase subclass. Implement the -invalidateFrame method, noting this may be called on a background thread.
  4. If you override other Syphon Base class methods, be sure to pass them on to the superclass (eg if you override -stop, call [super stop] from your implementation of -stop).
 
+ If your changes are for a well-used API, please consider making a pull-request or otherwise reaching out to us so we can add them to the project.
+
  @section framework_dev Framework development
  
  If you'd like to examine the framework's source code, report a bug, or get involved in development, head on over to the <a href="https://github.com/Syphon/Syphon-Framework">Syphon framework GitHub project.</a>
