@@ -56,11 +56,10 @@ extern NSString * const SyphonServerOptionIsPrivate;
 #endif
 
 @interface SyphonServerBase (SyphonSubclassing)
+// TODO: document, options is ignored for now
+- (IOSurfaceRef)copySurfaceForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
 // TODO: document
-- (IOSurfaceRef)copySurface;
-// TODO: document
-// clients are not updated until a subsequent call to publish
-- (void)setSurface:(nullable IOSurfaceRef)surface;
+- (void)destroySurface;
 // TODO: document
 - (void)publish;
 

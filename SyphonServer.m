@@ -138,7 +138,7 @@
 
 - (void) shutDownServer
 {	
-	[self destroyIOSurface];
+	[self destroyResources];
 }
 
 - (void) dealloc
@@ -182,7 +182,7 @@
         {
             [_renderer beginInContext];
         }
-        [self destroyIOSurface];
+        [self destroyResources];
         [self setupIOSurfaceForSize:size];
         if (!isInContext)
         {
@@ -268,16 +268,10 @@
 {	
 #if !SYPHON_DEBUG_NO_DRAWING
 	// init our texture and IOSurface
-	NSDictionary* surfaceAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithBool:YES], (NSString*)kIOSurfaceIsGlobal,
-									   [NSNumber numberWithUnsignedInteger:(NSUInteger)size.width], (NSString*)kIOSurfaceWidth,
-									   [NSNumber numberWithUnsignedInteger:(NSUInteger)size.height], (NSString*)kIOSurfaceHeight,
-									   [NSNumber numberWithUnsignedInteger:4U], (NSString*)kIOSurfaceBytesPerElement, nil];
-	
-	IOSurfaceRef surface =  IOSurfaceCreate((CFDictionaryRef) surfaceAttributes);
 
-    [self setSurface:surface];
-
-	[surfaceAttributes release];
+    // copySurfaceForWidth:height: returns a retained IOSurface, we release it
+    // once we are done with it
+    IOSurfaceRef surface = [self copySurfaceForWidth:size.width height:size.height options:nil];
 
     _surfaceTexture = [_renderer newImageForSurface:surface];
 
@@ -299,10 +293,10 @@
 #endif // SYPHON_DEBUG_NO_DRAWING
 }
 
-- (void) destroyIOSurface
+- (void)destroyResources
 {
 #if !SYPHON_DEBUG_NO_DRAWING
-    [self setSurface:NULL];
+    [self destroySurface];
     [_renderer destroySizedResources];
 	[_surfaceTexture release];
 	_surfaceTexture = nil;

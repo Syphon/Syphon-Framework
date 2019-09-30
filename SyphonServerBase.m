@@ -230,26 +230,41 @@ static void finalizer()
     }
 }
 
-- (IOSurfaceRef)copySurface
+- (void)destroySurface
 {
-    // TODO: we locking here?
-    CFRetain(_surface);
-    return _surface;
-}
-
-- (void)setSurface:(IOSurfaceRef)surface
-{
-    // TODO: ditto re lock
-    if (surface)
-    {
-        CFRetain(surface);
-    }
+    // TODO: are we locking here?
     if (_surface)
     {
         CFRelease(_surface);
+        _surface = NULL;
     }
-    _surface = surface;
-    _pushPending = YES;
+}
+
+- (IOSurfaceRef)copySurfaceForWidth:(size_t)width height:(size_t)height options:(NSDictionary<NSString *, id> *)options
+{
+    // TODO: are we locking here?
+    if (!_surface || IOSurfaceGetWidth(_surface) != width || IOSurfaceGetHeight(_surface) != height)
+    {
+        if (_surface)
+        {
+            CFRelease(_surface);
+        }
+        // init our texture and IOSurface
+        NSDictionary<NSString *, id> *surfaceAttributes = @{(NSString*)kIOSurfaceIsGlobal: @(YES),
+                                                            (NSString*)kIOSurfaceWidth: @(width),
+                                                            (NSString*)kIOSurfaceHeight: @(height),
+                                                            (NSString*)kIOSurfaceBytesPerElement: @(4U)};
+
+        _surface =  IOSurfaceCreate((CFDictionaryRef) surfaceAttributes);
+
+        _pushPending = YES;
+    }
+    if (_surface)
+    {
+        // Return retained (caller releases)
+        CFRetain(_surface);
+    }
+    return _surface;
 }
 
 - (void)publish
