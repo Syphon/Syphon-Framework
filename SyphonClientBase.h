@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IOSurfaceRef)newSurface;
 
 /*!
- Subclasses override this method to invalidate their output when the server's surface backing changes.
+ Subclasses override this method to invalidate their output when the server's surface backing changes. Do not call this method directly.
  */
 - (void)invalidateFrame;
 @end
