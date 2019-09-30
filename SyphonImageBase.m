@@ -27,13 +27,18 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#import "SyphonIOSurfaceImage.h"
+#import "SyphonImageBase.h"
 #import <IOSurface/IOSurface.h>
 
-@implementation SyphonIOSurfaceImage
+@implementation SyphonImageBase
 {
 @private
     IOSurfaceRef _surface;
+}
+
+- (id)init
+{
+    return [self initWithSurface:NULL];
 }
 
 - (id)initWithSurface:(IOSurfaceRef)surfaceRef
@@ -47,9 +52,6 @@
 			return nil;
 		}
 		_surface = (IOSurfaceRef)CFRetain(surfaceRef);
-		
-		_size.width = IOSurfaceGetWidth(surfaceRef);
-		_size.height = IOSurfaceGetHeight(surfaceRef);
 	}
 	return self;
 }
@@ -58,11 +60,6 @@
 {
     if (_surface) CFRelease(_surface);
 	[super dealloc];
-}
-
-- (NSSize)textureSize
-{
-	return _size;
 }
 
 - (IOSurfaceRef)surface

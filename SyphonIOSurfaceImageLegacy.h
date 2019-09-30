@@ -27,8 +27,8 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SyphonIOSurfaceImage.h"
+#import "SyphonImage.h"
 
-@interface SyphonIOSurfaceImageLegacy : SyphonIOSurfaceImage
+@interface SyphonIOSurfaceImageLegacy : SyphonImage
 - (id)initWithSurface:(IOSurfaceRef)surface forContext:(CGLContextObj)context;
 @end

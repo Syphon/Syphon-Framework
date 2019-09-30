@@ -57,7 +57,9 @@
         glEnable(GL_TEXTURE_RECTANGLE_ARB);
         glBindTexture(GL_TEXTURE_RECTANGLE_ARB, _texture);
 
-        CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, GL_RGBA8, _size.width, _size.height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, surface, 0);
+        NSSize size = self.textureSize;
+
+        CGLError err = CGLTexImageIOSurface2D(cgl_ctx, GL_TEXTURE_RECTANGLE_ARB, GL_RGBA8, size.width, size.height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, surface, 0);
 
         glPopAttrib();
 

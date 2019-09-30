@@ -30,7 +30,20 @@
 #import "SyphonImage.h"
 
 
-@implementation SyphonImage
+@implementation SyphonImage {
+    NSSize  _size;
+}
+- (instancetype)initWithSurface:(IOSurfaceRef)surfaceRef
+{
+    self = [super initWithSurface:surfaceRef];
+    if (self)
+    {
+        _size.width = IOSurfaceGetWidth(surfaceRef);
+        _size.height = IOSurfaceGetHeight(surfaceRef);
+    }
+    return self;
+}
+
 - (GLuint)textureName {return 0;}
-- (NSSize)textureSize {return NSMakeSize(0, 0);}
+- (NSSize)textureSize {return _size;}
 @end

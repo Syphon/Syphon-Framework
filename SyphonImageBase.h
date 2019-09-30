@@ -28,23 +28,20 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "SyphonImage.h"
 #import <IOSurface/IOSurface.h>
 
-#define SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonIOSurfaceImage)
+#define SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonImageBase)
 
-@interface SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME : SyphonImage {
-@protected
-	NSSize _size;
-}
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef;
+@interface SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME : NSObject
+
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef NS_DESIGNATED_INITIALIZER;
 @end
 
 #if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonIOSurfaceImage SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME;
+@compatibility_alias SyphonImageBase SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME;
 #endif
 
-@interface SyphonIOSurfaceImage (SyphonSubclassing)
+@interface SyphonImageBase (SyphonSubclassing)
 // TODO: subclasses probably only need this at init, we might not want to expose it here
 @property (readonly) IOSurfaceRef surface;
 @end
