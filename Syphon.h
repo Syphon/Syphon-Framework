@@ -176,7 +176,16 @@
  Use the <a href="http://forums.v002.info/forum.php?id=7" target="_blank">Syphon developer forum</a> to ask questions, and for any development related discussion.
  
  Good luck!
- 
+
+ @section extending_syphon Extending Syphon
+
+ Syphon can be extended for any IOSurface-based technology using the Syphon Base classes without modifying the framework at all.
+
+ 1. Implement a new SyphonImage subclass by subclassing SyphonImageBase to expose the surface in your new format. This class should be a minimal wrapper to the contained type.
+ 2. Implement a server by subclassing SyphonServerBase. Add methods to your subclass to publish frames. When needed, call -copySurfaceForWidth: height: options: to obtain an IOSurface. When you have updated the surface, call -publish. Add a method named -newFrameImage which returns an instance of your SyphonImageBase subclass.
+ 3. Implement a client by subclassing SyphonClientBase. Add a method named -newFrameImage which returns an instance of your SyphonImageBase subclass. Implement the -invalidateFrame method, noting this may be called on a background thread.
+ 4. If you override other Syphon Base class methods, be sure to pass them on to the superclass (eg if you override -stop, call [super stop] from your implementation of -stop).
+
  @section framework_dev Framework development
  
  If you'd like to examine the framework's source code, report a bug, or get involved in development, head on over to the <a href="https://github.com/Syphon/Syphon-Framework">Syphon framework GitHub project.</a>
