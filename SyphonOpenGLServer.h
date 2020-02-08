@@ -73,9 +73,8 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
  */
 
 #define SYPHON_OPENGL_SERVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonOpenGLServer)
-#define SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonOpenGLImage)
 
-@class SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME;
+@class SyphonOpenGLImage;
 
 @interface SYPHON_OPENGL_SERVER_UNIQUE_CLASS_NAME : SyphonServerBase
 
@@ -170,7 +169,7 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
   
  @returns A SyphonImage representing the current output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it. 
  */
-- (nullable SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage;
+- (nullable SyphonOpenGLImage *)newFrameImage;
 
 /*! 
  Stops the server instance. Use of this method is optional and releasing all references to the server has the same effect.

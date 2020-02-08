@@ -32,9 +32,8 @@
 #import <Syphon/SyphonClientBase.h>
 
 #define SYPHON_OPENGL_CLIENT_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonOpenGLClient)
-#define SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonOpenGLImage)
 
-@class SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME;
+@class SyphonOpenGLImage;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -91,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @returns A SyphonImage representing the live output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it.
  */
-- (nullable SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage;
+- (nullable SyphonOpenGLImage *)newFrameImage;
 
 /*!
  Stops the client from receiving any further frames from the server. Use of this method is optional and releasing all references to the client has the same effect.
