@@ -1,5 +1,5 @@
 /*
-    SyphonImage.m
+    SyphonOpenGLImage.m
     Syphon
 
     Copyright 2010-2011 bangnoise (Tom Butterworth) & vade (Anton Marini).
