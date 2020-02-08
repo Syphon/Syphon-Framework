@@ -4,10 +4,10 @@
 
 @implementation SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME
 {
-    id <MTLTexture> surfaceTexture;
-    id<MTLDevice> device;
-    MTLPixelFormat colorPixelFormat;
-    id<MTLCommandQueue> commandQueue;
+    id <MTLTexture> _surfaceTexture;
+    id<MTLDevice> _device;
+    MTLPixelFormat _colorPixelFormat;
+    id<MTLCommandQueue> _commandQueue;
 }
 
 #pragma mark - Lifecycle
@@ -17,38 +17,38 @@
     self = [super initWithName:name options:options];
     if( self )
     {
-        device = theDevice;
-        colorPixelFormat = theColorPixelFormat;
-        commandQueue = [device newCommandQueue];
-        surfaceTexture = nil;
+        _device = theDevice;
+        _colorPixelFormat = theColorPixelFormat;
+        _commandQueue = [_device newCommandQueue];
+        _surfaceTexture = nil;
     }
     return self;
 }
 
 - (void)lazySetupTextureForSize:(NSSize)size
 {
-    BOOL hasSizeChanged = !NSEqualSizes(CGSizeMake(surfaceTexture.width, surfaceTexture.height), size);
-    if( surfaceTexture == nil || hasSizeChanged )
+    BOOL hasSizeChanged = !NSEqualSizes(CGSizeMake(_surfaceTexture.width, _surfaceTexture.height), size);
+    if( _surfaceTexture == nil || hasSizeChanged )
     {
-        MTLTextureDescriptor *descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:colorPixelFormat
+        MTLTextureDescriptor *descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:_colorPixelFormat
                                                                                               width:size.width
                                                                                              height:size.height
                                                                                           mipmapped:NO];
         descriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
         IOSurfaceRef surface = [super copySurfaceForWidth:size.width height:size.height options:nil];
-        surfaceTexture = [device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
+        _surfaceTexture = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
     }
 }
 
 - (id<MTLTexture>)prepareToDrawFrameOfSize:(NSSize)size
 {
     [self lazySetupTextureForSize:size];
-    return [surfaceTexture retain];
+    return [_surfaceTexture retain];
 }
 
 - (void)stop
 {
-    surfaceTexture = nil;
+    _surfaceTexture = nil;
     [super stop];
 }
 
@@ -57,7 +57,7 @@
 
 - (id<MTLTexture>)newFrameImage
 {
-    return [surfaceTexture retain];
+    return [_surfaceTexture retain];
 }
 
 - (void)drawFrame:(void(^)(id<MTLTexture> frame,id<MTLCommandBuffer> commandBuffer))frameHandler size:(NSSize)size commandBuffer:(id<MTLCommandBuffer>)commandBuffer
@@ -75,7 +75,7 @@
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region
 {
     [self lazySetupTextureForSize:region.size];
-    id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
+    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
     
     // "framebufferOnly" should be 'NO' otherwise we can't blit
     if( textureToPublish.framebufferOnly )
@@ -90,7 +90,7 @@
                             sourceLevel:0
                            sourceOrigin:MTLOriginMake(region.origin.x, region.origin.y, 0)
                              sourceSize:MTLSizeMake(region.size.width, region.size.height, 1)
-                              toTexture:surfaceTexture
+                              toTexture:_surfaceTexture
                        destinationSlice:0
                        destinationLevel:0
                       destinationOrigin:MTLOriginMake(0, 0, 0)];

@@ -4,10 +4,10 @@
 
 @implementation SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME
 {
-    int32_t threadLock;
-    id<MTLTexture> frame;
-    id<MTLDevice> device;
-    MTLPixelFormat colorPixelFormat;
+    int32_t _threadLock;
+    id<MTLTexture> _frame;
+    id<MTLDevice> _device;
+    MTLPixelFormat _colorPixelFormat;
 }
 
 - (id)initWithServerDescription:(NSDictionary *)description device:(id<MTLDevice>)theDevice colorPixelFormat:(MTLPixelFormat)theColorPixelFormat options:(NSDictionary *)options
@@ -16,10 +16,10 @@
     self = [super initWithServerDescription:description options:options newFrameHandler:handler];
     if( self )
     {
-        colorPixelFormat = theColorPixelFormat;
-        device = theDevice;
-        threadLock = OS_SPINLOCK_INIT;
-        frame = nil;
+        _colorPixelFormat = theColorPixelFormat;
+        _device = theDevice;
+        _threadLock = OS_SPINLOCK_INIT;
+        _frame = nil;
     }
     return self;
 }
@@ -32,9 +32,9 @@
 
 - (void)stop
 {
-    OSSpinLockLock(&threadLock);
-    frame = nil;
-    OSSpinLockUnlock(&threadLock);
+    OSSpinLockLock(&_threadLock);
+    _frame = nil;
+    OSSpinLockUnlock(&_threadLock);
     [super stop];
 }
 
@@ -47,14 +47,14 @@
         SYPHONLOG(@"surface is nil !");
         return nil;
     }
-    BOOL hasSizeChanged = (frame.width != IOSurfaceGetWidth(surface) || frame.height != IOSurfaceGetWidth(surface));
-    if( frame == nil || hasSizeChanged )
+    BOOL hasSizeChanged = (_frame.width != IOSurfaceGetWidth(surface) || _frame.height != IOSurfaceGetWidth(surface));
+    if( _frame == nil || hasSizeChanged )
     {
-        MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:colorPixelFormat width:IOSurfaceGetWidth(surface) height:IOSurfaceGetHeight(surface) mipmapped:NO];
-        frame = [device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
+        MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:_colorPixelFormat width:IOSurfaceGetWidth(surface) height:IOSurfaceGetHeight(surface) mipmapped:NO];
+        _frame = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
     }
 
-    return [frame retain];
+    return [_frame retain];
 }
 
 @end
