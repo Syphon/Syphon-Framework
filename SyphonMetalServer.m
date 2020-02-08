@@ -26,7 +26,12 @@
 - (void)lazySetupTextureForSize:(NSSize)size
 {
     BOOL hasSizeChanged = !NSEqualSizes(CGSizeMake(_surfaceTexture.width, _surfaceTexture.height), size);
-    if( _surfaceTexture == nil || hasSizeChanged )
+    if (hasSizeChanged)
+    {
+        [_surfaceTexture release];
+        _surfaceTexture = nil;
+    }
+    if(_surfaceTexture == nil)
     {
         MTLTextureDescriptor *descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm
                                                                                               width:size.width
@@ -34,21 +39,28 @@
                                                                                           mipmapped:NO];
         descriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
         IOSurfaceRef surface = [super copySurfaceForWidth:size.width height:size.height options:nil];
-        _surfaceTexture = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
+        if (surface)
+        {
+            _surfaceTexture = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
+            CFRelease(surface);
+        }
     }
 }
 
 - (id<MTLTexture>)prepareToDrawFrameOfSize:(NSSize)size
 {
     [self lazySetupTextureForSize:size];
-    return [_surfaceTexture retain];
+    return _surfaceTexture;
 }
 
 - (void)stop
 {
+    [_surfaceTexture release];
     _surfaceTexture = nil;
     [_device release];
     _device = nil;
+    [_commandQueue release];
+    _commandQueue = nil;
     [super stop];
 }
 
