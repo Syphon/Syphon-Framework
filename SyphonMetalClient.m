@@ -17,7 +17,7 @@
     self = [super initWithServerDescription:description options:options newFrameHandler:handler];
     if( self )
     {
-        _device = theDevice;
+        _device = [theDevice retain];
         _threadLock = OS_SPINLOCK_INIT;
         _frame = nil;
     }
@@ -33,28 +33,49 @@
 - (void)stop
 {
     OSSpinLockLock(&_threadLock);
+    [_frame release];
     _frame = nil;
+    [_device release];
+    _device = nil;
     OSSpinLockUnlock(&_threadLock);
     [super stop];
 }
 
+- (void)invalidateFrame
+{
+    OSSpinLockLock(&_threadLock);
+    [_frame release];
+    _frame = nil;
+    OSSpinLockUnlock(&_threadLock);
+}
+
 - (id<MTLTexture>)newFrameImage
 {
-    IOSurfaceRef surface = [super newSurface];
-    if( surface == nil )
+    id<MTLTexture> image = nil;
+
+    OSSpinLockLock(&_threadLock);
+    if (_frame == nil)
     {
-        // TODO: should it happen ?
-        SYPHONLOG(@"surface is nil !");
-        return nil;
-    }
-    BOOL hasSizeChanged = (_frame.width != IOSurfaceGetWidth(surface) || _frame.height != IOSurfaceGetWidth(surface));
-    if( _frame == nil || hasSizeChanged )
-    {
-        MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:IOSurfaceGetWidth(surface) height:IOSurfaceGetHeight(surface) mipmapped:NO];
-        _frame = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
+        IOSurfaceRef surface = [super newSurface];
+        if( surface == nil )
+        {
+            // TODO: should it happen ?
+            SYPHONLOG(@"surface is nil !");
+        }
+        if (surface != nil)
+        {
+            MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:IOSurfaceGetWidth(surface) height:IOSurfaceGetHeight(surface) mipmapped:NO];
+            _frame = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
+
+            CFRelease(surface);
+        }
     }
 
-    return [_frame retain];
+    image = [_frame retain];
+
+    OSSpinLockUnlock(&_threadLock);
+
+    return image;
 }
 
 @end
