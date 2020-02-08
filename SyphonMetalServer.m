@@ -16,7 +16,7 @@
     self = [super initWithName:name options:options];
     if( self )
     {
-        _device = theDevice;
+        _device = [theDevice retain];
         _commandQueue = [_device newCommandQueue];
         _surfaceTexture = nil;
     }
@@ -47,6 +47,8 @@
 - (void)stop
 {
     _surfaceTexture = nil;
+    [_device release];
+    _device = nil;
     [super stop];
 }
 
