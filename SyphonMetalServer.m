@@ -6,19 +6,17 @@
 {
     id <MTLTexture> _surfaceTexture;
     id<MTLDevice> _device;
-    MTLPixelFormat _colorPixelFormat;
     id<MTLCommandQueue> _commandQueue;
 }
 
 #pragma mark - Lifecycle
 
-- (id)initWithName:(NSString *)name device:(id<MTLDevice>)theDevice colorPixelFormat:(MTLPixelFormat)theColorPixelFormat options:(NSDictionary *)options
+- (id)initWithName:(NSString *)name device:(id<MTLDevice>)theDevice options:(NSDictionary *)options
 {
     self = [super initWithName:name options:options];
     if( self )
     {
         _device = theDevice;
-        _colorPixelFormat = theColorPixelFormat;
         _commandQueue = [_device newCommandQueue];
         _surfaceTexture = nil;
     }
@@ -30,7 +28,7 @@
     BOOL hasSizeChanged = !NSEqualSizes(CGSizeMake(_surfaceTexture.width, _surfaceTexture.height), size);
     if( _surfaceTexture == nil || hasSizeChanged )
     {
-        MTLTextureDescriptor *descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:_colorPixelFormat
+        MTLTextureDescriptor *descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm
                                                                                               width:size.width
                                                                                              height:size.height
                                                                                           mipmapped:NO];

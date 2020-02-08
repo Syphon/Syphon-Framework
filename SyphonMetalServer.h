@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMetalServer)
 @interface SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME : SyphonServerBase
 
-- (id)initWithName:(NSString*)name device:(id<MTLDevice>)device colorPixelFormat:(MTLPixelFormat)colorPixelFormat options:(NSDictionary *)options;
+- (id)initWithName:(NSString*)name device:(id<MTLDevice>)device options:(NSDictionary *)options;
 
 // API Method 1
 - (void)drawFrame:(void(^)(id<MTLTexture> texture,id<MTLCommandBuffer> commandBuffer))frameHandler size:(NSSize)size commandBuffer:(id<MTLCommandBuffer>)commandBuffer;

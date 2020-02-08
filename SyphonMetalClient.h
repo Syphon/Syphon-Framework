@@ -8,8 +8,10 @@
 @interface SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME : SyphonClientBase
 
 
-- (id)initWithServerDescription:(NSDictionary *)description device:(id<MTLDevice>)device colorPixelFormat:(MTLPixelFormat)colorPixelFormat options:(NSDictionary *)options
-                frameHandler:(void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
+- (id)initWithServerDescription:(NSDictionary *)description
+                         device:(id<MTLDevice>)device
+                        options:(NSDictionary *)options
+                   frameHandler:(void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
 
 - (id<MTLTexture>)newFrameImage;
 - (void)stop;
