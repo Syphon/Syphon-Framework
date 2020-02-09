@@ -187,6 +187,7 @@
  @section extending_syphon Extending Syphon
 
  Syphon can be extended for any IOSurface-based technology using the Syphon Base classes without modifying the framework at all.
+ Import Syphon/SyphonSubclassing.h in your implementation files to gain access to essential methods for subclasses to use.
 
  1. If your new format is not an Objective C class, implement a new SyphonImage subclass by subclassing SyphonImageBase to expose the surface in your new format. This class should be a minimal wrapper to the contained type.
  2. Implement a server by subclassing SyphonServerBase. Add methods to your subclass to publish frames. When needed, call -copySurfaceForWidth: height: options: to obtain an IOSurface. When you have updated the surface, call -publish. Add a method named -newFrameImage which returns an instance of your SyphonImageBase subclass (or the new type directly).

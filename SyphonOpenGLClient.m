@@ -32,6 +32,7 @@
 #import "SyphonCGL.h"
 #import "SyphonIOSurfaceImageCore.h"
 #import "SyphonIOSurfaceImageLegacy.h"
+#import "SyphonSubclassing.h"
 
 #import <libkern/OSAtomic.h>
 

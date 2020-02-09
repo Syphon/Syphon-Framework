@@ -77,25 +77,4 @@ extern NSString * const SyphonServerOptionIsPrivate;
 @compatibility_alias SyphonServerBase SYPHON_SERVER_BASE_UNIQUE_CLASS_NAME;
 #endif
 
-@interface SyphonServerBase (SyphonSubclassing)
-/*!
- Subclasses call this to obtain a new IOSurface to draw to.
- @param width the width of the IOSurface in pixels
- @param height the height of the IOSurface in pixels
- @param options currently ignored, pass nil
- @returns an existing or new IOSurface sized for the given dimensions - to be released by the caller using CFRelease
- */
-- (nullable IOSurfaceRef)copySurfaceForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
-
-/*!
- Releases any current IOSurface
- */
-- (void)destroySurface;
-
-/*!
- Subclasses call this to have the server publish a new frame once the subclass has updated the IOSurface.
- */
-- (void)publish;
-
-@end
 NS_ASSUME_NONNULL_END

@@ -69,6 +69,7 @@
 		E240462923EF6F7E004C14E9 /* SyphonClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E240462723EF6F7E004C14E9 /* SyphonClient.m */; };
 		E240463023EF71D4004C14E9 /* SyphonImage.h in Headers */ = {isa = PBXBuildFile; fileRef = E240462E23EF71D4004C14E9 /* SyphonImage.h */; };
 		E240463123EF71D4004C14E9 /* SyphonImage.m in Sources */ = {isa = PBXBuildFile; fileRef = E240462F23EF71D4004C14E9 /* SyphonImage.m */; };
+		E240463523F0B9EF004C14E9 /* SyphonSubclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = E240463423F0B9EF004C14E9 /* SyphonSubclassing.h */; };
 		E28D0C9A1D8F43380036DF26 /* SyphonServerRendererCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0C981D8F43380036DF26 /* SyphonServerRendererCore.h */; };
 		E28D0C9B1D8F43380036DF26 /* SyphonServerRendererCore.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0C991D8F43380036DF26 /* SyphonServerRendererCore.m */; };
 		E28D0CA81D9296520036DF26 /* SyphonShader.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CA61D9296520036DF26 /* SyphonShader.h */; };
@@ -165,6 +166,7 @@
 		E240462723EF6F7E004C14E9 /* SyphonClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonClient.m; sourceTree = "<group>"; };
 		E240462E23EF71D4004C14E9 /* SyphonImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonImage.h; sourceTree = "<group>"; };
 		E240462F23EF71D4004C14E9 /* SyphonImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonImage.m; sourceTree = "<group>"; };
+		E240463423F0B9EF004C14E9 /* SyphonSubclassing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonSubclassing.h; sourceTree = "<group>"; };
 		E26877562199C4E600B8E495 /* Building Syphon.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Building Syphon.md"; sourceTree = "<group>"; };
 		E28D0C981D8F43380036DF26 /* SyphonServerRendererCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerRendererCore.h; sourceTree = "<group>"; };
 		E28D0C991D8F43380036DF26 /* SyphonServerRendererCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerRendererCore.m; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 				BD038875122EAB1A007725FF /* SyphonImageBase.h */,
 				E240462E23EF71D4004C14E9 /* SyphonImage.h */,
 				BD606D6611D2842D00E02702 /* SyphonServerDirectory.h */,
+				E240463423F0B9EF004C14E9 /* SyphonSubclassing.h */,
 			);
 			name = "Public Headers";
 			sourceTree = "<group>";
@@ -454,6 +457,7 @@
 				E218B67718436D3B004FD9E3 /* SyphonOpenGLClient.h in Headers */,
 				E28D0C9A1D8F43380036DF26 /* SyphonServerRendererCore.h in Headers */,
 				E240463023EF71D4004C14E9 /* SyphonImage.h in Headers */,
+				E240463523F0B9EF004C14E9 /* SyphonSubclassing.h in Headers */,
 				E219FB59233CDC3B00FB7F63 /* SyphonClientBase.h in Headers */,
 				E218B67818436D3F004FD9E3 /* SyphonOpenGLImage.h in Headers */,
 				E240462823EF6F7E004C14E9 /* SyphonClient.h in Headers */,
@@ -585,6 +589,10 @@
 				"$(SRCROOT)/SyphonServerBase.h",
 				"$(SRCROOT)/SyphonClientBase.h",
 				"$(SRCROOT)/SyphonImageBase.h",
+				"$(SRCROOT)/SyphonOpenGLImage.h",
+				"$(SRCROOT)/SyphonOpenGLServer.h",
+				"$(SRCROOT)/SyphonOpenGLClient.h",
+				"$(SRCROOT)/SyphonSubclassing.h",
 			);
 			name = "Generate Public Headers";
 			outputPaths = (
@@ -595,10 +603,14 @@
 				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonServerBase.h,
 				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonClientBase.h,
 				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonImageBase.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonOpenGLImage.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonOpenGLServer.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonOpenGLClient.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonSubclassing.h,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncombined=\"\"\nfor def in $GCC_PREPROCESSOR_DEFINITIONS\ndo\ncombined=\"${combined} -D${def}\"\ndone\nfor header in \"SyphonOpenGLClient\" \"SyphonClientBase\" \"SyphonClient\" \"SyphonOpenGLServer\" \"SyphonServerBase\" \"SyphonServer\" \"SyphonServerDirectory\" \"SyphonImageBase\" \"SyphonOpenGLImage\" \"SyphonImage\"\ndo\nsed 's:#import://SYPHON_IMPORT_PLACEHOLDER:' \"$SRCROOT/${header}.h\" > \"$DERIVED_FILE_DIR/${header}_stage_1.h\"\nclang -E -C -P -nostdinc ${combined} -DSYPHON_HEADER_BUILD_PHASE -include \"$SRCROOT/SyphonBuildMacros.h\" \"$DERIVED_FILE_DIR/${header}_stage_1.h\" -o \"$DERIVED_FILE_DIR/${header}_stage_2.h\"\nsed 's://SYPHON_IMPORT_PLACEHOLDER:#import:' \"$DERIVED_FILE_DIR/${header}_stage_2.h\" > \"$DERIVED_FILE_DIR/${header}_stage_3.h\"\nsed '/./,$!d' \"$DERIVED_FILE_DIR/${header}_stage_3.h\" > \"$DERIVED_FILE_DIR/${header}_stage_4.h\"\ncat -s \"$DERIVED_FILE_DIR/${header}_stage_4.h\" > \"$DERIVED_FILE_DIR/${header}.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_1.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_2.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_3.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_4.h\"\ncp \"$DERIVED_FILE_DIR/${header}.h\" \"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/${header}.h\"\ndone\n";
+			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncombined=\"\"\nfor def in $GCC_PREPROCESSOR_DEFINITIONS\ndo\ncombined=\"${combined} -D${def}\"\ndone\nfor header in \"SyphonOpenGLClient\" \"SyphonClientBase\" \"SyphonClient\" \"SyphonOpenGLServer\" \"SyphonServerBase\" \"SyphonServer\" \"SyphonServerDirectory\" \"SyphonImageBase\" \"SyphonOpenGLImage\" \"SyphonImage\" \"SyphonSubclassing\"\ndo\nsed 's:#import://SYPHON_IMPORT_PLACEHOLDER:' \"$SRCROOT/${header}.h\" > \"$DERIVED_FILE_DIR/${header}_stage_1.h\"\nclang -E -C -P -nostdinc ${combined} -DSYPHON_HEADER_BUILD_PHASE -include \"$SRCROOT/SyphonBuildMacros.h\" \"$DERIVED_FILE_DIR/${header}_stage_1.h\" -o \"$DERIVED_FILE_DIR/${header}_stage_2.h\"\nsed 's://SYPHON_IMPORT_PLACEHOLDER:#import:' \"$DERIVED_FILE_DIR/${header}_stage_2.h\" > \"$DERIVED_FILE_DIR/${header}_stage_3.h\"\nsed '/./,$!d' \"$DERIVED_FILE_DIR/${header}_stage_3.h\" > \"$DERIVED_FILE_DIR/${header}_stage_4.h\"\ncat -s \"$DERIVED_FILE_DIR/${header}_stage_4.h\" > \"$DERIVED_FILE_DIR/${header}.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_1.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_2.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_3.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_4.h\"\ncp \"$DERIVED_FILE_DIR/${header}.h\" \"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/${header}.h\"\ndone\n";
 		};
 		BDFE6806122866C7009C2E21 /* Generate Exported Symbols File */ = {
 			isa = PBXShellScriptBuildPhase;

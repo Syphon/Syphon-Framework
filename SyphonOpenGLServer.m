@@ -34,6 +34,7 @@
 #import "SyphonServerRendererCore.h"
 #import "SyphonPrivate.h"
 #import "SyphonCGL.h"
+#import "SyphonSubclassing.h"
 #import <Cocoa/Cocoa.h>
 #import <IOSurface/IOSurface.h>
 

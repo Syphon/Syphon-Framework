@@ -70,19 +70,4 @@ NS_ASSUME_NONNULL_BEGIN
 @compatibility_alias SyphonClientBase SYPHON_CLIENT_BASE_UNIQUE_CLASS_NAME;
 #endif
 
-@interface SyphonClientBase (SyphonSubclassing)
-/*!
- Subclasses use this method to acquire an IOSurface representing the current output from the server. Subclasses may consider the returned value valid until
- the next call to -invalidateFrame.
-
- @returns An IOSurface representing the live output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT using CFRelease() when you
- are finished with it.
- */
-- (IOSurfaceRef)newSurface;
-
-/*!
- Subclasses override this method to invalidate their output when the server's surface backing changes. Do not call this method directly.
- */
-- (void)invalidateFrame;
-@end
 NS_ASSUME_NONNULL_END
