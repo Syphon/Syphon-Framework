@@ -59,8 +59,8 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 
 - (id)init
 {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    // Returns nil
+    return [self initWithServerDescription:@{} options:nil newFrameHandler:nil];
 }
 
 - (instancetype)initWithServerDescription:(NSDictionary<NSString *, id> *)description options:(nullable NSDictionary<NSString *, id> *)options newFrameHandler:(nullable void (^)(id client))handler

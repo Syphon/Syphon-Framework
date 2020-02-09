@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param description
 
  */
-- (instancetype)initWithServerDescription:(NSDictionary<NSString *, id> *)description options:(nullable NSDictionary<NSString *, id> *)options newFrameHandler:(nullable void (^)(id client))handler;
+- (instancetype)initWithServerDescription:(NSDictionary<NSString *, id> *)description options:(nullable NSDictionary<NSString *, id> *)options newFrameHandler:(nullable void (^)(id client))handler NS_DESIGNATED_INITIALIZER;
 
 /*!
  Returns a dictionary with a description of the server the client is attached to. See SyphonServerDirectory for the keys this dictionary contains
