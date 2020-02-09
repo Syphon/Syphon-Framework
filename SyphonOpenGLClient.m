@@ -29,13 +29,9 @@
 
 
 #import "SyphonOpenGLClient.h"
-#import "SyphonPrivate.h" // TODO: using it?
-#import "SyphonClientConnectionManager.h" // TODO: using it?
 #import "SyphonCGL.h"
 #import "SyphonIOSurfaceImageCore.h"
 #import "SyphonIOSurfaceImageLegacy.h"
-
-#import "SyphonCGL.h"
 
 #import <libkern/OSAtomic.h>
 
