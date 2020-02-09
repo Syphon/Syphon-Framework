@@ -52,7 +52,7 @@ extern NSString * const SyphonServerOptionIsPrivate;
 */
 - (instancetype)initWithName:(nullable NSString*)serverName options:(nullable NSDictionary<NSString *, id> *)options NS_DESIGNATED_INITIALIZER;
 /*!
- A string representing the name of the SyphonServer.
+ A string representing the name of the server.
  */
 @property (strong) NSString* name;
 
@@ -78,11 +78,23 @@ extern NSString * const SyphonServerOptionIsPrivate;
 #endif
 
 @interface SyphonServerBase (SyphonSubclassing)
-// TODO: document, options is ignored for now
-- (IOSurfaceRef)copySurfaceForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
-// TODO: document
+/*!
+ Subclasses call this to obtain a new IOSurface to draw to.
+ @param width the width of the IOSurface in pixels
+ @param height the height of the IOSurface in pixels
+ @param options currently ignored, pass nil
+ @returns an existing or new IOSurface sized for the given dimensions - to be released by the caller using CFRelease
+ */
+- (nullable IOSurfaceRef)copySurfaceForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
+
+/*!
+ Releases any current IOSurface
+ */
 - (void)destroySurface;
-// TODO: document
+
+/*!
+ Subclasses call this to have the server publish a new frame once the subclass has updated the IOSurface.
+ */
 - (void)publish;
 
 @end
