@@ -40,8 +40,3 @@
 #if defined(SYPHON_USE_CLASS_ALIAS)
 @compatibility_alias SyphonImageBase SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME;
 #endif
-
-@interface SyphonImageBase (SyphonSubclassing)
-// TODO: subclasses probably only need this at init, we might not want to expose it here
-@property (readonly) IOSurfaceRef surface;
-@end
