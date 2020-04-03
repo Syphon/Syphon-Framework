@@ -15,8 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)drawFrame:(void(^)(id<MTLTexture> texture,id<MTLCommandBuffer> commandBuffer))frameHandler size:(NSSize)size commandBuffer:(id<MTLCommandBuffer>)commandBuffer;
 
 // API Method 2
-- (void)publishFrameTexture:(id<MTLTexture>)texture imageRegion:(NSRect)region;
-- (void)publishFrameTexture:(id<MTLTexture>)texture;
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region flip:(BOOL)flip;
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region;
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish flip:(BOOL)flip;
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish;
 
 
 - (id<MTLTexture>)newFrameImage;

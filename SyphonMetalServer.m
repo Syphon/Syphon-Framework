@@ -1,13 +1,27 @@
 #import "SyphonMetalServer.h"
 #import <Metal/MTLCommandQueue.h>
-
+#import "SyphonServerRendererMetal.h"
+#import "SyphonPrivate.h"
 
 @implementation SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME
 {
-    id <MTLTexture> _surfaceTexture;
+    id<MTLTexture> _surfaceTexture;
     id<MTLDevice> _device;
     id<MTLCommandQueue> _commandQueue;
+    SyphonServerRendererMetal *_renderer;
+    NSInteger _msaaSampleCount;
 }
+
++ (NSInteger)integerValueForKey:(NSString *)key fromOptions:(NSDictionary *)options
+{
+    NSNumber *number = [options objectForKey:key];
+    if ([number respondsToSelector:@selector(unsignedIntValue)])
+    {
+        return [number unsignedIntValue];
+    }
+    return 0;
+}
+
 
 #pragma mark - Lifecycle
 
@@ -19,6 +33,10 @@
         _device = [theDevice retain];
         _commandQueue = [_device newCommandQueue];
         _surfaceTexture = nil;
+        NSInteger unsafeMsaaSampleCount = [[self class] integerValueForKey:SyphonServerOptionAntialiasSampleCount fromOptions:options];
+        _msaaSampleCount = [SyphonServerRendererMetal safeMsaaSampleCountForDevice:_device unsafeSampleCount:unsafeMsaaSampleCount verbose:YES];
+#warning MTO: MSAA is disabled, it needs more testing
+        _renderer = [[SyphonServerRendererMetal alloc] initWithDevice:theDevice colorPixelFormat:MTLPixelFormatBGRA8Unorm msaaSampleCount:1];
     }
     return self;
 }
@@ -42,6 +60,7 @@
         if (surface)
         {
             _surfaceTexture = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
+            _surfaceTexture.label = @"Syphon Surface Texture";
             CFRelease(surface);
         }
     }
@@ -61,6 +80,8 @@
     _device = nil;
     [_commandQueue release];
     _commandQueue = nil;
+    [_renderer release];
+    _renderer = nil;
     [super stop];
 }
 
@@ -84,41 +105,60 @@
     }
 }
 
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region
-{
-    [self lazySetupTextureForSize:region.size];
-    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-    
-    // "framebufferOnly" should be 'NO' otherwise we can't blit
-    if( textureToPublish.framebufferOnly )
-    {
-        SYPHONLOG(@"Syphon Metal Server: Abort sending frame. You need to set the value 'frameBufferOnly' to 'NO' in your MTLTexture.")
-        return;
-    }
-    
-    id<MTLBlitCommandEncoder> blitCommandEncoder = [commandBuffer blitCommandEncoder];
-    [blitCommandEncoder copyFromTexture:textureToPublish
-                            sourceSlice:0
-                            sourceLevel:0
-                           sourceOrigin:MTLOriginMake(region.origin.x, region.origin.y, 0)
-                             sourceSize:MTLSizeMake(region.size.width, region.size.height, 1)
-                              toTexture:_surfaceTexture
-                       destinationSlice:0
-                       destinationLevel:0
-                      destinationOrigin:MTLOriginMake(0, 0, 0)];
-    
-    [blitCommandEncoder endEncoding];
-    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull commandBuffer) {
-        [self publish];
-    }];
-    
-    [commandBuffer commit];
-}
-
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish
 {
     NSRect region = NSMakeRect(0, 0, textureToPublish.width, textureToPublish.height);
-    [self publishFrameTexture:textureToPublish imageRegion:region];
+    [self publishFrameTexture:textureToPublish imageRegion:region flip:NO];
 }
+
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish flip:(BOOL)flip
+{
+    NSRect region = NSMakeRect(0, 0, textureToPublish.width, textureToPublish.height);
+    [self publishFrameTexture:textureToPublish imageRegion:region flip:flip];
+}
+
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region
+{
+    [self publishFrameTexture:textureToPublish imageRegion:region flip:NO];
+}
+
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region flip:(BOOL)flip
+{
+    [self lazySetupTextureForSize:region.size];
+    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+    commandBuffer.label = @"Syphon Server commandBuffer";
+    
+    // When possible, use faster blit
+    if( !flip && _msaaSampleCount == 1 && textureToPublish.pixelFormat == _surfaceTexture.pixelFormat
+       && textureToPublish.sampleCount == _surfaceTexture.sampleCount
+       && !textureToPublish.framebufferOnly)
+    {
+        id<MTLBlitCommandEncoder> blitCommandEncoder = [commandBuffer blitCommandEncoder];
+        blitCommandEncoder.label = @"Syphon Server Optimised Blit commandEncoder";
+        [blitCommandEncoder copyFromTexture:textureToPublish
+                                sourceSlice:0
+                                sourceLevel:0
+                               sourceOrigin:MTLOriginMake(region.origin.x, region.origin.y, 0)
+                                 sourceSize:MTLSizeMake(region.size.width, region.size.height, 1)
+                                  toTexture:_surfaceTexture
+                           destinationSlice:0
+                           destinationLevel:0
+                          destinationOrigin:MTLOriginMake(0, 0, 0)];
+
+        [blitCommandEncoder endEncoding];
+    }
+    // otherwise, re-draw the frame
+    else
+    {
+        [_renderer renderFromTexture:textureToPublish inTexture:_surfaceTexture region:region onCommandBuffer:commandBuffer flip:flip];
+    }
+    
+    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull commandBuffer) {
+        [self publish];
+    }];
+    [commandBuffer commit];
+}
+
+
 
 @end

@@ -29,6 +29,8 @@
 		1B0906C911CBB1CE00BCBE41 /* Syphon.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C811CBB1CE00BCBE41 /* Syphon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B09098711CD9A1C00BCBE41 /* SyphonClientConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B09098511CD9A1C00BCBE41 /* SyphonClientConnectionManager.h */; settings = {ATTRIBUTES = (); }; };
 		1B09098811CD9A1C00BCBE41 /* SyphonClientConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B09098611CD9A1C00BCBE41 /* SyphonClientConnectionManager.m */; };
+		8488126624361D4D008E17CC /* SyphonServerRendererMetal.h in Headers */ = {isa = PBXBuildFile; fileRef = 8488126424361D4C008E17CC /* SyphonServerRendererMetal.h */; };
+		8488126724361D4D008E17CC /* SyphonServerRendererMetal.m in Sources */ = {isa = PBXBuildFile; fileRef = 8488126524361D4D008E17CC /* SyphonServerRendererMetal.m */; };
 		84E4D2262385923F00E24F2D /* SyphonMetalServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E4D2242385923F00E24F2D /* SyphonMetalServer.h */; };
 		84E4D2272385923F00E24F2D /* SyphonMetalServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E4D2252385923F00E24F2D /* SyphonMetalServer.m */; };
 		84E4D22A2385927B00E24F2D /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E4D2292385927B00E24F2D /* Metal.framework */; };
@@ -114,6 +116,8 @@
 		1B09098511CD9A1C00BCBE41 /* SyphonClientConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonClientConnectionManager.h; sourceTree = "<group>"; };
 		1B09098611CD9A1C00BCBE41 /* SyphonClientConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonClientConnectionManager.m; sourceTree = "<group>"; };
 		32DBCF5E0370ADEE00C91783 /* Syphon_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syphon_Prefix.pch; sourceTree = "<group>"; };
+		8488126424361D4C008E17CC /* SyphonServerRendererMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerRendererMetal.h; sourceTree = "<group>"; };
+		8488126524361D4D008E17CC /* SyphonServerRendererMetal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerRendererMetal.m; sourceTree = "<group>"; };
 		84E4D2242385923F00E24F2D /* SyphonMetalServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonMetalServer.h; sourceTree = "<group>"; };
 		84E4D2252385923F00E24F2D /* SyphonMetalServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonMetalServer.m; sourceTree = "<group>"; };
 		84E4D2292385927B00E24F2D /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -293,6 +297,8 @@
 				E2D6C88F1D8B4DED00108260 /* SyphonServerRendererLegacy.m */,
 				E28D0C981D8F43380036DF26 /* SyphonServerRendererCore.h */,
 				E28D0C991D8F43380036DF26 /* SyphonServerRendererCore.m */,
+				8488126424361D4C008E17CC /* SyphonServerRendererMetal.h */,
+				8488126524361D4D008E17CC /* SyphonServerRendererMetal.m */,
 				E28D0CA61D9296520036DF26 /* SyphonShader.h */,
 				E28D0CA71D9296520036DF26 /* SyphonShader.m */,
 				E28D0CAA1D930B9F0036DF26 /* SyphonServerShader.h */,
@@ -471,6 +477,7 @@
 				E2D6C88C1D8B4A6D00108260 /* SyphonServerRenderer.h in Headers */,
 				E2D6C8901D8B4DED00108260 /* SyphonServerRendererLegacy.h in Headers */,
 				84E4D23223859C3A00E24F2D /* SyphonMetalClient.h in Headers */,
+				8488126624361D4D008E17CC /* SyphonServerRendererMetal.h in Headers */,
 				BDB8DA311211F59A0028D250 /* SyphonCFMessageReceiver.h in Headers */,
 				E2CF04FE227398E600B8CD19 /* SyphonServerBase.h in Headers */,
 				BDB8DA351211F59A0028D250 /* SyphonMessageSender.h in Headers */,
@@ -653,6 +660,7 @@
 				84E4D2272385923F00E24F2D /* SyphonMetalServer.m in Sources */,
 				E28D0CAD1D930B9F0036DF26 /* SyphonServerShader.m in Sources */,
 				BDB8DAF61211FA7F0028D250 /* SyphonMessaging.m in Sources */,
+				8488126724361D4D008E17CC /* SyphonServerRendererMetal.m in Sources */,
 				E21003C71D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m in Sources */,
 				BD038878122EAB1A007725FF /* SyphonImageBase.m in Sources */,
 				BD038887122EABE2007725FF /* SyphonImage.m in Sources */,
