@@ -31,6 +31,9 @@
 #import "SyphonMessaging.h"
 #import <libkern/OSAtomic.h>
 
+static dispatch_queue_t theQueue = NULL;
+static int theCount = 0;
+
 static CFDataRef MessageReturnCallback (
 								 CFMessagePortRef local,
 								 SInt32 msgid,
@@ -53,7 +56,31 @@ static CFDataRef MessageReturnCallback (
 {
 @private
     CFMessagePortRef _port;
-    CFRunLoopSourceRef _runLoopSource;
+}
+
++ (dispatch_queue_t)addUser
+{
+    @synchronized(self) {
+        theCount++;
+        if (!theQueue)
+        {
+            dispatch_queue_attr_t attributes = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_USER_INTERACTIVE, -1);
+            theQueue = dispatch_queue_create("info.v002.syphon.messaging", attributes);
+        }
+    }
+    return theQueue;
+}
+
++ (void)endUser
+{
+    @synchronized(self) {
+        theCount--;
+        if (theCount == 0)
+        {
+            dispatch_release(theQueue);
+            theQueue = NULL;
+        }
+    }
 }
 
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id data, uint32_t type))handler
@@ -71,24 +98,25 @@ static CFDataRef MessageReturnCallback (
 			[self release];
 			return nil;
 		}
-		_runLoopSource = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _port, 0);
-		// TODO: Think about which run loop we want to be in (current thread, our own private, main, or what?)
-		CFRunLoopAddSource(CFRunLoopGetMain(), _runLoopSource, kCFRunLoopCommonModes);
+        CFMessagePortSetDispatchQueue(_port, [[self class] addUser]);
 	}
 	return self;
 }
 
 - (void)dealloc
 {
-	if (_runLoopSource) CFRelease(_runLoopSource);
 	if (_port) CFRelease(_port);
 	[super dealloc];
 }
 
 - (void)invalidate
 {
-	if (_port) CFMessagePortInvalidate(_port);
-	if (_runLoopSource) CFRunLoopSourceInvalidate(_runLoopSource);
-	[super invalidate];
+	if (_port)
+    {
+        CFMessagePortInvalidate(_port);
+        // we only called addUser if _port was created
+        [[self class] endUser];
+    }
+    [super invalidate];
 }
 @end
