@@ -45,7 +45,6 @@ extern NSString * const SyphonServerOptionIsPrivate;
 /*!
  @relates SyphonServerBase
  If this key is matched with a NSNumber with a NSUInteger value greater than zero, the server will, when using the bindToDrawFrameOfSize / unbindAndPublish API, render to an antialiased render buffer with the requested multisample count (via the FBO MSAA and BLIT extensions). Default sample count is 0 should this key be ommited, indicating no antialiased buffers will be used. If the requested sample count is not supported by the GL context, the nearest supported sample count will be used instead. If MSAA is not supported at all, this key will be ignored and the server will render without the antialiasing stage.
- 
  */
 extern NSString * const SyphonServerOptionAntialiasSampleCount;
 
@@ -90,7 +89,6 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
  @param options A dictionary containing key-value pairs to specify options for the server. Currently supported options are SyphonServerOptionIsPrivate, SyphonServerOptionAntialiasQuality and SyphonServerOptionHasDepthBuffer. See their descriptions for details.
  @returns A newly intialized SyphonOpenGLServer. Nil on failure.
 */
-
 - (instancetype)initWithName:(nullable NSString*)serverName context:(CGLContextObj)context options:(nullable NSDictionary *)options;
 
 /** @} */
@@ -100,25 +98,21 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
 /*!
  The CGLContext the server uses for drawing. This may or may not be the context passed in at init.
 */
-
 @property (readonly) CGLContextObj context;
 
 /*! 
  A string representing the name of the SyphonOpenGLServer.
-*/ 
-
+*/
 @property (nullable, retain) NSString* name;
 
 /*! 
  A dictionary describing the server. Normally you won't need to access this, however if you created the server as private (using SyphonServerOptionIsPrivate) then you must pass this dictionary to any process in which you wish to create a SyphonClient. You should not rely on the presence of any particular keys in this dictionary. The content will always conform to the \<NSCoding\> protocol.
 */
-
 @property (readonly) NSDictionary* serverDescription;
 
 /*! 
 YES if clients are currently attached, NO otherwise. If you generate frames frequently (for instance on a display-link timer), you may choose to test this and only call publishFrameTexture:textureTarget:imageRegion:textureDimensions:flipped: when clients are attached.
-*/ 
-
+*/
 @property (readonly) BOOL hasClients;
 
 /** @} */
@@ -138,7 +132,6 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
  @param size The full size of the texture
  @param isFlipped Is the texture flipped?
 */
-
 - (void)publishFrameTexture:(GLuint)texID textureTarget:(GLenum)target imageRegion:(NSRect)region textureDimensions:(NSSize)size flipped:(BOOL)isFlipped;
 
 /*! 
@@ -151,7 +144,6 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
  @param size The size the frame you wish to publish.
  @returns YES if binding succeeded, NO otherwise.
 */
-
 - (BOOL)bindToDrawFrameOfSize:(NSSize)size;
 
 /*! 
@@ -161,7 +153,6 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 
  In legacy OpenGL contexts the previous FBO binding is restored. In Core Profile OpenGL contexts the default (0) FBO is restored. No other state is modified.
 */
-
 - (void)unbindAndPublish;
 
 /*! 
@@ -174,8 +165,8 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 /*! 
  Stops the server instance. Use of this method is optional and releasing all references to the server has the same effect.
 */
-
 - (void)stop;
+
 /** @} */
 @end
 

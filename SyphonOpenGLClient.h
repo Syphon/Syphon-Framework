@@ -55,7 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param handler A block which is invoked when a new frame becomes available. handler may be nil. This block may be invoked on a thread other than that on which the client was created.
  @returns A newly initialized SyphonOpenGLClient object, or nil if a client could not be created.
 */
-
 - (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(nullable NSDictionary *)options newFrameHandler:(nullable void (^)(SYPHON_OPENGL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
 
 /*!
@@ -66,19 +65,16 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  A client is valid if it has a working connection to a server. Once this returns NO, the SyphonOpenGLClient will not yield any further frames.
  */
-
 @property (readonly) BOOL isValid;
 
 /*!
  Returns a dictionary with a description of the server the client is attached to. See SyphonServerDirectory for the keys this dictionary contains
 */
-
 @property (readonly) NSDictionary *serverDescription;
 
 /*!
  Returns YES if the server has output a new frame since the last time newFrameImage was called for this client, NO otherwise.
 */
-
 @property (readonly) BOOL hasNewFrame;
 
 /*!
@@ -97,7 +93,6 @@ NS_ASSUME_NONNULL_BEGIN
 
  This method may perform work in the OpenGL context. As with any other OpenGL calls, you must ensure no other threads use those contexts during calls to this method.
  */
-
 - (void)stop;
 
 @end
