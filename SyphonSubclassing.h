@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable IOSurfaceRef)copySurfaceForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
 
 /*!
- Releases any current IOSurface
+ Subclasses may call this to release any current IOSurface
  */
 - (void)destroySurface;
 
@@ -57,8 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SyphonClientBase (SyphonSubclassing)
 /*!
- Subclasses use this method to acquire an IOSurface representing the current output from the server. Subclasses may consider the returned value valid until
- the next call to -invalidateFrame.
+ Subclasses use this method to acquire an IOSurface representing the current output from the server. Subclasses may consider the returned value valid until the next call to -invalidateFrame.
 
  @returns An IOSurface representing the live output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT using CFRelease() when you
  are finished with it.
@@ -66,7 +65,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (IOSurfaceRef)newSurface;
 
 /*!
- Subclasses override this method to invalidate their output when the server's surface backing changes. Do not call this method directly.
+ Subclasses override this method to invalidate their output when the server's surface backing changes. Do not call this method directly -
+ it will be called for you when necessary.
  */
 - (void)invalidateFrame;
 @end

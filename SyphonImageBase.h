@@ -33,7 +33,14 @@
 #define SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonImageBase)
 
 @interface SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME : NSObject
+/*!
+ If you implement your own subclass of SyphonImageBase, you must call this designated initializer from your own initializer.
 
+ Creates a new image with the provided IOSurface.
+
+ @param surfaceRef A valid IOSurface with image data.
+ @returns A newly intialized Syphon image. Nil on failure.
+*/
 - (id)initWithSurface:(IOSurfaceRef)surfaceRef NS_DESIGNATED_INITIALIZER;
 @end
 
