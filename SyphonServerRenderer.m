@@ -133,7 +133,7 @@
 
 }
 
-- (SyphonImage *)newImageForSurface:(IOSurfaceRef)surface
+- (SyphonOpenGLImage *)newImageForSurface:(IOSurfaceRef)surface
 {
     return nil;
 }

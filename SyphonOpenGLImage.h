@@ -1,7 +1,7 @@
 /*
-    SyphonClientConnectionManager.h
-    Syphon
-
+     SyphonOpenGLImage.h
+     Syphon
+     
      Copyright 2010-2011 bangnoise (Tom Butterworth) & vade (Anton Marini).
      All rights reserved.
      
@@ -27,43 +27,33 @@
      SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #import <Foundation/Foundation.h>
+#import <OpenGL/OpenGL.h>
+#import <Syphon/SyphonImageBase.h>
 
-/* This object handles messaging to and from the server.
+#define SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonOpenGLImage)
 
- SyphonClients should
- 
- addInfoClient:self
- addFrameClient:self (if wanted)
- ...
- removeFrameClient:self (if added)
- removeInfoClient:self
- 
- in that order.
- 
- Thread-safe. One instance is shared between all clients for a server.
- 
+NS_ASSUME_NONNULL_BEGIN
+
+/** 
+ SyphonImage represents an image stored as an OpenGL texture of type GL_TEXTURE_RECTANGLE.
  */
 
-@protocol SyphonFrameReceiving
-- (void)receiveNewFrame;
-@end
-@protocol SyphonInfoReceiving
-- (void)invalidateFrame;
-@end
+@interface SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME : SyphonImageBase
 
-#define SYPHON_CLIENT_CONNECTION_MANAGER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonClientConnectionManager)
+/**
+ A GLuint representing the texture name. The associated texture is of type GL_TEXTURE_RECTANGLE.
+ */
+@property (readonly) GLuint textureName;
 
-@interface SYPHON_CLIENT_CONNECTION_MANAGER_UNIQUE_CLASS_NAME : NSObject
-- (id)initWithServerDescription:(NSDictionary *)description;
-@property (readonly) BOOL isValid;
-- (void)addInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;     // Must be
-- (void)removeInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;  // paired
-- (IOSurfaceRef)newSurface;
-@property (readonly) NSUInteger frameID;
+/**
+ A NSSize representing the dimensions of the texture. The image will fill the texture entirely.
+ */
+@property (readonly) NSSize textureSize;
 @end
 
 #if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonClientConnectionManager SYPHON_CLIENT_CONNECTION_MANAGER_UNIQUE_CLASS_NAME;
+@compatibility_alias SyphonOpenGLImage SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME;
 #endif
+
+NS_ASSUME_NONNULL_END

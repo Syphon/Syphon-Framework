@@ -1,5 +1,5 @@
 /*
-    SyphonIOSurfaceImage.h
+    SyphonImageBase.m
     Syphon
 
     Copyright 2010-2011 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -27,20 +27,43 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#import <Foundation/Foundation.h>
-#import "SyphonImage.h"
+#import "SyphonImageBase.h"
 #import <IOSurface/IOSurface.h>
 
-#define SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonIOSurfaceImage)
-
-@interface SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME : SyphonImage {
-@protected
-	CGLContextObj cgl_ctx;
-	NSSize _size;
+@implementation SyphonImageBase
+{
+@private
+    IOSurfaceRef _surface;
 }
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context;
-@end
 
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonIOSurfaceImage SYPHON_IOSURFACE_IMAGE_UNIQUE_CLASS_NAME;
-#endif
+- (id)init
+{
+    return [self initWithSurface:NULL];
+}
+
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef
+{
+    self = [super init];
+	if (self)
+	{
+		if (surfaceRef == nil)
+		{
+			[self release];
+			return nil;
+		}
+		_surface = (IOSurfaceRef)CFRetain(surfaceRef);
+	}
+	return self;
+}
+
+- (void)dealloc
+{
+    if (_surface) CFRelease(_surface);
+	[super dealloc];
+}
+
+- (IOSurfaceRef)surface
+{
+    return _surface;
+}
+@end

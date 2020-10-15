@@ -30,9 +30,14 @@
 //    This file gets passed through the C preprocessor before it is used
 
 
+SYPHON_UNIQUE_CLASS_SYMBOL(SyphonOpenGLClient)
+SYPHON_UNIQUE_CLASS_SYMBOL(SyphonClientBase)
 SYPHON_UNIQUE_CLASS_SYMBOL(SyphonClient)
+SYPHON_UNIQUE_CLASS_SYMBOL(SyphonOpenGLServer)
+SYPHON_UNIQUE_CLASS_SYMBOL(SyphonServerBase)
 SYPHON_UNIQUE_CLASS_SYMBOL(SyphonServer)
 SYPHON_UNIQUE_CLASS_SYMBOL(SyphonServerDirectory)
+SYPHON_UNIQUE_CLASS_SYMBOL(SyphonOpenGLImage)
 SYPHON_UNIQUE_CLASS_SYMBOL(SyphonImage)
 
 _SyphonServerAnnounceNotification

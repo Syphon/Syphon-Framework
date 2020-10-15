@@ -1,5 +1,5 @@
 /*
-    SyphonIOSurfaceImage.m
+    SyphonImageBase.h
     Syphon
 
     Copyright 2010-2011 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -27,43 +27,23 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#import "SyphonIOSurfaceImage.h"
+#import <Foundation/Foundation.h>
 #import <IOSurface/IOSurface.h>
 
-@implementation SyphonIOSurfaceImage
-{
-@private
-    IOSurfaceRef _surface;
-}
+#define SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonImageBase)
 
-- (id)initWithSurface:(IOSurfaceRef)surfaceRef forContext:(CGLContextObj)context
-{
-    self = [super init];
-	if (self)
-	{
-		if (context == nil || surfaceRef == nil)
-		{
-			[self release];
-			return nil;
-		}
-		_surface = (IOSurfaceRef)CFRetain(surfaceRef);
-		cgl_ctx = CGLRetainContext(context);
-		_size.width = IOSurfaceGetWidth(surfaceRef);
-		_size.height = IOSurfaceGetHeight(surfaceRef);
-	}
-	return self;
-}
+@interface SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME : NSObject
+/*!
+ If you implement your own subclass of SyphonImageBase, you must call this designated initializer from your own initializer.
 
-- (void)dealloc
-{
-    if (_surface) CFRelease(_surface);
-    if (cgl_ctx) CGLReleaseContext(cgl_ctx);
-	[super dealloc];
-}
+ Creates a new image with the provided IOSurface.
 
-- (NSSize)textureSize
-{
-	return _size;
-}
-
+ @param surfaceRef A valid IOSurface with image data.
+ @returns A newly intialized Syphon image. Nil on failure.
+*/
+- (id)initWithSurface:(IOSurfaceRef)surfaceRef NS_DESIGNATED_INITIALIZER;
 @end
+
+#if defined(SYPHON_USE_CLASS_ALIAS)
+@compatibility_alias SyphonImageBase SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME;
+#endif

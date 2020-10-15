@@ -144,7 +144,7 @@
     [super destroySizedResources];
 }
 
-- (SyphonImage *)newImageForSurface:(IOSurfaceRef)surface
+- (SyphonOpenGLImage *)newImageForSurface:(IOSurfaceRef)surface
 {
     return [[SyphonIOSurfaceImageLegacy alloc] initWithSurface:surface forContext:cgl_ctx];
 }
