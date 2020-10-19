@@ -105,14 +105,20 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 
 - (void) dealloc
 {
+    // Don't call anything in the subclass, it has already been dealloc'd
     [[SyphonServerDirectory sharedDirectory] removeObserver:self forKeyPath:@"servers"];
-    [self stop];
+    [self stopBase];
     [_handler release];
     [_serverDescription release];
     [super dealloc];
 }
 
 - (void)stop
+{
+    [self stopBase];
+}
+
+- (void)stopBase
 {
     OSSpinLockLock(&_lock);
     if (_connectionManager)

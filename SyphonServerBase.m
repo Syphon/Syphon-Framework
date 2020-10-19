@@ -122,7 +122,8 @@ static void finalizer()
 - (void)dealloc
 {
     SYPHONLOG(@"Server deallocing, name: %@, UUID: %@", self.name, [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);
-    [self stop];
+    // Don't call anything in the subclass, it has already been dealloc'd
+    [self destroyBaseResources];
     [_name release];
     [_uuid release];
     [super dealloc];
@@ -185,6 +186,11 @@ static void finalizer()
 }
 
 - (void)stop
+{
+    [self destroyBaseResources];
+}
+
+- (void)destroyBaseResources
 {
     if (_connectionManager)
     {
