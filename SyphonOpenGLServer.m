@@ -137,14 +137,9 @@
 	return self;
 }
 
-- (void) shutDownServer
-{	
-	[self destroyResources];
-}
-
 - (void) dealloc
 {
-	[self shutDownServer];
+	[self destroyResources];
 #ifdef SYPHON_CORE_SHARE
     if (_shareContext)
     {
@@ -166,7 +161,7 @@
 
 - (void)stop
 {
-	[self shutDownServer];
+	[self destroyResources];
     [super stop];
 }
 
