@@ -92,6 +92,10 @@
 
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer imageRegion:(NSRect)region flipped:(BOOL)isFlipped
 {
+    if(textureToPublish == nil) {
+        SYPHONLOG(@"TextureToPublish is nil. Syphon will not publish");
+        return;
+    }
     [self lazySetupTextureForSize:region.size];
     
     // When possible, use faster blit
