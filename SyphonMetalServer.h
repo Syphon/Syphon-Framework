@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)initWithName:(NSString*)name device:(id<MTLDevice>)device options:(NSDictionary *)options;
 
 // API
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region flip:(BOOL)flip;
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer imageRegion:(NSRect)region flip:(BOOL)flip;
 
 
 - (id<MTLTexture>)newFrameImage;

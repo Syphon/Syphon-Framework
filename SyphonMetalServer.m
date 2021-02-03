@@ -8,7 +8,6 @@
 {
     id<MTLTexture> _surfaceTexture;
     id<MTLDevice> _device;
-    id<MTLCommandQueue> _commandQueue;
     SyphonServerRendererMetal *_renderer;
     NSInteger _msaaSampleCount;
 }
@@ -32,7 +31,6 @@
     if( self )
     {
         _device = [theDevice retain];
-        _commandQueue = [_device newCommandQueue];
         _surfaceTexture = nil;
         NSInteger unsafeMsaaSampleCount = [[self class] integerValueForKey:SyphonServerOptionAntialiasSampleCount fromOptions:options];
         _msaaSampleCount = [SyphonServerRendererMetal safeMsaaSampleCountForDevice:_device unsafeSampleCount:unsafeMsaaSampleCount verbose:YES];
@@ -79,8 +77,6 @@
     _surfaceTexture = nil;
     [_device release];
     _device = nil;
-    [_commandQueue release];
-    _commandQueue = nil;
     [_renderer release];
     _renderer = nil;
     [super stop];
@@ -94,11 +90,9 @@
     return [_surfaceTexture retain];
 }
 
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region flip:(BOOL)flip
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer imageRegion:(NSRect)region flip:(BOOL)flip
 {
     [self lazySetupTextureForSize:region.size];
-    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-    commandBuffer.label = @"Syphon Server commandBuffer";
     
     // When possible, use faster blit
     if( !flip && _msaaSampleCount == 1 && textureToPublish.pixelFormat == _surfaceTexture.pixelFormat
@@ -128,9 +122,6 @@
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull commandBuffer) {
         [self publish];
     }];
-    [commandBuffer commit];
 }
-
-
 
 @end
