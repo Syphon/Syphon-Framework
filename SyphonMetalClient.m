@@ -12,7 +12,7 @@
 - (id)initWithServerDescription:(NSDictionary *)description
                          device:(id<MTLDevice>)theDevice
                         options:(NSDictionary *)options
-                   frameHandler:(void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler
+                   newFrameHandler:(void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler
 {
     self = [super initWithServerDescription:description options:options newFrameHandler:handler];
     if( self )

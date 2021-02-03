@@ -90,12 +90,12 @@
     return [_surfaceTexture retain];
 }
 
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer imageRegion:(NSRect)region flip:(BOOL)flip
+- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer imageRegion:(NSRect)region flipped:(BOOL)isFlipped
 {
     [self lazySetupTextureForSize:region.size];
     
     // When possible, use faster blit
-    if( !flip && _msaaSampleCount == 1 && textureToPublish.pixelFormat == _surfaceTexture.pixelFormat
+    if( !isFlipped && _msaaSampleCount == 1 && textureToPublish.pixelFormat == _surfaceTexture.pixelFormat
        && textureToPublish.sampleCount == _surfaceTexture.sampleCount
        && !textureToPublish.framebufferOnly)
     {
@@ -116,7 +116,7 @@
     // otherwise, re-draw the frame
     else
     {
-        [_renderer renderFromTexture:textureToPublish inTexture:_surfaceTexture region:region onCommandBuffer:commandBuffer flip:flip];
+        [_renderer renderFromTexture:textureToPublish inTexture:_surfaceTexture region:region onCommandBuffer:commandBuffer flip:isFlipped];
     }
     
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull commandBuffer) {
