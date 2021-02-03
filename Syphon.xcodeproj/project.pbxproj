@@ -24,23 +24,26 @@
 /* Begin PBXBuildFile section */
 		1B09069B11CB2FBD00BCBE41 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B09069A11CB2FBD00BCBE41 /* IOSurface.framework */; };
 		1B09069D11CB2FBD00BCBE41 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B09069C11CB2FBD00BCBE41 /* OpenGL.framework */; };
-		1B0906C111CBB0F500BCBE41 /* SyphonServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906BF11CBB0F500BCBE41 /* SyphonServer.m */; };
-		1B0906C711CBB1C100BCBE41 /* SyphonClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906C511CBB1C100BCBE41 /* SyphonClient.m */; };
+		1B0906C111CBB0F500BCBE41 /* SyphonOpenGLServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906BF11CBB0F500BCBE41 /* SyphonOpenGLServer.m */; };
+		1B0906C711CBB1C100BCBE41 /* SyphonOpenGLClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906C511CBB1C100BCBE41 /* SyphonOpenGLClient.m */; };
 		1B0906C911CBB1CE00BCBE41 /* Syphon.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C811CBB1CE00BCBE41 /* Syphon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B09098711CD9A1C00BCBE41 /* SyphonClientConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B09098511CD9A1C00BCBE41 /* SyphonClientConnectionManager.h */; settings = {ATTRIBUTES = (); }; };
 		1B09098811CD9A1C00BCBE41 /* SyphonClientConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B09098611CD9A1C00BCBE41 /* SyphonClientConnectionManager.m */; };
+		565D06A925CAA2FA0048C4DD /* SyphonMetalServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 565D06A525CAA2F90048C4DD /* SyphonMetalServer.m */; };
+		565D06AA25CAA2FA0048C4DD /* SyphonMetalServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 565D06A625CAA2F90048C4DD /* SyphonMetalServer.h */; };
+		565D06AB25CAA2FA0048C4DD /* SyphonMetalClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 565D06A725CAA2FA0048C4DD /* SyphonMetalClient.h */; };
+		565D06AC25CAA2FA0048C4DD /* SyphonMetalClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 565D06A825CAA2FA0048C4DD /* SyphonMetalClient.m */; };
 		8488126624361D4D008E17CC /* SyphonServerRendererMetal.h in Headers */ = {isa = PBXBuildFile; fileRef = 8488126424361D4C008E17CC /* SyphonServerRendererMetal.h */; };
 		8488126724361D4D008E17CC /* SyphonServerRendererMetal.m in Sources */ = {isa = PBXBuildFile; fileRef = 8488126524361D4D008E17CC /* SyphonServerRendererMetal.m */; };
 		84E4D2262385923F00E24F2D /* SyphonMetalServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E4D2242385923F00E24F2D /* SyphonMetalServer.h */; };
 		84E4D2272385923F00E24F2D /* SyphonMetalServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E4D2252385923F00E24F2D /* SyphonMetalServer.m */; };
 		84E4D22A2385927B00E24F2D /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E4D2292385927B00E24F2D /* Metal.framework */; };
 		84E4D23223859C3A00E24F2D /* SyphonMetalClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E4D23023859C3A00E24F2D /* SyphonMetalClient.h */; };
-		84E4D23323859C3A00E24F2D /* SyphonMetalClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E4D23123859C3A00E24F2D /* SyphonMetalClient.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		BD038877122EAB1A007725FF /* SyphonImageBase.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038875122EAB1A007725FF /* SyphonImageBase.h */; };
 		BD038878122EAB1A007725FF /* SyphonImageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038876122EAB1A007725FF /* SyphonImageBase.m */; };
-		BD038887122EABE2007725FF /* SyphonImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038886122EABE2007725FF /* SyphonImage.m */; };
+		BD038887122EABE2007725FF /* SyphonOpenGLImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038886122EABE2007725FF /* SyphonOpenGLImage.m */; };
 		BD27307611D2B85E0084BB5E /* SyphonPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = BD27307511D2B85E0084BB5E /* SyphonPrivate.h */; };
 		BD3796D211DD470D0042870B /* SyphonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD3796CF11DD470D0042870B /* SyphonPrivate.m */; };
 		BD45586211DF6BD300F15521 /* SyphonServerConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BD45585C11DF6BD300F15521 /* SyphonServerConnectionManager.h */; };
@@ -64,12 +67,19 @@
 		E21003C71D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m in Sources */ = {isa = PBXBuildFile; fileRef = E21003C51D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m */; };
 		E21003CA1D85FAD00066E934 /* SyphonIOSurfaceImageCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E21003C81D85FAD00066E934 /* SyphonIOSurfaceImageCore.h */; };
 		E21003CB1D85FAD00066E934 /* SyphonIOSurfaceImageCore.m in Sources */ = {isa = PBXBuildFile; fileRef = E21003C91D85FAD00066E934 /* SyphonIOSurfaceImageCore.m */; };
-		E218B67618436D38004FD9E3 /* SyphonServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906BE11CBB0F500BCBE41 /* SyphonServer.h */; };
-		E218B67718436D3B004FD9E3 /* SyphonClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C411CBB1C100BCBE41 /* SyphonClient.h */; };
-		E218B67818436D3F004FD9E3 /* SyphonImage.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038870122EA9FF007725FF /* SyphonImage.h */; };
+		E218B67618436D38004FD9E3 /* SyphonOpenGLServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906BE11CBB0F500BCBE41 /* SyphonOpenGLServer.h */; };
+		E218B67718436D3B004FD9E3 /* SyphonOpenGLClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C411CBB1C100BCBE41 /* SyphonOpenGLClient.h */; };
+		E218B67818436D3F004FD9E3 /* SyphonOpenGLImage.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038870122EA9FF007725FF /* SyphonOpenGLImage.h */; };
 		E218B67918436D41004FD9E3 /* SyphonServerDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = BD606D6611D2842D00E02702 /* SyphonServerDirectory.h */; };
 		E219FB59233CDC3B00FB7F63 /* SyphonClientBase.h in Headers */ = {isa = PBXBuildFile; fileRef = E219FB57233CDC3B00FB7F63 /* SyphonClientBase.h */; };
 		E219FB5A233CDC3B00FB7F63 /* SyphonClientBase.m in Sources */ = {isa = PBXBuildFile; fileRef = E219FB58233CDC3B00FB7F63 /* SyphonClientBase.m */; };
+		E240462423EF6B7A004C14E9 /* SyphonServer.h in Headers */ = {isa = PBXBuildFile; fileRef = E240462223EF6B7A004C14E9 /* SyphonServer.h */; };
+		E240462523EF6B7A004C14E9 /* SyphonServer.m in Sources */ = {isa = PBXBuildFile; fileRef = E240462323EF6B7A004C14E9 /* SyphonServer.m */; };
+		E240462823EF6F7E004C14E9 /* SyphonClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E240462623EF6F7E004C14E9 /* SyphonClient.h */; };
+		E240462923EF6F7E004C14E9 /* SyphonClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E240462723EF6F7E004C14E9 /* SyphonClient.m */; };
+		E240463023EF71D4004C14E9 /* SyphonImage.h in Headers */ = {isa = PBXBuildFile; fileRef = E240462E23EF71D4004C14E9 /* SyphonImage.h */; };
+		E240463123EF71D4004C14E9 /* SyphonImage.m in Sources */ = {isa = PBXBuildFile; fileRef = E240462F23EF71D4004C14E9 /* SyphonImage.m */; };
+		E240463523F0B9EF004C14E9 /* SyphonSubclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = E240463423F0B9EF004C14E9 /* SyphonSubclassing.h */; };
 		E28D0C9A1D8F43380036DF26 /* SyphonServerRendererCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0C981D8F43380036DF26 /* SyphonServerRendererCore.h */; };
 		E28D0C9B1D8F43380036DF26 /* SyphonServerRendererCore.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0C991D8F43380036DF26 /* SyphonServerRendererCore.m */; };
 		E28D0CA81D9296520036DF26 /* SyphonShader.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CA61D9296520036DF26 /* SyphonShader.h */; };
@@ -108,27 +118,30 @@
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1B09069A11CB2FBD00BCBE41 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		1B09069C11CB2FBD00BCBE41 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		1B0906BE11CBB0F500BCBE41 /* SyphonServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServer.h; sourceTree = "<group>"; wrapsLines = 1; };
-		1B0906BF11CBB0F500BCBE41 /* SyphonServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServer.m; sourceTree = "<group>"; };
-		1B0906C411CBB1C100BCBE41 /* SyphonClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonClient.h; sourceTree = "<group>"; wrapsLines = 1; };
-		1B0906C511CBB1C100BCBE41 /* SyphonClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonClient.m; sourceTree = "<group>"; };
+		1B0906BE11CBB0F500BCBE41 /* SyphonOpenGLServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLServer.h; sourceTree = "<group>"; wrapsLines = 1; };
+		1B0906BF11CBB0F500BCBE41 /* SyphonOpenGLServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonOpenGLServer.m; sourceTree = "<group>"; };
+		1B0906C411CBB1C100BCBE41 /* SyphonOpenGLClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLClient.h; sourceTree = "<group>"; wrapsLines = 1; };
+		1B0906C511CBB1C100BCBE41 /* SyphonOpenGLClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonOpenGLClient.m; sourceTree = "<group>"; };
 		1B0906C811CBB1CE00BCBE41 /* Syphon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syphon.h; sourceTree = "<group>"; wrapsLines = 1; };
 		1B09098511CD9A1C00BCBE41 /* SyphonClientConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonClientConnectionManager.h; sourceTree = "<group>"; };
 		1B09098611CD9A1C00BCBE41 /* SyphonClientConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonClientConnectionManager.m; sourceTree = "<group>"; };
 		32DBCF5E0370ADEE00C91783 /* Syphon_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syphon_Prefix.pch; sourceTree = "<group>"; };
+		565D06A525CAA2F90048C4DD /* SyphonMetalServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMetalServer.m; sourceTree = "<group>"; };
+		565D06A625CAA2F90048C4DD /* SyphonMetalServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMetalServer.h; sourceTree = "<group>"; };
+		565D06A725CAA2FA0048C4DD /* SyphonMetalClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMetalClient.h; sourceTree = "<group>"; };
+		565D06A825CAA2FA0048C4DD /* SyphonMetalClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMetalClient.m; sourceTree = "<group>"; };
 		8488126424361D4C008E17CC /* SyphonServerRendererMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerRendererMetal.h; sourceTree = "<group>"; };
 		8488126524361D4D008E17CC /* SyphonServerRendererMetal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerRendererMetal.m; sourceTree = "<group>"; };
 		84E4D2242385923F00E24F2D /* SyphonMetalServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonMetalServer.h; sourceTree = "<group>"; };
 		84E4D2252385923F00E24F2D /* SyphonMetalServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonMetalServer.m; sourceTree = "<group>"; };
 		84E4D2292385927B00E24F2D /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		84E4D23023859C3A00E24F2D /* SyphonMetalClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonMetalClient.h; sourceTree = "<group>"; };
-		84E4D23123859C3A00E24F2D /* SyphonMetalClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonMetalClient.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* Syphon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Syphon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BD038870122EA9FF007725FF /* SyphonImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonImage.h; sourceTree = "<group>"; };
+		BD038870122EA9FF007725FF /* SyphonOpenGLImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLImage.h; sourceTree = "<group>"; };
 		BD038875122EAB1A007725FF /* SyphonImageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonImageBase.h; sourceTree = "<group>"; };
 		BD038876122EAB1A007725FF /* SyphonImageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonImageBase.m; sourceTree = "<group>"; };
-		BD038886122EABE2007725FF /* SyphonImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonImage.m; sourceTree = "<group>"; };
+		BD038886122EABE2007725FF /* SyphonOpenGLImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonOpenGLImage.m; sourceTree = "<group>"; };
 		BD1718201224308200CB2E18 /* Exported_Symbols.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Exported_Symbols.exp; sourceTree = "<group>"; };
 		BD27307511D2B85E0084BB5E /* SyphonPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonPrivate.h; sourceTree = "<group>"; };
 		BD3796CF11DD470D0042870B /* SyphonPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonPrivate.m; sourceTree = "<group>"; };
@@ -167,6 +180,13 @@
 		E219FB57233CDC3B00FB7F63 /* SyphonClientBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonClientBase.h; sourceTree = "<group>"; };
 		E219FB58233CDC3B00FB7F63 /* SyphonClientBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonClientBase.m; sourceTree = "<group>"; };
 		E234B23F2257668400FBDC0C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E240462223EF6B7A004C14E9 /* SyphonServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServer.h; sourceTree = "<group>"; };
+		E240462323EF6B7A004C14E9 /* SyphonServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonServer.m; sourceTree = "<group>"; };
+		E240462623EF6F7E004C14E9 /* SyphonClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonClient.h; sourceTree = "<group>"; };
+		E240462723EF6F7E004C14E9 /* SyphonClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonClient.m; sourceTree = "<group>"; };
+		E240462E23EF71D4004C14E9 /* SyphonImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonImage.h; sourceTree = "<group>"; };
+		E240462F23EF71D4004C14E9 /* SyphonImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonImage.m; sourceTree = "<group>"; };
+		E240463423F0B9EF004C14E9 /* SyphonSubclassing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonSubclassing.h; sourceTree = "<group>"; };
 		E26877562199C4E600B8E495 /* Building Syphon.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Building Syphon.md"; sourceTree = "<group>"; };
 		E28D0C981D8F43380036DF26 /* SyphonServerRendererCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerRendererCore.h; sourceTree = "<group>"; };
 		E28D0C991D8F43380036DF26 /* SyphonServerRendererCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerRendererCore.m; sourceTree = "<group>"; };
@@ -227,6 +247,7 @@
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				84E4D2282385927B00E24F2D /* Frameworks */,
+				565D06A425CAA2D20048C4DD /* Recovered References */,
 			);
 			name = OpenVideoTap;
 			sourceTree = "<group>";
@@ -287,8 +308,9 @@
 		1B0906C211CBB0FB00BCBE41 /* Server */ = {
 			isa = PBXGroup;
 			children = (
-				1B0906BF11CBB0F500BCBE41 /* SyphonServer.m */,
-				84E4D2252385923F00E24F2D /* SyphonMetalServer.m */,
+				E240462323EF6B7A004C14E9 /* SyphonServer.m */,
+				1B0906BF11CBB0F500BCBE41 /* SyphonOpenGLServer.m */,
+				565D06A525CAA2F90048C4DD /* SyphonMetalServer.m */,
 				BD45585C11DF6BD300F15521 /* SyphonServerConnectionManager.h */,
 				BD45585D11DF6BD300F15521 /* SyphonServerConnectionManager.m */,
 				E2D6C88A1D8B4A6D00108260 /* SyphonServerRenderer.h */,
@@ -315,8 +337,9 @@
 		1B0906C311CBB10000BCBE41 /* Client */ = {
 			isa = PBXGroup;
 			children = (
-				1B0906C511CBB1C100BCBE41 /* SyphonClient.m */,
-				84E4D23123859C3A00E24F2D /* SyphonMetalClient.m */,
+				1B0906C511CBB1C100BCBE41 /* SyphonOpenGLClient.m */,
+				565D06A825CAA2FA0048C4DD /* SyphonMetalClient.m */,
+				E240462723EF6F7E004C14E9 /* SyphonClient.m */,
 				E219FB58233CDC3B00FB7F63 /* SyphonClientBase.m */,
 				1B09098511CD9A1C00BCBE41 /* SyphonClientConnectionManager.h */,
 				1B09098611CD9A1C00BCBE41 /* SyphonClientConnectionManager.m */,
@@ -347,6 +370,16 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		565D06A425CAA2D20048C4DD /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				84E4D23023859C3A00E24F2D /* SyphonMetalClient.h */,
+				84E4D2242385923F00E24F2D /* SyphonMetalServer.h */,
+				84E4D2252385923F00E24F2D /* SyphonMetalServer.m */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		84E4D2282385927B00E24F2D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -358,12 +391,13 @@
 		BD057EE912307B3B0024694B /* Image */ = {
 			isa = PBXGroup;
 			children = (
-				BD038886122EABE2007725FF /* SyphonImage.m */,
+				BD038886122EABE2007725FF /* SyphonOpenGLImage.m */,
 				BD038876122EAB1A007725FF /* SyphonImageBase.m */,
 				E21003C41D85F9320066E934 /* SyphonIOSurfaceImageLegacy.h */,
 				E21003C51D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m */,
 				E21003C81D85FAD00066E934 /* SyphonIOSurfaceImageCore.h */,
 				E21003C91D85FAD00066E934 /* SyphonIOSurfaceImageCore.m */,
+				E240462F23EF71D4004C14E9 /* SyphonImage.m */,
 			);
 			name = Image;
 			sourceTree = "<group>";
@@ -372,15 +406,19 @@
 			isa = PBXGroup;
 			children = (
 				1B0906C811CBB1CE00BCBE41 /* Syphon.h */,
-				1B0906BE11CBB0F500BCBE41 /* SyphonServer.h */,
-				84E4D2242385923F00E24F2D /* SyphonMetalServer.h */,
+				1B0906BE11CBB0F500BCBE41 /* SyphonOpenGLServer.h */,
 				E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */,
-				1B0906C411CBB1C100BCBE41 /* SyphonClient.h */,
-				84E4D23023859C3A00E24F2D /* SyphonMetalClient.h */,
+				E240462223EF6B7A004C14E9 /* SyphonServer.h */,
+				1B0906C411CBB1C100BCBE41 /* SyphonOpenGLClient.h */,
 				E219FB57233CDC3B00FB7F63 /* SyphonClientBase.h */,
-				BD038870122EA9FF007725FF /* SyphonImage.h */,
+				E240462623EF6F7E004C14E9 /* SyphonClient.h */,
+				BD038870122EA9FF007725FF /* SyphonOpenGLImage.h */,
 				BD038875122EAB1A007725FF /* SyphonImageBase.h */,
+				E240462E23EF71D4004C14E9 /* SyphonImage.h */,
 				BD606D6611D2842D00E02702 /* SyphonServerDirectory.h */,
+				E240463423F0B9EF004C14E9 /* SyphonSubclassing.h */,
+				565D06A725CAA2FA0048C4DD /* SyphonMetalClient.h */,
+				565D06A625CAA2F90048C4DD /* SyphonMetalServer.h */,
 			);
 			name = "Public Headers";
 			sourceTree = "<group>";
@@ -460,12 +498,16 @@
 			files = (
 				E2D6C8891D8B470E00108260 /* SyphonCGL.h in Headers */,
 				E21003C61D85F9320066E934 /* SyphonIOSurfaceImageLegacy.h in Headers */,
+				E240462423EF6B7A004C14E9 /* SyphonServer.h in Headers */,
 				1B0906C911CBB1CE00BCBE41 /* Syphon.h in Headers */,
-				E218B67618436D38004FD9E3 /* SyphonServer.h in Headers */,
-				E218B67718436D3B004FD9E3 /* SyphonClient.h in Headers */,
+				E218B67618436D38004FD9E3 /* SyphonOpenGLServer.h in Headers */,
+				E218B67718436D3B004FD9E3 /* SyphonOpenGLClient.h in Headers */,
 				E28D0C9A1D8F43380036DF26 /* SyphonServerRendererCore.h in Headers */,
+				E240463023EF71D4004C14E9 /* SyphonImage.h in Headers */,
+				E240463523F0B9EF004C14E9 /* SyphonSubclassing.h in Headers */,
 				E219FB59233CDC3B00FB7F63 /* SyphonClientBase.h in Headers */,
-				E218B67818436D3F004FD9E3 /* SyphonImage.h in Headers */,
+				E218B67818436D3F004FD9E3 /* SyphonOpenGLImage.h in Headers */,
+				E240462823EF6F7E004C14E9 /* SyphonClient.h in Headers */,
 				E218B67918436D41004FD9E3 /* SyphonServerDirectory.h in Headers */,
 				E28D0CB01D9542B30036DF26 /* SyphonVertices.h in Headers */,
 				E28D0CB41D95770C0036DF26 /* SyphonServerVertices.h in Headers */,
@@ -486,8 +528,10 @@
 				BD038877122EAB1A007725FF /* SyphonImageBase.h in Headers */,
 				E28D0CAC1D930B9F0036DF26 /* SyphonServerShader.h in Headers */,
 				E2DE7FD312495BF50081453B /* SyphonMessageQueue.h in Headers */,
+				565D06AB25CAA2FA0048C4DD /* SyphonMetalClient.h in Headers */,
 				E21003CA1D85FAD00066E934 /* SyphonIOSurfaceImageCore.h in Headers */,
 				BDFBD77D126F4D8800075A23 /* SyphonDispatch.h in Headers */,
+				565D06AA25CAA2FA0048C4DD /* SyphonMetalServer.h in Headers */,
 				BDFAE528148CDA84008C9E6F /* SyphonOpenGLFunctions.h in Headers */,
 				84E4D2262385923F00E24F2D /* SyphonMetalServer.h in Headers */,
 			);
@@ -597,8 +641,12 @@
 				"$(SRCROOT)/SyphonServerBase.h",
 				"$(SRCROOT)/SyphonClientBase.h",
 				"$(SRCROOT)/SyphonImageBase.h",
-				"$(SRCROOT)/SyphonMetalServer.h",
+				"$(SRCROOT)/SyphonOpenGLImage.h",
+				"$(SRCROOT)/SyphonOpenGLServer.h",
+				"$(SRCROOT)/SyphonOpenGLClient.h",
+				"$(SRCROOT)/SyphonSubclassing.h",
 				"$(SRCROOT)/SyphonMetalClient.h",
+				"$(SRCROOT)/SyphonMetalServer.h",
 			);
 			name = "Generate Public Headers";
 			outputPaths = (
@@ -609,12 +657,14 @@
 				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonServerBase.h,
 				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonClientBase.h,
 				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonImageBase.h,
-				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonMetalServer.h,
-				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonMetalClient.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonOpenGLImage.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonOpenGLServer.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonOpenGLClient.h,
+				$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/SyphonSubclassing.h,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncombined=\"\"\nfor def in $GCC_PREPROCESSOR_DEFINITIONS\ndo\ncombined=\"${combined} -D${def}\"\ndone\nfor header in \"SyphonClient\" \"SyphonClientBase\" \"SyphonServer\" \"SyphonServerBase\" \"SyphonServerDirectory\" \"SyphonImageBase\" \"SyphonImage\" \"SyphonMetalServer\" \"SyphonMetalClient\"\ndo\nsed 's:#import://SYPHON_IMPORT_PLACEHOLDER:' \"$SRCROOT/${header}.h\" > \"$DERIVED_FILE_DIR/${header}_stage_1.h\"\nclang -E -C -P -nostdinc ${combined} -DSYPHON_HEADER_BUILD_PHASE -include \"$SRCROOT/SyphonBuildMacros.h\" \"$DERIVED_FILE_DIR/${header}_stage_1.h\" -o \"$DERIVED_FILE_DIR/${header}_stage_2.h\"\nsed 's://SYPHON_IMPORT_PLACEHOLDER:#import:' \"$DERIVED_FILE_DIR/${header}_stage_2.h\" > \"$DERIVED_FILE_DIR/${header}_stage_3.h\"\nsed '/./,$!d' \"$DERIVED_FILE_DIR/${header}_stage_3.h\" > \"$DERIVED_FILE_DIR/${header}_stage_4.h\"\ncat -s \"$DERIVED_FILE_DIR/${header}_stage_4.h\" > \"$DERIVED_FILE_DIR/${header}.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_1.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_2.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_3.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_4.h\"\ncp \"$DERIVED_FILE_DIR/${header}.h\" \"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/${header}.h\"\ndone\n";
+			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncombined=\"\"\nfor def in $GCC_PREPROCESSOR_DEFINITIONS\ndo\ncombined=\"${combined} -D${def}\"\ndone\nfor header in \"SyphonOpenGLClient\" \"SyphonClientBase\" \"SyphonClient\" \"SyphonOpenGLServer\" \"SyphonServerBase\" \"SyphonServer\" \"SyphonServerDirectory\" \"SyphonImageBase\" \"SyphonOpenGLImage\" \"SyphonImage\" \"SyphonSubclassing\" \"SyphonMetalClient\" \"SyphonMetalServer\"\ndo\nsed 's:#import://SYPHON_IMPORT_PLACEHOLDER:' \"$SRCROOT/${header}.h\" > \"$DERIVED_FILE_DIR/${header}_stage_1.h\"\nclang -E -C -P -nostdinc ${combined} -DSYPHON_HEADER_BUILD_PHASE -include \"$SRCROOT/SyphonBuildMacros.h\" \"$DERIVED_FILE_DIR/${header}_stage_1.h\" -o \"$DERIVED_FILE_DIR/${header}_stage_2.h\"\nsed 's://SYPHON_IMPORT_PLACEHOLDER:#import:' \"$DERIVED_FILE_DIR/${header}_stage_2.h\" > \"$DERIVED_FILE_DIR/${header}_stage_3.h\"\nsed '/./,$!d' \"$DERIVED_FILE_DIR/${header}_stage_3.h\" > \"$DERIVED_FILE_DIR/${header}_stage_4.h\"\ncat -s \"$DERIVED_FILE_DIR/${header}_stage_4.h\" > \"$DERIVED_FILE_DIR/${header}.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_1.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_2.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_3.h\"\nrm \"$DERIVED_FILE_DIR/${header}_stage_4.h\"\ncp \"$DERIVED_FILE_DIR/${header}.h\" \"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Headers/${header}.h\"\ndone\n";
 		};
 		BDFE6806122866C7009C2E21 /* Generate Exported Symbols File */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -640,10 +690,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B0906C111CBB0F500BCBE41 /* SyphonServer.m in Sources */,
-				84E4D23323859C3A00E24F2D /* SyphonMetalClient.m in Sources */,
+				1B0906C111CBB0F500BCBE41 /* SyphonOpenGLServer.m in Sources */,
 				E2D6C8911D8B4DED00108260 /* SyphonServerRendererLegacy.m in Sources */,
-				1B0906C711CBB1C100BCBE41 /* SyphonClient.m in Sources */,
+				1B0906C711CBB1C100BCBE41 /* SyphonOpenGLClient.m in Sources */,
 				1B09098811CD9A1C00BCBE41 /* SyphonClientConnectionManager.m in Sources */,
 				BD606D6911D2842D00E02702 /* SyphonServerDirectory.m in Sources */,
 				BD3796D211DD470D0042870B /* SyphonPrivate.m in Sources */,
@@ -654,6 +703,8 @@
 				E28D0CB51D95770C0036DF26 /* SyphonServerVertices.m in Sources */,
 				BDB8DA301211F59A0028D250 /* SyphonMessageReceiver.m in Sources */,
 				BDB8DA321211F59A0028D250 /* SyphonCFMessageReceiver.m in Sources */,
+				565D06AC25CAA2FA0048C4DD /* SyphonMetalClient.m in Sources */,
+				E240462923EF6F7E004C14E9 /* SyphonClient.m in Sources */,
 				BDB8DA361211F59A0028D250 /* SyphonMessageSender.m in Sources */,
 				BDB8DA381211F59A0028D250 /* SyphonCFMessageSender.m in Sources */,
 				E219FB5A233CDC3B00FB7F63 /* SyphonClientBase.m in Sources */,
@@ -662,8 +713,10 @@
 				BDB8DAF61211FA7F0028D250 /* SyphonMessaging.m in Sources */,
 				8488126724361D4D008E17CC /* SyphonServerRendererMetal.m in Sources */,
 				E21003C71D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m in Sources */,
+				E240462523EF6B7A004C14E9 /* SyphonServer.m in Sources */,
+				E240463123EF71D4004C14E9 /* SyphonImage.m in Sources */,
 				BD038878122EAB1A007725FF /* SyphonImageBase.m in Sources */,
-				BD038887122EABE2007725FF /* SyphonImage.m in Sources */,
+				BD038887122EABE2007725FF /* SyphonOpenGLImage.m in Sources */,
 				E28D0CB11D9542B30036DF26 /* SyphonVertices.m in Sources */,
 				E2DE7FD412495BF50081453B /* SyphonMessageQueue.m in Sources */,
 				E2D6C88D1D8B4A6D00108260 /* SyphonServerRenderer.m in Sources */,
@@ -671,6 +724,7 @@
 				BDFBD77E126F4D8800075A23 /* SyphonDispatch.c in Sources */,
 				BDFAE527148CDA84008C9E6F /* SyphonOpenGLFunctions.c in Sources */,
 				E21003CB1D85FAD00066E934 /* SyphonIOSurfaceImageCore.m in Sources */,
+				565D06A925CAA2FA0048C4DD /* SyphonMetalServer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -787,7 +841,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "i386 x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -827,7 +881,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "i386 x86_64 arm64";
 			};
 			name = Release;
 		};
@@ -874,7 +928,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "i386 x86_64 arm64";
 			};
 			name = "Debug Messaging Only";
 		};

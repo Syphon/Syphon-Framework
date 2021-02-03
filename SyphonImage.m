@@ -1,8 +1,8 @@
 /*
-    SyphonImage.m
-    Syphon
+   SyphonImage.m
+   Syphon
 
-    Copyright 2010-2011 bangnoise (Tom Butterworth) & vade (Anton Marini).
+    Copyright 2010-2020 bangnoise (Tom Butterworth) & vade (Anton Marini).
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -25,25 +25,15 @@
     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
 #import "SyphonImage.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
-@implementation SyphonImage {
-    NSSize  _size;
-}
-- (instancetype)initWithSurface:(IOSurfaceRef)surfaceRef
-{
-    self = [super initWithSurface:surfaceRef];
-    if (self)
-    {
-        _size.width = IOSurfaceGetWidth(surfaceRef);
-        _size.height = IOSurfaceGetHeight(surfaceRef);
-    }
-    return self;
-}
+@implementation SyphonImage
 
-- (GLuint)textureName {return 0;}
-- (NSSize)textureSize {return _size;}
 @end
+
+#pragma clang diagnostic pop

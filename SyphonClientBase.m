@@ -1,9 +1,31 @@
-//
-//  SyphonIOSurfaceClient.m
-//  Syphon
-//
-//  Created by Tom Butterworth on 26/09/2019.
-//
+/*
+   SyphonClientBase.m
+   Syphon
+
+    Copyright 2010-2020 bangnoise (Tom Butterworth) & vade (Anton Marini).
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 #import "SyphonClientBase.h"
 #import "SyphonServerDirectory.h"
@@ -37,8 +59,8 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 
 - (id)init
 {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    // Returns nil
+    return [self initWithServerDescription:@{} options:nil newFrameHandler:nil];
 }
 
 - (instancetype)initWithServerDescription:(NSDictionary<NSString *, id> *)description options:(nullable NSDictionary<NSString *, id> *)options newFrameHandler:(nullable void (^)(id client))handler
@@ -83,14 +105,20 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 
 - (void) dealloc
 {
+    // Don't call anything in the subclass, it has already been dealloc'd
     [[SyphonServerDirectory sharedDirectory] removeObserver:self forKeyPath:@"servers"];
-    [self stop];
+    [self stopBase];
     [_handler release];
     [_serverDescription release];
     [super dealloc];
 }
 
 - (void)stop
+{
+    [self stopBase];
+}
+
+- (void)stopBase
 {
     OSSpinLockLock(&_lock);
     if (_connectionManager)
