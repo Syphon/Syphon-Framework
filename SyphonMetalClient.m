@@ -9,6 +9,8 @@
     id<MTLDevice> _device;
 }
 
+@dynamic isValid, serverDescription, hasNewFrame;
+
 - (id)initWithServerDescription:(NSDictionary *)description
                          device:(id<MTLDevice>)theDevice
                         options:(NSDictionary *)options
