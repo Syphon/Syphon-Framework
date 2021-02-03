@@ -94,18 +94,6 @@
     return [_surfaceTexture retain];
 }
 
-- (void)drawFrame:(void(^)(id<MTLTexture> frame,id<MTLCommandBuffer> commandBuffer))frameHandler size:(NSSize)size commandBuffer:(id<MTLCommandBuffer>)commandBuffer
-{
-    id<MTLTexture> texture = [self prepareToDrawFrameOfSize:size];
-    if( texture != nil )
-    {
-        frameHandler(texture, commandBuffer);
-        [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull commandBuffer) {
-            [self publish];
-        }];
-    }
-}
-
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish
 {
     NSRect region = NSMakeRect(0, 0, textureToPublish.width, textureToPublish.height);
