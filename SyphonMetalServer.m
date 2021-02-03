@@ -2,6 +2,7 @@
 #import <Metal/MTLCommandQueue.h>
 #import "SyphonServerRendererMetal.h"
 #import "SyphonPrivate.h"
+#import "SyphonSubclassing.h"
 
 @implementation SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME
 {
@@ -56,7 +57,7 @@
                                                                                              height:size.height
                                                                                           mipmapped:NO];
         descriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
-        IOSurfaceRef surface = [super copySurfaceForWidth:size.width height:size.height options:nil];
+        IOSurfaceRef surface = [self copySurfaceForWidth:size.width height:size.height options:nil];
         if (surface)
         {
             _surfaceTexture = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];

@@ -1,6 +1,6 @@
 #import "SyphonMetalClient.h"
 #import <Metal/MTLCommandQueue.h>
-
+#import "SyphonSubclassing.h"
 
 @implementation SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME
 {
@@ -56,7 +56,7 @@
     OSSpinLockLock(&_threadLock);
     if (_frame == nil)
     {
-        IOSurfaceRef surface = [super newSurface];
+        IOSurfaceRef surface = [self newSurface];
         if( surface == nil )
         {
             // TODO: should it happen ?
