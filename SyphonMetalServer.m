@@ -94,23 +94,6 @@
     return [_surfaceTexture retain];
 }
 
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish
-{
-    NSRect region = NSMakeRect(0, 0, textureToPublish.width, textureToPublish.height);
-    [self publishFrameTexture:textureToPublish imageRegion:region flip:NO];
-}
-
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish flip:(BOOL)flip
-{
-    NSRect region = NSMakeRect(0, 0, textureToPublish.width, textureToPublish.height);
-    [self publishFrameTexture:textureToPublish imageRegion:region flip:flip];
-}
-
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region
-{
-    [self publishFrameTexture:textureToPublish imageRegion:region flip:NO];
-}
-
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region flip:(BOOL)flip
 {
     [self lazySetupTextureForSize:region.size];

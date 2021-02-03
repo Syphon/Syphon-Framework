@@ -13,9 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // API
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region flip:(BOOL)flip;
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish imageRegion:(NSRect)region;
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish flip:(BOOL)flip;
-- (void)publishFrameTexture:(id<MTLTexture>)textureToPublish;
 
 
 - (id<MTLTexture>)newFrameImage;
