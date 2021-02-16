@@ -32,10 +32,7 @@
     {
         _device = [theDevice retain];
         _surfaceTexture = nil;
-        NSInteger unsafeMsaaSampleCount = [[self class] integerValueForKey:SyphonServerOptionAntialiasSampleCount fromOptions:options];
-        _msaaSampleCount = [SyphonServerRendererMetal safeMsaaSampleCountForDevice:_device unsafeSampleCount:unsafeMsaaSampleCount verbose:YES];
-#warning MTO: MSAA is disabled, it needs more testing
-        _renderer = [[SyphonServerRendererMetal alloc] initWithDevice:theDevice colorPixelFormat:MTLPixelFormatBGRA8Unorm msaaSampleCount:1];
+        _renderer = [[SyphonServerRendererMetal alloc] initWithDevice:theDevice colorPixelFormat:MTLPixelFormatBGRA8Unorm];
     }
     return self;
 }

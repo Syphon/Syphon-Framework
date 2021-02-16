@@ -81,36 +81,16 @@ NSString *shaderCode = @""
     MTLPixelFormat _colorPixelFormat;
     vector_uint2 _viewportSize;
     id<MTLDevice> _device;
-    id<MTLTexture> _msaaTexture;
-    NSInteger _sampleCount;
 }
 
-+ (NSInteger)safeMsaaSampleCountForDevice:(id<MTLDevice>)device unsafeSampleCount:(NSInteger)unsafeSampleCount verbose:(BOOL)verbose
-{
-    const NSInteger safeSampleCount = (1 <= unsafeSampleCount) ? unsafeSampleCount : 1;
-    if( [device supportsTextureSampleCount:safeSampleCount] )
-    {
-        return safeSampleCount;
-    }
-    else
-    {
-        if( verbose )
-        {
-             SYPHONLOG(@"Warning: provided sample count (%lu) is not supported by device. Rollback to sample count (1)", safeSampleCount);
-        }
-        return 1;
-    }
-}
-
-- (nonnull instancetype)initWithDevice:(id<MTLDevice>)device colorPixelFormat:(MTLPixelFormat)colorPixelFormat msaaSampleCount:(NSInteger)sampleCount
+- (nonnull instancetype)initWithDevice:(id<MTLDevice>)device colorPixelFormat:(MTLPixelFormat)colorPixelFormat
 {
     self = [super init];
     if( self )
     {
         _colorPixelFormat = colorPixelFormat;
         _device = device;
-        _sampleCount = [SyphonServerRendererMetal safeMsaaSampleCountForDevice:device unsafeSampleCount:sampleCount verbose:NO];
-        
+
         NSError *error = NULL;
         NSString *code = [types stringByAppendingString:shaderCode];
         MTLCompileOptions *compileOptions = [MTLCompileOptions new];
@@ -131,9 +111,6 @@ NSString *shaderCode = @""
         pipelineStateDescriptor.vertexFunction = vertexFunction;
         pipelineStateDescriptor.fragmentFunction = fragmentFunction;
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = colorPixelFormat;
-
-        pipelineStateDescriptor.sampleCount = _sampleCount; // Soon deprecated
-        pipelineStateDescriptor.rasterSampleCount = _sampleCount;
         
         _pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor error:&error];
         
@@ -142,7 +119,6 @@ NSString *shaderCode = @""
             SYPHONLOG(@"Failed to createe pipeline state, error %@", error);
             return nil;
         }
-        _msaaTexture = nil;
     }
     return self;
 }
@@ -173,30 +149,8 @@ NSString *shaderCode = @""
     MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
     renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 1);
-    if( _sampleCount == 1 )
-    {
-        renderPassDescriptor.colorAttachments[0].texture = texture;
-        renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-    }
-    else
-    {
-        // Even if we dont keep it, we supposedly need this msaaTexture output apply antialiasing
-        if( _msaaTexture == nil || _msaaTexture.width != offScreenTexture.width || _msaaTexture.height != offScreenTexture.height )
-        {
-            MTLTextureDescriptor *msaaTextureDescriptor =  [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:_colorPixelFormat width:offScreenTexture.width height:offScreenTexture.height mipmapped:YES];
-            msaaTextureDescriptor.mipmapLevelCount = 1;
-            msaaTextureDescriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
-            msaaTextureDescriptor.textureType = MTLTextureType2DMultisample;
-            msaaTextureDescriptor.sampleCount = _sampleCount;
-            msaaTextureDescriptor.resourceOptions = MTLResourceStorageModePrivate;
-            _msaaTexture = [_device newTextureWithDescriptor:msaaTextureDescriptor];
-            _msaaTexture.label = @"Syphon Server internal MSAA texture (not used)";
-        }
-        renderPassDescriptor.colorAttachments[0].texture = _msaaTexture;
-        renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionMultisampleResolve;
-        // ResolveTexture supposedlyf have antialiasing applied
-        renderPassDescriptor.colorAttachments[0].resolveTexture = texture;
-    }
+    renderPassDescriptor.colorAttachments[0].texture = texture;
+    renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
     
     // Create a render command encoder so we can render into something
     id<MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
