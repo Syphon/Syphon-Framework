@@ -363,6 +363,7 @@
     glFlush();
 }
 
+
 - (void)drawFrameTexture:(GLuint)texID textureTarget:(GLenum)target imageRegion:(NSRect)region textureDimensions:(NSSize)size flipped:(BOOL)isFlipped
 {
     if (_vertices == nil)

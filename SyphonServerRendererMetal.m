@@ -125,6 +125,11 @@ NSString *shaderCode = @""
 
 - (void)renderFromTexture:(id<MTLTexture>)offScreenTexture inTexture:(id<MTLTexture>)texture region:(NSRect)region onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer flip:(BOOL)flip
 {
+    if( texture == nil )
+    {
+        return;
+    }
+    
     const MTLViewport viewport = (MTLViewport){region.origin.x, region.origin.y, region.size.width, region.size.height, -1.0, 1.0 };
     _viewportSize.x = viewport.width;
     _viewportSize.y = viewport.height;
@@ -148,7 +153,7 @@ NSString *shaderCode = @""
     const NSUInteger numberOfVertices = sizeof(quadVertices) / sizeof(SYPHONTextureVertex);
     MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
-    renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 1);
+    renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 0);
     renderPassDescriptor.colorAttachments[0].texture = texture;
     renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
     
