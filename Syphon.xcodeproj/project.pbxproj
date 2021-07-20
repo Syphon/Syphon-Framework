@@ -711,7 +711,7 @@
 				GCC_PREFIX_HEADER = Syphon_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
-				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
@@ -734,7 +734,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Syphon_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
-				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
@@ -896,7 +896,7 @@
 				GCC_PREFIX_HEADER = Syphon_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
-				LD_DYLIB_INSTALL_NAME = "@loader_path/../Frameworks/$(EXECUTABLE_PATH)";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
