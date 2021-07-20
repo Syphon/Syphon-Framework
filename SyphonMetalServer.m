@@ -4,12 +4,14 @@
 #import "SyphonPrivate.h"
 #import "SyphonSubclassing.h"
 
+
+
+
 @implementation SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME
 {
     id<MTLTexture> _surfaceTexture;
     id<MTLDevice> _device;
     SyphonServerRendererMetal *_renderer;
-    NSInteger _msaaSampleCount;
 }
 
 + (NSInteger)integerValueForKey:(NSString *)key fromOptions:(NSDictionary *)options
@@ -96,7 +98,7 @@
     [self lazySetupTextureForSize:region.size];
     
     // When possible, use faster blit
-    if( !isFlipped && _msaaSampleCount == 1 && textureToPublish.pixelFormat == _surfaceTexture.pixelFormat
+    if( !isFlipped && textureToPublish.pixelFormat == _surfaceTexture.pixelFormat
        && textureToPublish.sampleCount == _surfaceTexture.sampleCount
        && !textureToPublish.framebufferOnly)
     {
