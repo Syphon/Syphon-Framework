@@ -27,6 +27,9 @@
      SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef SYPHONOPENGLSERVER_H_CA651C4B_67BD_4AE5_AF16_239BFC9359DE
+#define SYPHONOPENGLSERVER_H_CA651C4B_67BD_4AE5_AF16_239BFC9359DE
+
 #import <Foundation/Foundation.h>
 #import <OpenGL/OpenGL.h>
 #import <Syphon/SyphonServerBase.h>
@@ -175,3 +178,4 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 #endif
 
 NS_ASSUME_NONNULL_END
+#endif

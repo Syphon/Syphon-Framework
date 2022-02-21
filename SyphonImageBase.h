@@ -27,6 +27,8 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef SYPHONIMAGEBASE_H_A65FF8E1_DE27_40CA_8893_0BAC63A4FA5C
+#define SYPHONIMAGEBASE_H_A65FF8E1_DE27_40CA_8893_0BAC63A4FA5C
 #import <Foundation/Foundation.h>
 #import <IOSurface/IOSurface.h>
 
@@ -46,4 +48,5 @@
 
 #if defined(SYPHON_USE_CLASS_ALIAS)
 @compatibility_alias SyphonImageBase SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME;
+#endif
 #endif

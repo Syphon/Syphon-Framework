@@ -27,6 +27,9 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef SYPHON_H_4C3DD1ED_2002_41B4_8BDA_31B05C8E3CE5
+#define SYPHON_H_4C3DD1ED_2002_41B4_8BDA_31B05C8E3CE5
+
 #import "SyphonServerDirectory.h"
 #import "SyphonOpenGLServer.h"
 #import "SyphonOpenGLClient.h"
@@ -201,3 +204,5 @@
  If you'd like to examine the framework's source code, report a bug, or get involved in development, head on over to the <a href="https://github.com/Syphon/Syphon-Framework">Syphon framework GitHub project.</a>
  
  */
+
+#endif
