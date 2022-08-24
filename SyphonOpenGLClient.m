@@ -131,23 +131,25 @@
 	if (_frameValid == 0)
     {
         [_frame release];
-        IOSurfaceRef surface = [self newSurface];
-        if (surface)
-        {
-            if (SyphonOpenGLContextIsLegacy(_context))
-            {
-                _frame = [[SyphonIOSurfaceImageLegacy alloc] initWithSurface:surface forContext:_context];
-            }
-            else
-            {
-                _frame = [[SyphonIOSurfaceImageCore alloc] initWithSurface:surface forContext:_context];
-            }
-            CFRelease(surface);
-        }
-        else
-        {
-            _frame = nil;
-        }
+		_frame = nil;
+		
+		if (_context)
+		{
+			IOSurfaceRef surface = [self newSurface];
+			if (surface)
+			{
+				if (SyphonOpenGLContextIsLegacy(_context))
+				{
+					_frame = [[SyphonIOSurfaceImageLegacy alloc] initWithSurface:surface forContext:_context];
+				}
+				else
+				{
+					_frame = [[SyphonIOSurfaceImageCore alloc] initWithSurface:surface forContext:_context];
+				}
+				CFRelease(surface);
+			}
+		}
+        
         OSAtomicTestAndSetBarrier(0, &_frameValid);
     }
 	OSSpinLockUnlock(&_lock);
