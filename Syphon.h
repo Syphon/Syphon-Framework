@@ -27,17 +27,17 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SyphonServerDirectory.h"
-#import "SyphonOpenGLServer.h"
-#import "SyphonOpenGLClient.h"
-#import "SyphonOpenGLImage.h"
+#import <Syphon/SyphonServerDirectory.h>
+#import <Syphon/SyphonOpenGLServer.h>
+#import <Syphon/SyphonOpenGLClient.h>
+#import <Syphon/SyphonOpenGLImage.h>
 
 /*
  Deprecated headers
  */
-#import "SyphonServer.h"
-#import "SyphonClient.h"
-#import "SyphonImage.h"
+#import <Syphon/SyphonServer.h>
+#import <Syphon/SyphonClient.h>
+#import <Syphon/SyphonImage.h>
 
 /*! \mainpage Syphon Framework
  @section intro_sec Developing with Syphon

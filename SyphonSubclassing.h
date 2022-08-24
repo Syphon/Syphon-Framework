@@ -28,8 +28,8 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "SyphonServerBase.h"
-#import "SyphonClientBase.h"
+#import <Syphon/SyphonServerBase.h>
+#import <Syphon/SyphonClientBase.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
