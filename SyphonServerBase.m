@@ -1,5 +1,5 @@
 //
-//  SyphonIOSurfaceServer.m
+//  SyphonServerBase.m
 //  Syphon
 //
 //  Created by Tom Butterworth on 26/04/2019.
