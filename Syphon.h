@@ -38,8 +38,8 @@
 #import <Syphon/SyphonServer.h>
 #import <Syphon/SyphonClient.h>
 #import <Syphon/SyphonImage.h>
-#import <SyphonMetalServer.h>
-#import <SyphonMetalClient.h>
+#import <Syphon/SyphonMetalServer.h>
+#import <Syphon/SyphonMetalClient.h>
 
 /*! \mainpage Syphon Framework
  @section intro_sec Developing with Syphon
