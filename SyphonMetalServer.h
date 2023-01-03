@@ -1,4 +1,4 @@
-#import "SyphonServerBase.h"
+#import <Syphon/SyphonServerBase.h>
 #import <Metal/MTLPixelFormat.h>
 #import <Metal/MTLTexture.h>
 #import <Metal/MTLCommandBuffer.h>
@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMetalServer)
 @interface SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME : SyphonServerBase
 
-- (id)initWithName:(NSString*)name device:(id<MTLDevice>)device options:(NSDictionary *)options;
+- (id)initWithName:(nullable NSString*)name device:(id<MTLDevice>)device options:(nullable NSDictionary *)options;
 
 /*!
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.
@@ -20,8 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer imageRegion:(NSRect)region flipped:(BOOL)isFlipped;
 
-
-- (id<MTLTexture>)newFrameImage;
+- (nullable id<MTLTexture>)newFrameImage;
 - (void)stop;
 
 @end

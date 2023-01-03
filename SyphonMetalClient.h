@@ -1,9 +1,10 @@
 #import <Foundation/Foundation.h>
 #import <Metal/MTLPixelFormat.h>
-#import "SyphonClientBase.h"
+#import <Syphon/SyphonClientBase.h>
 
 #define SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMetalClient)
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME : SyphonClientBase
 
@@ -17,15 +18,15 @@
 */
 - (id)initWithServerDescription:(NSDictionary *)description
                          device:(id<MTLDevice>)device
-                        options:(NSDictionary *)options
-                   newFrameHandler:(void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
+                        options:(nullable NSDictionary *)options
+                   newFrameHandler:(nullable void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
 
 /*!
 Returns a MTLTexture representing the current output from the server. The texture associated with the image may continue to update when you draw with it, but you should not depend on that behaviour: call this method every time you wish to access the current server frame. This object may have GPU resources associated with it and you should release it as soon as you are finished drawing with it.
 
 @returns A MTLTexture representing the live output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it.
 */
-- (id<MTLTexture>)newFrameImage;
+- (nullable id<MTLTexture>)newFrameImage;
 
 /*!
 Stops the client from receiving any further frames from the server. Use of this method is optional and releasing all references to the client has the same effect.
@@ -39,3 +40,4 @@ Stops the client from receiving any further frames from the server. Use of this 
 @compatibility_alias SyphonMetalClient SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME;
 #endif
 
+NS_ASSUME_NONNULL_END
