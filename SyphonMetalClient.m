@@ -59,11 +59,6 @@
     if (_frame == nil)
     {
         IOSurfaceRef surface = [self newSurface];
-        if( surface == nil )
-        {
-            // TODO: should it happen ?
-            SYPHONLOG(@"surface is nil !");
-        }
         if (surface != nil)
         {
             MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:IOSurfaceGetWidth(surface) height:IOSurfaceGetHeight(surface) mipmapped:NO];
