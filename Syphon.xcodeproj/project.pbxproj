@@ -86,6 +86,7 @@
 		E28D0CB11D9542B30036DF26 /* SyphonVertices.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CAF1D9542B30036DF26 /* SyphonVertices.m */; };
 		E28D0CB41D95770C0036DF26 /* SyphonServerVertices.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CB21D95770C0036DF26 /* SyphonServerVertices.h */; };
 		E28D0CB51D95770C0036DF26 /* SyphonServerVertices.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CB31D95770C0036DF26 /* SyphonServerVertices.m */; };
+		E2C755A72964C19D00C8B5D5 /* SyphonMetalShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */; };
 		E2CF04FE227398E600B8CD19 /* SyphonServerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */; };
 		E2CF04FF227398E600B8CD19 /* SyphonServerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CF04FD227398E600B8CD19 /* SyphonServerBase.m */; };
 		E2D6C8881D8B470E00108260 /* SyphonCGL.c in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8861D8B470E00108260 /* SyphonCGL.c */; };
@@ -194,6 +195,8 @@
 		E28D0CAF1D9542B30036DF26 /* SyphonVertices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonVertices.m; sourceTree = "<group>"; };
 		E28D0CB21D95770C0036DF26 /* SyphonServerVertices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerVertices.h; sourceTree = "<group>"; };
 		E28D0CB31D95770C0036DF26 /* SyphonServerVertices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerVertices.m; sourceTree = "<group>"; };
+		E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SyphonMetalShaders.metal; sourceTree = "<group>"; };
+		E2C755A82964C32500C8B5D5 /* SyphonServerMetalTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServerMetalTypes.h; sourceTree = "<group>"; };
 		E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServerBase.h; sourceTree = "<group>"; };
 		E2CF04FD227398E600B8CD19 /* SyphonServerBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonServerBase.m; sourceTree = "<group>"; };
 		E2D6C8861D8B470E00108260 /* SyphonCGL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonCGL.c; sourceTree = "<group>"; };
@@ -326,6 +329,8 @@
 				E28D0CB21D95770C0036DF26 /* SyphonServerVertices.h */,
 				E28D0CB31D95770C0036DF26 /* SyphonServerVertices.m */,
 				E2CF04FD227398E600B8CD19 /* SyphonServerBase.m */,
+				E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */,
+				E2C755A82964C32500C8B5D5 /* SyphonServerMetalTypes.h */,
 			);
 			name = Server;
 			sourceTree = "<group>";
@@ -703,6 +708,7 @@
 				E219FB5A233CDC3B00FB7F63 /* SyphonClientBase.m in Sources */,
 				E28D0CAD1D930B9F0036DF26 /* SyphonServerShader.m in Sources */,
 				BDB8DAF61211FA7F0028D250 /* SyphonMessaging.m in Sources */,
+				E2C755A72964C19D00C8B5D5 /* SyphonMetalShaders.metal in Sources */,
 				8488126724361D4D008E17CC /* SyphonServerRendererMetal.m in Sources */,
 				E21003C71D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m in Sources */,
 				E240462523EF6B7A004C14E9 /* SyphonServer.m in Sources */,
