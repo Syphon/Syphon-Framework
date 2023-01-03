@@ -27,7 +27,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#import "SyphonOpenGLServer.h"
+#import <Syphon/SyphonOpenGLServer.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -27,7 +27,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#import "SyphonOpenGLClient.h"
+#import <Syphon/SyphonOpenGLClient.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

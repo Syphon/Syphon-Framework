@@ -58,7 +58,7 @@
 }
 
 // TODO: delete if we move these out of SyphonServer.h
-// (they are redeclared from SyphonIOSurfaceServer.h)
+// (they are redeclared from SyphonServerBase.h)
 @dynamic name;
 @dynamic serverDescription;
 @dynamic hasClients;

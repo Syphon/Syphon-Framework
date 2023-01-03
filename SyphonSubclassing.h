@@ -28,14 +28,14 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "SyphonServerBase.h"
-#import "SyphonClientBase.h"
+#import <Syphon/SyphonServerBase.h>
+#import <Syphon/SyphonClientBase.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SyphonServerBase (SyphonSubclassing)
 /*!
- Subclasses call this to obtain a new IOSurface to draw to.
+ Subclasses call this to obtain a new IOSurface to draw to. The surface will always be in a BGRA8 format, other formats are not currently supported.
  @param width the width of the IOSurface in pixels
  @param height the height of the IOSurface in pixels
  @param options currently ignored, pass nil
