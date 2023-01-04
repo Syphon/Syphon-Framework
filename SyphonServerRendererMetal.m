@@ -6,9 +6,6 @@
 @implementation SyphonServerRendererMetal
 {
     id<MTLRenderPipelineState> _pipelineState;
-    MTLPixelFormat _colorPixelFormat;
-    vector_uint2 _viewportSize;
-    id<MTLDevice> _device;
 }
 
 - (nonnull instancetype)initWithDevice:(id<MTLDevice>)device colorPixelFormat:(MTLPixelFormat)colorPixelFormat
@@ -16,9 +13,6 @@
     self = [super init];
     if( self )
     {
-        _colorPixelFormat = colorPixelFormat;
-        _device = device;
-
         NSError *error = NULL;
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         id<MTLLibrary> defaultLibrary = [device newDefaultLibraryWithBundle:bundle error:&error];
@@ -31,6 +25,8 @@
         id <MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"textureToScreenVertexShader"];
         id <MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"textureToScreenSamplingShader"];
         
+        [defaultLibrary release];
+        
         // Set up a descriptor for creating a pipeline state object
         MTLRenderPipelineDescriptor *pipelineStateDescriptor = [MTLRenderPipelineDescriptor new];
         pipelineStateDescriptor.label = @"Syphon Pipeline";
@@ -40,13 +36,23 @@
         
         _pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor error:&error];
         
+        [vertexFunction release];
+        [fragmentFunction release];
+        
         if( !_pipelineState )
         {
             SYPHONLOG(@"Failed to createe pipeline state, error %@", error);
+            [self release];
             return nil;
         }
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [_pipelineState release];
+    [super dealloc];
 }
 
 - (void)renderFromTexture:(id<MTLTexture>)offScreenTexture inTexture:(id<MTLTexture>)texture region:(NSRect)region onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer flip:(BOOL)flip
@@ -57,8 +63,7 @@
     }
     
     const MTLViewport viewport = (MTLViewport){region.origin.x, region.origin.y, region.size.width, region.size.height, -1.0, 1.0 };
-    _viewportSize.x = viewport.width;
-    _viewportSize.y = viewport.height;
+    vector_uint2 viewportSize = simd_make_uint2(viewport.width, viewport.height);
     
     const float w = viewport.width/2;
     const float h = viewport.height/2;
@@ -89,7 +94,7 @@
     [renderEncoder setViewport:viewport];
     [renderEncoder setRenderPipelineState:_pipelineState];
     [renderEncoder setVertexBytes:quadVertices length:sizeof(quadVertices) atIndex:SYPHONVertexInputIndexVertices];
-    [renderEncoder setVertexBytes:&_viewportSize length:sizeof(_viewportSize) atIndex:SYPHONVertexInputIndexViewportSize];
+    [renderEncoder setVertexBytes:&viewportSize length:sizeof(viewportSize) atIndex:SYPHONVertexInputIndexViewportSize];
     [renderEncoder setFragmentTexture:offScreenTexture atIndex:SYPHONTextureIndexZero];
     [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:numberOfVertices];
     [renderEncoder endEncoding];
