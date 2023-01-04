@@ -35,7 +35,6 @@ using namespace metal;
 typedef struct
 {
     float4 clipSpacePosition [[position]];
-    float4 color;
     float2 textureCoordinate;
 } RasterizerData;
 
