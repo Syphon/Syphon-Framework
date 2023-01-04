@@ -1,5 +1,5 @@
 /*
- SyphonServerRendererCore.h
+ SyphonServerRendererLegacyGL.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -30,7 +30,5 @@
 
 #import "SyphonServerRenderer.h"
 
-@class SyphonServerShader, SyphonServerVertices;
-
-@interface SyphonServerRendererCore : SyphonServerRenderer
+@interface SyphonServerRendererLegacyGL : SyphonServerRenderer
 @end

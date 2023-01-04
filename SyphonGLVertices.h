@@ -1,5 +1,5 @@
 /*
- SyphonVertices.h
+ SyphonGLVertices.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -30,7 +30,7 @@
 #import <Foundation/Foundation.h>
 #import <OpenGL/gltypes.h>
 
-@interface SyphonVertices : NSObject
+@interface SyphonGLVertices : NSObject
 - (void)setFloats:(GLfloat *)data count:(GLsizei)count;
 - (void)setAttributePointer:(GLint)index components:(GLsizei)components stride:(GLsizei)stride offset:(GLsizei)offset;
 - (void)bind;

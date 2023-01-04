@@ -1,5 +1,5 @@
 /*
- SyphonShader.h
+ SyphonServerGLVertices.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -27,12 +27,9 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
-#import <OpenGL/OpenGL.h>
+#import "SyphonGLVertices.h"
+#import <OpenGL/gltypes.h>
 
-@interface SyphonShader : NSObject
-- (instancetype)initWithVertexShader:(NSString *)vert fragmentShader:(NSString *)frag;
-- (void)useProgram;
-- (void)endProgram;
-- (GLint)getAttributeLocation:(NSString *)name;
+@interface SyphonServerGLVertices : SyphonGLVertices
+- (void)setRegionX:(GLfloat)x Y:(GLfloat)y width:(GLfloat)width height:(GLfloat)height flipped:(BOOL)isFlipped;
 @end

@@ -1,5 +1,5 @@
 /*
- SyphonServerVertices.h
+ SyphonServerGLVertices.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -27,9 +27,9 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SyphonServerVertices.h"
+#import "SyphonServerGLVertices.h"
 
-@implementation SyphonServerVertices
+@implementation SyphonServerGLVertices
 {
 @private
     GLfloat _vertices[16];

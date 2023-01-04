@@ -1,5 +1,5 @@
 /*
- SyphonServerRendererLegacy.h
+ SyphonServerGLShader.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -25,10 +25,13 @@
  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
  */
 
-#import "SyphonServerRenderer.h"
+#import "SyphonGLShader.h"
 
-@interface SyphonServerRendererLegacy : SyphonServerRenderer
+@interface SyphonServerGLShader : SyphonGLShader
+- (instancetype)initForTextureTarget:(GLenum)target;
+@property (readonly) GLenum target;
+@property (readonly) GLint vertexAttribLocation;
+@property (readonly) GLint textureVertexAttribLocation;
 @end

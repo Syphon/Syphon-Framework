@@ -1,5 +1,5 @@
 /*
- SyphonServerRendererLegacy.m
+ SyphonServerRendererLegacyGL.m
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -28,12 +28,12 @@
  
  */
 
-#import "SyphonServerRendererLegacy.h"
+#import "SyphonServerRendererLegacyGL.h"
 #import "SyphonIOSurfaceImageLegacy.h"
 #import "SyphonOpenGLFunctions.h"
 #import <OpenGL/CGLMacro.h>
 
-@implementation SyphonServerRendererLegacy
+@implementation SyphonServerRendererLegacyGL
 {
 @private
     CGLContextObj cgl_ctx;
