@@ -95,6 +95,9 @@
         SYPHONLOG(@"TextureToPublish is nil. Syphon will not publish");
         return;
     }
+    
+    region = NSIntersectionRect(region, NSMakeRect(0, 0, textureToPublish.width, textureToPublish.height));
+    
     [self lazySetupTextureForSize:region.size];
     
     // When possible, use faster blit
