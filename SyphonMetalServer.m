@@ -11,6 +11,11 @@
     SyphonServerRendererMetal *_renderer;
 }
 
+// These are redeclared from SyphonServerBase.h
+@dynamic name;
+@dynamic serverDescription;
+@dynamic hasClients;
+
 #pragma mark - Lifecycle
 
 - (id)initWithName:(NSString *)name device:(id<MTLDevice>)theDevice options:(NSDictionary *)options
