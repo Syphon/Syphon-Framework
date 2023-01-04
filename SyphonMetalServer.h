@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)initWithName:(nullable NSString*)name device:(id<MTLDevice>)device options:(nullable NSDictionary *)options;
 
 /*!
+ The MTLDevice the server uses for drawing.
+*/
+@property (readonly) id<MTLDevice> device;
+
+/*!
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.
  @param textureToPublish The MTLTexture you wish to publish on the server.
  @param commandBuffer Your commandBuffer on which Syphon will write its internal metal commands - You are responsible for comitting your commandBuffer yourself

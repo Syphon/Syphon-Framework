@@ -25,6 +25,11 @@
     return self;
 }
 
+- (id<MTLDevice>)device
+{
+    return _device;
+}
+
 - (id<MTLTexture>)prepareToDrawFrameOfSize:(NSSize)size
 {
     @synchronized (self) {
