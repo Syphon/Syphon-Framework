@@ -28,7 +28,7 @@
  
  */
 
-#import "SyphonServerRenderer.h"
+#import "SyphonServerRendererGL.h"
 
-@interface SyphonServerRendererCoreGL : SyphonServerRenderer
+@interface SyphonServerRendererCoreGL : SyphonServerRendererGL
 @end

@@ -1,5 +1,5 @@
 /*
- SyphonServerRenderer.h
+ SyphonServerRendererGL.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -31,7 +31,7 @@
 #import <Foundation/Foundation.h>
 #import "SyphonOpenGLImage.h"
 
-@interface SyphonServerRenderer : NSObject
+@interface SyphonServerRendererGL : NSObject
 - (instancetype)initWithContext:(CGLContextObj)context MSAASampleCount:(GLuint)msc depthBufferResolution:(GLuint)dbr stencilBufferResolution:(GLuint)sbr;
 @property (readonly) CGLContextObj context;
 @property (readonly) GLuint MSAASampleCount;

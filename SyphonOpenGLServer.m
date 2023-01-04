@@ -46,7 +46,7 @@
 @implementation SyphonOpenGLServer
 {
 @private
-    SyphonServerRenderer * _renderer;
+    SyphonServerRendererGL * _renderer;
     CGLContextObj _shareContext;
 
     BOOL _pushPending;
