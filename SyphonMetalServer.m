@@ -14,17 +14,6 @@
     SyphonServerRendererMetal *_renderer;
 }
 
-+ (NSInteger)integerValueForKey:(NSString *)key fromOptions:(NSDictionary *)options
-{
-    NSNumber *number = [options objectForKey:key];
-    if ([number respondsToSelector:@selector(unsignedIntValue)])
-    {
-        return [number unsignedIntValue];
-    }
-    return 0;
-}
-
-
 #pragma mark - Lifecycle
 
 - (id)initWithName:(NSString *)name device:(id<MTLDevice>)theDevice options:(NSDictionary *)options
