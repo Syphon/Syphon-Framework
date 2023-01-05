@@ -35,6 +35,23 @@
     return self;
 }
 
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        [self release];
+        self = nil;
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [self destroyResources];
+    [super dealloc];
+}
+
 - (id<MTLDevice>)device
 {
     return _device;
@@ -68,7 +85,7 @@
     }
 }
 
-- (void)stop
+- (void)destroyResources
 {
     @synchronized (self) {
         [_surfaceTexture release];
@@ -78,6 +95,11 @@
     _device = nil;
     [_renderer release];
     _renderer = nil;
+}
+
+- (void)stop
+{
+    [self destroyResources];
     [super stop];
 }
 

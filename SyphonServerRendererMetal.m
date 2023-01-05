@@ -36,6 +36,7 @@
         
         _pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor error:&error];
         
+        [pipelineStateDescriptor release];
         [vertexFunction release];
         [fragmentFunction release];
         
