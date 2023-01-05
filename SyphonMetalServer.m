@@ -26,6 +26,11 @@
         _device = [theDevice retain];
         _surfaceTexture = nil;
         _renderer = [[SyphonServerRendererMetal alloc] initWithDevice:theDevice colorPixelFormat:MTLPixelFormatBGRA8Unorm];
+        if (!_renderer)
+        {
+            [self release];
+            return nil;
+        }
     }
     return self;
 }
