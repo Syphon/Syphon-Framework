@@ -95,7 +95,8 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 /** @{ */
 
 /*!
- Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.
+ Publishes the part of the texture described in region of the texture to clients. The texture is copied and can be safely modified once this method has returned.
+ 
  @param textureToPublish The MTLTexture you wish to publish on the server.
  @param commandBuffer Your commandBuffer on which Syphon will write its internal metal commands - You are responsible for comitting your commandBuffer yourself
  @param region The sub-region of the texture to publish.
@@ -104,7 +105,7 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer imageRegion:(NSRect)region flipped:(BOOL)isFlipped;
 
 /*!
- Returns a MTLTexture representing the current output from the server, valid on the server's MTLDevice. Call this method every time you wish to access the current server frame. This object has a limited useful lifetime, and may have GPU resources associated with it: you should release it as soon as you are finished drawing with it.
+ Returns a MTLTexture representing the current output from the server, valid on the server's MTLDevice. Call this method every time you wish to access the current server frame. This texture has a limited useful lifetime: you should release it as soon as you are finished drawing with it.
   
  @returns A MTLTexture representing the current output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it.
  */

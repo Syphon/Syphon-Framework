@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
                    newFrameHandler:(nullable void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
 
 /*!
-Returns a MTLTexture representing the current output from the server. The texture associated with the image may continue to update when you draw with it, but you should not depend on that behaviour: call this method every time you wish to access the current server frame. This object may have GPU resources associated with it and you should release it as soon as you are finished drawing with it.
+Returns a MTLTexture representing the current output from the server. The texture associated with the image may continue to update when you draw with it, but you should not depend on that behaviour: call this method every time you wish to access the current server frame.
 
 @returns A MTLTexture representing the live output from the server. YOU ARE RESPONSIBLE FOR RELEASING THIS OBJECT when you are finished with it.
 */
