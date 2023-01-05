@@ -28,7 +28,6 @@
  */
 
 #import "SyphonServerRendererMetal.h"
-#import <Metal/Metal.h>
 #include <simd/simd.h>
 #include "SyphonServerMetalTypes.h"
 

@@ -28,7 +28,6 @@
  */
 
 #import "SyphonMetalServer.h"
-#import <Metal/MTLCommandQueue.h>
 #import "SyphonServerRendererMetal.h"
 #import "SyphonPrivate.h"
 #import "SyphonSubclassing.h"

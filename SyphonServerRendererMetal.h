@@ -28,13 +28,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <Metal/MTLPixelFormat.h>
-
-@protocol MTLDevice;
-@protocol MTLTexture;
-@protocol MTLCommandQueue;
-@protocol MTLCommandBuffer;
-@import Metal;
+#import <Metal/Metal.h>
 
 @interface SyphonServerRendererMetal : NSObject
 

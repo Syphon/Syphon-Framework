@@ -28,7 +28,6 @@
  */
 
 #import "SyphonMetalClient.h"
-#import <Metal/MTLCommandQueue.h>
 #import "SyphonSubclassing.h"
 
 @implementation SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME

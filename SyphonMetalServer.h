@@ -28,9 +28,7 @@
  */
 
 #import <Syphon/SyphonServerBase.h>
-#import <Metal/MTLPixelFormat.h>
-#import <Metal/MTLTexture.h>
-#import <Metal/MTLCommandBuffer.h>
+#import <Metal/Metal.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

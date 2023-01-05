@@ -28,7 +28,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <Metal/MTLPixelFormat.h>
+#import <Metal/Metal.h>
 #import <Syphon/SyphonClientBase.h>
 
 #define SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMetalClient)
