@@ -65,8 +65,10 @@
 
 - (void)stop
 {
-    [_surfaceTexture release];
-    _surfaceTexture = nil;
+    @synchronized (self) {
+        [_surfaceTexture release];
+        _surfaceTexture = nil;
+    }
     [_device release];
     _device = nil;
     [_renderer release];
@@ -79,7 +81,9 @@
 
 - (id<MTLTexture>)newFrameImage
 {
-    return [_surfaceTexture retain];
+    @synchronized (self) {
+        return [_surfaceTexture retain];
+    }
 }
 
 - (void)publishFrameTexture:(id<MTLTexture>)textureToPublish onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer imageRegion:(NSRect)region flipped:(BOOL)isFlipped
