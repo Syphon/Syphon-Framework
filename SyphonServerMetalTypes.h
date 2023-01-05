@@ -2,8 +2,8 @@
  SyphonServerMetalTypes.h
  Syphon
  
- Copyright 2010-2023 bangnoise (Tom Butterworth) & vade (Anton Marini)
- and contributors. All rights reserved.
+ Copyright 2020-2023 Maxime Touroute & Philippe Chaurand (www.millumin.com),
+ bangnoise (Tom Butterworth) & vade (Anton Marini). All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -25,7 +25,7 @@
  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 #ifndef SyphonServerMetalTypes_h
 #define SyphonServerMetalTypes_h
