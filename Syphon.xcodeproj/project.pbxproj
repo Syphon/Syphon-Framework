@@ -129,10 +129,7 @@
 		565D06A825CAA2FA0048C4DD /* SyphonMetalClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMetalClient.m; sourceTree = "<group>"; };
 		8488126424361D4C008E17CC /* SyphonServerRendererMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerRendererMetal.h; sourceTree = "<group>"; };
 		8488126524361D4D008E17CC /* SyphonServerRendererMetal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerRendererMetal.m; sourceTree = "<group>"; };
-		84E4D2242385923F00E24F2D /* SyphonMetalServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonMetalServer.h; sourceTree = "<group>"; };
-		84E4D2252385923F00E24F2D /* SyphonMetalServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonMetalServer.m; sourceTree = "<group>"; };
 		84E4D2292385927B00E24F2D /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
-		84E4D23023859C3A00E24F2D /* SyphonMetalClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonMetalClient.h; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* Syphon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Syphon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD038870122EA9FF007725FF /* SyphonOpenGLImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLImage.h; sourceTree = "<group>"; };
@@ -246,7 +243,6 @@
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				84E4D2282385927B00E24F2D /* Frameworks */,
-				565D06A425CAA2D20048C4DD /* Recovered References */,
 			);
 			name = OpenVideoTap;
 			sourceTree = "<group>";
@@ -369,16 +365,6 @@
 				32DBCF5E0370ADEE00C91783 /* Syphon_Prefix.pch */,
 			);
 			name = "Other Sources";
-			sourceTree = "<group>";
-		};
-		565D06A425CAA2D20048C4DD /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				84E4D23023859C3A00E24F2D /* SyphonMetalClient.h */,
-				84E4D2242385923F00E24F2D /* SyphonMetalServer.h */,
-				84E4D2252385923F00E24F2D /* SyphonMetalServer.m */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		84E4D2282385927B00E24F2D /* Frameworks */ = {
