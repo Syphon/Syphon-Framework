@@ -64,9 +64,7 @@
  @section introduction Developing with Syphon
  
  The Syphon framework provides the classes necessary to add Syphon support to your application. A Syphon server is used to make frames available to other applications. SyphonServerDirectory is used to discover available servers. A SyphonClient is used to connect to and receive frames from a Syphon server. Servers and clients are available for OpenGL and Metal, and the two are interoperable.
- 
- The framework <em>requires</em> MacOS X 10.8 or later.
- 
+  
  To include Syphon in your application, follow these steps:
  
  <ol>
