@@ -1,5 +1,5 @@
 /*
- SyphonServerRenderer.m
+ SyphonServerRendererGL.m
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -28,7 +28,7 @@
  
  */
 
-#import "SyphonServerRenderer.h"
+#import "SyphonServerRendererGL.h"
 #import "SyphonIOSurfaceImageLegacy.h"
 
 // These match OpenGL definitions but this class is agnostic
@@ -41,7 +41,7 @@
 #define SYPHON_GL_STENCIL_INDEX8    0x8D48
 #define SYPHON_GL_STENCIL_INDEX16   0x8D49
 
-@implementation SyphonServerRenderer
+@implementation SyphonServerRendererGL
 {
 @private
     CGLContextObj _context;

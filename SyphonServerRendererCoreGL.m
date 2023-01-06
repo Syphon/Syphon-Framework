@@ -1,5 +1,5 @@
 /*
- SyphonServerRendererCore.m
+ SyphonServerRendererCoreGL.m
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -28,14 +28,14 @@
  
  */
 
-#import "SyphonServerRendererCore.h"
+#import "SyphonServerRendererCoreGL.h"
 #import "SyphonIOSurfaceImageCore.h"
-#import "SyphonServerShader.h"
-#import "SyphonServerVertices.h"
+#import "SyphonServerGLShader.h"
+#import "SyphonServerGLVertices.h"
 #import <OpenGL/gl3.h>
 #import <OpenGL/gl3ext.h> // For glFlushRendererAPPLE()
 
-@implementation SyphonServerRendererCore
+@implementation SyphonServerRendererCoreGL
 {
 @private
     GLuint  _depthBuffer;
@@ -45,8 +45,8 @@
     GLuint  _msaaColorBuffer;
     GLuint  _actualMSAASampleCount;
     CGLContextObj   _prevContext;
-    SyphonServerShader  *_shader;
-    SyphonServerVertices *_vertices;
+    SyphonServerGLShader  *_shader;
+    SyphonServerGLVertices *_vertices;
 #ifdef SYPHON_CORE_RESTORE
     GLint _previousReadFBO;
     GLint _previousDrawFBO;
@@ -363,17 +363,18 @@
     glFlush();
 }
 
+
 - (void)drawFrameTexture:(GLuint)texID textureTarget:(GLenum)target imageRegion:(NSRect)region textureDimensions:(NSSize)size flipped:(BOOL)isFlipped
 {
     if (_vertices == nil)
     {
-        _vertices = [[SyphonServerVertices alloc] init];
+        _vertices = [[SyphonServerGLVertices alloc] init];
     }
 
     if (target != _shader.target)
     {
         [_shader release];
-        _shader = [[SyphonServerShader alloc] initForTextureTarget:target];
+        _shader = [[SyphonServerGLShader alloc] initForTextureTarget:target];
         [_shader useProgram];
         [_vertices bind];
         GLint vertLoc = _shader.vertexAttribLocation;

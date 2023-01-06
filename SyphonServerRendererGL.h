@@ -1,5 +1,5 @@
 /*
- SyphonVertices.h
+ SyphonServerRendererGL.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -25,14 +25,28 @@
  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
  */
 
 #import <Foundation/Foundation.h>
-#import <OpenGL/gltypes.h>
+#import "SyphonOpenGLImage.h"
 
-@interface SyphonVertices : NSObject
-- (void)setFloats:(GLfloat *)data count:(GLsizei)count;
-- (void)setAttributePointer:(GLint)index components:(GLsizei)components stride:(GLsizei)stride offset:(GLsizei)offset;
+@interface SyphonServerRendererGL : NSObject
+- (instancetype)initWithContext:(CGLContextObj)context MSAASampleCount:(GLuint)msc depthBufferResolution:(GLuint)dbr stencilBufferResolution:(GLuint)sbr;
+@property (readonly) CGLContextObj context;
+@property (readonly) GLuint MSAASampleCount;
+@property (readonly) GLenum depthBufferFormat;
+@property (readonly) GLenum stencilBufferFormat;
+@property (readonly) GLsizei width;
+@property (readonly) GLsizei height;
+- (void)beginInContext; // Called once before any number of the following are called
+- (void)endInContext; // Called once after any number of the following have been called
+- (BOOL)capabilitiesDidChange; // Called when the context's capabilities have changed, returns YES if the renderer changes its configuration
+- (void)destroySizedResources;
+- (SyphonOpenGLImage *)newImageForSurface:(IOSurfaceRef)surface;
+- (void)setupForBackingTexture:(GLuint)backing width:(GLsizei)width height:(GLsizei)height;
 - (void)bind;
 - (void)unbind;
+- (void)flush;
+- (void)drawFrameTexture:(GLuint)texID textureTarget:(GLenum)target imageRegion:(NSRect)region textureDimensions:(NSSize)size flipped:(BOOL)isFlipped;
 @end

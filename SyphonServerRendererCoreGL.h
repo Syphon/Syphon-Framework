@@ -1,5 +1,5 @@
 /*
- SyphonServerVertices.h
+ SyphonServerRendererCoreGL.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -25,34 +25,10 @@
  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
  */
 
-#import "SyphonServerVertices.h"
+#import "SyphonServerRendererGL.h"
 
-@implementation SyphonServerVertices
-{
-@private
-    GLfloat _vertices[16];
-}
-
-- (void)setRegionX:(GLfloat)x Y:(GLfloat)y width:(GLfloat)width height:(GLfloat)height flipped:(BOOL)isFlipped
-{
-    GLfloat region[4] = {
-        x,
-        isFlipped ? height : y,
-        width,
-        isFlipped ? y : height
-    };
-    if (_vertices[2] != region[0] || _vertices[3] != region[1] || _vertices[10] != region[2] || _vertices[7] != region[3])
-    {
-        _vertices[0] = _vertices[1] = _vertices[4]  = _vertices[9] = -1.0;
-        _vertices[5] = _vertices[8] = _vertices[12] = _vertices[13] = 1.0;
-        _vertices[2]  = _vertices[6]  = region[0];
-        _vertices[3]  = _vertices[11] = region[1];
-        _vertices[10] = _vertices[14] = region[2];
-        _vertices[7]  = _vertices[15] = region[3];
-        [self setFloats:_vertices count:16];
-    }
-}
-
+@interface SyphonServerRendererCoreGL : SyphonServerRendererGL
 @end

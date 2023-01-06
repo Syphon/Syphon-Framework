@@ -1,5 +1,5 @@
 /*
- SyphonVertices.m
+ SyphonGLVertices.m
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -27,10 +27,10 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SyphonVertices.h"
+#import "SyphonGLVertices.h"
 #import <OpenGL/gl3.h>
 
-@implementation SyphonVertices
+@implementation SyphonGLVertices
 {
 @private
     GLuint _vao;

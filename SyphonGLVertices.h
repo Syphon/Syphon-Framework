@@ -1,5 +1,5 @@
 /*
- SyphonServerShader.h
+ SyphonGLVertices.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -27,11 +27,12 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SyphonShader.h"
+#import <Foundation/Foundation.h>
+#import <OpenGL/gltypes.h>
 
-@interface SyphonServerShader : SyphonShader
-- (instancetype)initForTextureTarget:(GLenum)target;
-@property (readonly) GLenum target;
-@property (readonly) GLint vertexAttribLocation;
-@property (readonly) GLint textureVertexAttribLocation;
+@interface SyphonGLVertices : NSObject
+- (void)setFloats:(GLfloat *)data count:(GLsizei)count;
+- (void)setAttributePointer:(GLint)index components:(GLsizei)components stride:(GLsizei)stride offset:(GLsizei)offset;
+- (void)bind;
+- (void)unbind;
 @end

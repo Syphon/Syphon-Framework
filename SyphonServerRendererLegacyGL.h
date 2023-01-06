@@ -1,5 +1,5 @@
 /*
- SyphonServerVertices.h
+ SyphonServerRendererLegacyGL.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -25,11 +25,10 @@
  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
  */
 
-#import "SyphonVertices.h"
-#import <OpenGL/gltypes.h>
+#import "SyphonServerRendererGL.h"
 
-@interface SyphonServerVertices : SyphonVertices
-- (void)setRegionX:(GLfloat)x Y:(GLfloat)y width:(GLfloat)width height:(GLfloat)height flipped:(BOOL)isFlipped;
+@interface SyphonServerRendererLegacyGL : SyphonServerRendererGL
 @end

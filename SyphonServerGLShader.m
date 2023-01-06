@@ -1,5 +1,5 @@
 /*
- SyphonServerShader.m
+ SyphonServerGLShader.m
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -26,7 +26,7 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#import "SyphonServerShader.h"
+#import "SyphonServerGLShader.h"
 #import <OpenGL/gl3.h>
 
 static NSString * const vertSource = @"#version 150\n\
@@ -54,7 +54,7 @@ void main() {\
     color = texture(tex, fragTexCoord);\
 }";
 
-@implementation SyphonServerShader
+@implementation SyphonServerGLShader
 {
 @private
     GLenum _target;

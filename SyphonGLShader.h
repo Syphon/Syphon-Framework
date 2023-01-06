@@ -1,5 +1,5 @@
 /*
- SyphonShader.h
+ SyphonGLShader.h
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -30,7 +30,7 @@
 #import <Foundation/Foundation.h>
 #import <OpenGL/OpenGL.h>
 
-@interface SyphonShader : NSObject
+@interface SyphonGLShader : NSObject
 - (instancetype)initWithVertexShader:(NSString *)vert fragmentShader:(NSString *)frag;
 - (void)useProgram;
 - (void)endProgram;

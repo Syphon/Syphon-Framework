@@ -30,8 +30,8 @@
 
 #import "SyphonOpenGLServer.h"
 #import "SyphonOpenGLImage.h"
-#import "SyphonServerRendererLegacy.h"
-#import "SyphonServerRendererCore.h"
+#import "SyphonServerRendererLegacyGL.h"
+#import "SyphonServerRendererCoreGL.h"
 #import "SyphonPrivate.h"
 #import "SyphonCGL.h"
 #import "SyphonSubclassing.h"
@@ -46,7 +46,7 @@
 @implementation SyphonOpenGLServer
 {
 @private
-    SyphonServerRenderer * _renderer;
+    SyphonServerRendererGL * _renderer;
     CGLContextObj _shareContext;
 
     BOOL _pushPending;
@@ -115,7 +115,7 @@
 #endif
         if (SyphonOpenGLContextIsLegacy(context))
         {
-            _renderer = [[SyphonServerRendererLegacy alloc] initWithContext:context
+            _renderer = [[SyphonServerRendererLegacyGL alloc] initWithContext:context
                                                             MSAASampleCount:MSAASampleCount
                                                       depthBufferResolution:depthBufferResolution
                                                     stencilBufferResolution:stencilBufferResolution];
@@ -125,7 +125,7 @@
 #ifdef SYPHON_CORE_SHARE
             context = SyphonOpenGLCreateSharedContext(context);
 #endif
-            _renderer = [[SyphonServerRendererCore alloc] initWithContext:context
+            _renderer = [[SyphonServerRendererCoreGL alloc] initWithContext:context
                                                           MSAASampleCount:MSAASampleCount
                                                     depthBufferResolution:depthBufferResolution
                                                   stencilBufferResolution:stencilBufferResolution];

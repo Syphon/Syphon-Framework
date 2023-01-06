@@ -1,5 +1,5 @@
 /*
- SyphonShader.m
+ SyphonGLShader.m
  Syphon
 
  Copyright 2016 bangnoise (Tom Butterworth) & vade (Anton Marini).
@@ -27,10 +27,10 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SyphonShader.h"
+#import "SyphonGLShader.h"
 #import <OpenGL/gl3.h>
 
-@implementation SyphonShader
+@implementation SyphonGLShader
 {
 @private
     GLuint _program;
