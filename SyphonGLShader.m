@@ -95,7 +95,6 @@
 
         if (status == GL_FALSE)
         {
-            [self release];
             return nil;
         }
     }
@@ -108,7 +107,6 @@
     {
         glDeleteProgram(_program);
     }
-    [super dealloc];
 }
 
 - (void)useProgram

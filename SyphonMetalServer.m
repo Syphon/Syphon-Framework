@@ -51,12 +51,11 @@
     self = [super initWithName:name options:options];
     if( self )
     {
-        _device = [theDevice retain];
+        _device = theDevice;
         _surfaceTexture = nil;
         _renderer = [[SyphonServerRendererMetal alloc] initWithDevice:theDevice colorPixelFormat:MTLPixelFormatBGRA8Unorm];
         if (!_renderer)
         {
-            [self release];
             return nil;
         }
     }
@@ -68,7 +67,6 @@
     self = [super init];
     if (self)
     {
-        [self release];
         self = nil;
     }
     return self;
@@ -77,7 +75,6 @@
 - (void)dealloc
 {
     [self destroyResources];
-    [super dealloc];
 }
 
 - (id<MTLDevice>)device
@@ -91,7 +88,6 @@
         BOOL hasSizeChanged = !NSEqualSizes(CGSizeMake(_surfaceTexture.width, _surfaceTexture.height), size);
         if (hasSizeChanged)
         {
-            [_surfaceTexture release];
             _surfaceTexture = nil;
         }
         if(_surfaceTexture == nil)
@@ -109,19 +105,16 @@
                 CFRelease(surface);
             }
         }
-        return [[_surfaceTexture retain] autorelease];
+        return _surfaceTexture;
     }
 }
 
 - (void)destroyResources
 {
     @synchronized (self) {
-        [_surfaceTexture release];
         _surfaceTexture = nil;
     }
-    [_device release];
     _device = nil;
-    [_renderer release];
     _renderer = nil;
 }
 
@@ -137,7 +130,7 @@
 - (id<MTLTexture>)newFrameImage
 {
     @synchronized (self) {
-        return [_surfaceTexture retain];
+        return _surfaceTexture;
     }
 }
 

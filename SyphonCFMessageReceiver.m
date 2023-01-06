@@ -44,11 +44,11 @@ static CFDataRef MessageReturnCallback (
 	id <NSCoding> decoded;
 	if (data && CFDataGetLength(data))
 	{
-		decoded = [NSKeyedUnarchiver unarchiveObjectWithData:(NSData *)data];
+        decoded = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)data];
 	} else {
 		decoded = nil;
 	}
-	[(SyphonMessageReceiver *)info receiveMessageWithPayload:decoded ofType:msgid];
+	[(__bridge SyphonMessageReceiver *)info receiveMessageWithPayload:decoded ofType:msgid];
 	return NULL;
 }
 
@@ -77,7 +77,6 @@ static CFDataRef MessageReturnCallback (
         theCount--;
         if (theCount == 0)
         {
-            dispatch_release(theQueue);
             theQueue = NULL;
         }
     }
@@ -90,12 +89,11 @@ static CFDataRef MessageReturnCallback (
 	{
 		if ([protocolName isEqualToString:SyphonMessagingProtocolCFMessage])
 		{
-			CFMessagePortContext context = (CFMessagePortContext){0,self,NULL,NULL,NULL};
+			CFMessagePortContext context = (CFMessagePortContext){0,(__bridge void *)(self),NULL,NULL,NULL};
 			_port = CFMessagePortCreateLocal(kCFAllocatorDefault, (CFStringRef)name, MessageReturnCallback, &context, NULL);
 		}
 		if (_port == NULL)
 		{
-			[self release];
 			return nil;
 		}
         CFMessagePortSetDispatchQueue(_port, [[self class] addUser]);
@@ -106,7 +104,6 @@ static CFDataRef MessageReturnCallback (
 - (void)dealloc
 {
 	if (_port) CFRelease(_port);
-	[super dealloc];
 }
 
 - (void)invalidate

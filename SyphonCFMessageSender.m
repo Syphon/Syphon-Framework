@@ -52,12 +52,11 @@
 		_port = CFMessagePortCreateRemote(kCFAllocatorDefault, (CFStringRef)name);
 		if (_port == NULL)
 		{
-			[self release];
 			return nil;
 		}
 
 		_queue = [[SyphonMessageQueue alloc] init];
-		_queue.userInfo = self;
+        _queue.userInfo = (__bridge void *)(self);
 		// local vars for block references, see note below
 		CFMessagePortRef port = _port;
 		SyphonMessageQueue *queue = _queue;
@@ -74,7 +73,6 @@
 			{
 				// TODO: think about dealing with time-outs
 				result = CFMessagePortSendRequest(port, mType, (CFDataRef)mContent, 60, 0, NULL, &returned);
-				[mContent release];
 				if (result != kCFMessagePortSuccess)
 				{
 					if (result == kCFMessagePortIsInvalid)
@@ -119,8 +117,6 @@
 - (void)dealloc
 {
 	[self finishPort];
-	[_queue release];
-	[super dealloc];
 }
 
 - (BOOL)isValid

@@ -73,7 +73,7 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
         _connectionManager = [[SyphonClientConnectionManager alloc] initWithServerDescription:description];
 
         _handler = [handler copy]; // copy don't retain
-        _serverDescription = [description retain];
+        _serverDescription = description;
 
         [[SyphonServerDirectory sharedDirectory] addObserver:self
                                                   forKeyPath:@"servers"
@@ -88,7 +88,6 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
             || [dictionaryVersion unsignedIntValue] > kSyphonDictionaryVersion
             || _connectionManager == nil)
         {
-            [self release];
             return nil;
         }
     }
@@ -108,9 +107,6 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
     // Don't call anything in the subclass, it has already been dealloc'd
     [[SyphonServerDirectory sharedDirectory] removeObserver:self forKeyPath:@"servers"];
     [self stopBase];
-    [_handler release];
-    [_serverDescription release];
-    [super dealloc];
 }
 
 - (void)stop
@@ -125,7 +121,6 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
     {
         [_connectionManager removeInfoClient:(id <SyphonInfoReceiving>)self
                                isFrameClient:_handler != nil ? YES : NO];
-        [_connectionManager release];
         _connectionManager = nil;
     }
     OSSpinLockUnlock(&_lock);
@@ -176,10 +171,9 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
                     ![_serverDescription isEqualToDictionary:description])
                 {
                     [self willChangeValueForKey:@"serverDescription"];
-                    description = [description copy];
+                    NSDictionary *copied = [description copy];
                     OSSpinLockLock(&_lock);
-                    [_serverDescription release];
-                    _serverDescription = description;
+                    _serverDescription = copied;
                     OSSpinLockUnlock(&_lock);
                     [self didChangeValueForKey:@"serverDescription"];
                 }

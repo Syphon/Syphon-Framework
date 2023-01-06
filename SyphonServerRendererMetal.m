@@ -53,7 +53,6 @@
         id <MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"textureToScreenVertexShader"];
         id <MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"textureToScreenSamplingShader"];
         
-        [defaultLibrary release];
         
         // Set up a descriptor for creating a pipeline state object
         MTLRenderPipelineDescriptor *pipelineStateDescriptor = [MTLRenderPipelineDescriptor new];
@@ -64,25 +63,16 @@
         
         _pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor error:&error];
         
-        [pipelineStateDescriptor release];
-        [vertexFunction release];
-        [fragmentFunction release];
         
         if( !_pipelineState )
         {
             SYPHONLOG(@"Failed to createe pipeline state, error %@", error);
-            [self release];
             return nil;
         }
     }
     return self;
 }
 
-- (void)dealloc
-{
-    [_pipelineState release];
-    [super dealloc];
-}
 
 - (void)renderFromTexture:(id<MTLTexture>)offScreenTexture inTexture:(id<MTLTexture>)texture region:(NSRect)region onCommandBuffer:(id<MTLCommandBuffer>)commandBuffer flip:(BOOL)flip
 {

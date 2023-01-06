@@ -82,14 +82,12 @@
 - (void) dealloc
 {
 	[self stop];
-	[super dealloc];
 }
 
 - (void)stop
 {
     [super stop];
     OSSpinLockLock(&_lock);
-    [_frame release];
     _frame = nil;
     _frameValid = NO;
     if (_shareContext)
@@ -130,7 +128,6 @@
 	OSSpinLockLock(&_lock);
 	if (_frameValid == 0)
     {
-        [_frame release];
 		_frame = nil;
 		
 		if (_context)
@@ -153,7 +150,7 @@
         OSAtomicTestAndSetBarrier(0, &_frameValid);
     }
 	OSSpinLockUnlock(&_lock);
-	return [_frame retain];
+	return _frame;
 }
 
 @end

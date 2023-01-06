@@ -34,8 +34,6 @@
 
 #define kSyphonServerDirectoryAnnounceTimeout 6
 
-static SyphonServerDirectory *_sharedDirectory = nil;
-
 NSString * const SyphonServerAnnounceNotification = @"SyphonServerAnnounceNotification";
 NSString * const SyphonServerUpdateNotification = @"SyphonServerUpdateNotification";
 NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotification";
@@ -85,46 +83,15 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 
 + (SyphonServerDirectory *)sharedDirectory
 {
-    @synchronized([SyphonServerDirectory class]) {
-        if (_sharedDirectory == nil)
-		{
-			_sharedDirectory = [[super allocWithZone:NULL] initOnce];
-        }
-    }
-    return _sharedDirectory;
+    static SyphonServerDirectory *sharedDirectory = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedDirectory = [[self alloc] init];
+    });
+    return sharedDirectory;
 }
 
-+ (id)allocWithZone:(NSZone *)zone
-{
-	return [[self sharedDirectory] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
-}
-
-- (id)initOnce
+- (id)init
 {
     self = [super init];
     if (self)
@@ -132,7 +99,6 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 		if (pthread_mutex_init(&_generalLock, NULL) != 0
 			|| pthread_mutex_init(&_mutateLock, NULL) != 0)
 		{
-			[self release];
 			return nil;
 		}
 		_servers = [[NSMutableArray alloc] initWithCapacity:4];
@@ -153,9 +119,6 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 	pthread_mutex_destroy(&_generalLock);
 	pthread_mutex_destroy(&_mutateLock);
-	[_pings release];
-	[_servers release];
-	[super dealloc];
 }
 
 - (NSArray *)servers
@@ -216,12 +179,12 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 		dispatch_time_t when = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * kSyphonServerDirectoryAnnounceTimeout);
 		dispatch_after(when, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
 			// Lock so nobody mutates for the duration
-			pthread_mutex_lock(&_mutateLock);
+            pthread_mutex_lock(&self->_mutateLock);
 			// Lock for access
-			pthread_mutex_lock(&_generalLock);
+            pthread_mutex_lock(&self->_generalLock);
 			// Get the servers we know about which haven't responded to our announce request
-			NSIndexSet *indices = [_servers indexesOfObjectsPassingTest:^(id obj, NSUInteger idx, BOOL *stop) {
-				if ([_pings containsObject:[obj objectForKey:SyphonServerDescriptionUUIDKey]])
+            NSIndexSet *indices = [self->_servers indexesOfObjectsPassingTest:^(id obj, NSUInteger idx, BOOL *stop) {
+                if ([self->_pings containsObject:[obj objectForKey:SyphonServerDescriptionUUIDKey]])
 				{
 					return NO;
 				}
@@ -232,28 +195,27 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 
 			}];
 			// Unlock for access as we're either finished or about to post a change, in which case others need access
-			pthread_mutex_unlock(&_generalLock);
+            pthread_mutex_unlock(&self->_generalLock);
 			NSArray *retired = nil;
 			if ([indices count] > 0)
 			{
 				SYPHONLOG(@"Removing servers which didn't respond to an announce request.");
 				[self willChange:NSKeyValueChangeRemoval valuesAtIndexes:indices forKey:@"servers"];
 				// Lock for access
-				pthread_mutex_lock(&_generalLock);
+                pthread_mutex_lock(&self->_generalLock);
 				// Save server descriptions for the notifications we will post
-				retired = [_servers objectsAtIndexes:indices];
+                retired = [self->_servers objectsAtIndexes:indices];
 				// Make the removal
-				[_servers removeObjectsAtIndexes:indices];
+                [self->_servers removeObjectsAtIndexes:indices];
 				// Unlock for access so others can access in response to didChange
-				pthread_mutex_unlock(&_generalLock);
+                pthread_mutex_unlock(&self->_generalLock);
 				[self didChange:NSKeyValueChangeRemoval valuesAtIndexes:indices forKey:@"servers"];
 			}
-			pthread_mutex_lock(&_generalLock);
+            pthread_mutex_lock(&self->_generalLock);
 			// Reset _pings so we will handle the next announce request
-			[_pings release];
-			_pings = nil;
-			pthread_mutex_unlock(&_generalLock);
-			pthread_mutex_unlock(&_mutateLock);
+            self->_pings = nil;
+            pthread_mutex_unlock(&self->_generalLock);
+            pthread_mutex_unlock(&self->_mutateLock);
 			for (NSDictionary *description in retired) {
 				[[NSNotificationCenter defaultCenter] postNotificationName:SyphonServerRetireNotification object:self userInfo:description];
 			}

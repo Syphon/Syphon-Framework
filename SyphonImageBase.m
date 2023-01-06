@@ -48,7 +48,6 @@
 	{
 		if (surfaceRef == nil)
 		{
-			[self release];
 			return nil;
 		}
 		_surface = (IOSurfaceRef)CFRetain(surfaceRef);
@@ -59,7 +58,6 @@
 - (void)dealloc
 {
     if (_surface) CFRelease(_surface);
-	[super dealloc];
 }
 
 - (IOSurfaceRef)surface

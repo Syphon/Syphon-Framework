@@ -65,7 +65,6 @@
     {
         CGLReleaseContext(cgl_ctx);
     }
-    [super dealloc];
 }
 
 - (BOOL)capabilitiesDidChange

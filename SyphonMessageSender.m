@@ -46,7 +46,6 @@
 	{
 		if ([self class] == [SyphonMessageSender class])
 		{
-            [self release];
             if ([protocolName isEqualToString:SyphonMessagingProtocolCFMessage])
 			{
                 return [[SyphonCFMessageSender alloc] initForName:name protocol:protocolName invalidationHandler:handler];
@@ -72,12 +71,6 @@
 	return self;
 }
 
-- (void)dealloc
-{
-	[_name release];
-	[_handler release];
-	[super dealloc];
-}
 
 - (NSString *)name
 {

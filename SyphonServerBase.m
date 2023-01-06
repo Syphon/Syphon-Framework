@@ -98,7 +98,6 @@ static void finalizer()
 
         if (![_connectionManager start])
         {
-            [self release];
             return nil;
         }
 
@@ -113,7 +112,7 @@ static void finalizer()
         if ([processInfo respondsToSelector:@selector(beginActivityWithOptions:reason:)])
         {
             NSActivityOptions options = NSActivityAutomaticTerminationDisabled | NSActivityBackground;
-            _activityToken = [[processInfo beginActivityWithOptions:options reason:_uuid] retain];
+            _activityToken = [processInfo beginActivityWithOptions:options reason:_uuid];
         }
     }
     return self;
@@ -124,17 +123,14 @@ static void finalizer()
     SYPHONLOG(@"Server deallocing, name: %@, UUID: %@", self.name, [self.serverDescription objectForKey:SyphonServerDescriptionUUIDKey]);
     // Don't call anything in the subclass, it has already been dealloc'd
     [self destroyBaseResources];
-    [_name release];
-    [_uuid release];
-    [super dealloc];
 }
 
 - (NSString*)name
 {
     OSSpinLockLock(&_mdLock);
-    NSString *result = [_name retain];
+    NSString *result = _name;
     OSSpinLockUnlock(&_mdLock);
-    return [result autorelease];
+    return result;
 }
 
 - (void)setName:(NSString *)newName
@@ -144,9 +140,7 @@ static void finalizer()
         newName = @"";
     }
     [newName copy];
-    [newName retain];
     OSSpinLockLock(&_mdLock);
-    [_name release];
     _name = newName;
     OSSpinLockUnlock(&_mdLock);
     [(SyphonServerConnectionManager *)_connectionManager setName:newName];
@@ -196,7 +190,6 @@ static void finalizer()
     {
         [(SyphonServerConnectionManager *)_connectionManager removeObserver:self forKeyPath:@"hasClients"];
         [(SyphonServerConnectionManager *)_connectionManager stop];
-        [(SyphonServerConnectionManager *)_connectionManager release];
         _connectionManager = nil;
     }
     if (_broadcasts)
@@ -207,7 +200,6 @@ static void finalizer()
     if (_activityToken)
     {
         [[NSProcessInfo processInfo] endActivity:_activityToken];
-        [_activityToken release];
         _activityToken = nil;
     }
     if (_surface != NULL)
@@ -316,7 +308,6 @@ static NSMutableSet *mRetireList = nil;
     [mRetireList removeObject:serverUUID];
     if ([mRetireList count] == 0)
     {
-        [mRetireList release];
         mRetireList = nil;
     }
     OSSpinLockUnlock(&mRetireListLock);
@@ -339,7 +330,6 @@ static NSMutableSet *mRetireList = nil;
                                                                      userInfo:fakeServerDescription
                                                            deliverImmediately:YES];
     }
-    [mySet release];
 }
 
 - (void)startBroadcasts

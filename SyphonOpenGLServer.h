@@ -103,7 +103,7 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
 /*! 
  A string representing the name of the SyphonOpenGLServer.
 */
-@property (nullable, retain) NSString* name;
+@property (nullable, strong) NSString* name;
 
 /*! 
  A dictionary describing the server. Normally you won't need to access this, however if you created the server as private (using SyphonServerOptionIsPrivate) then you must pass this dictionary to any process in which you wish to create a SyphonClient. You should not rely on the presence of any particular keys in this dictionary. The content will always conform to the \<NSCoding\> protocol.

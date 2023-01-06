@@ -78,7 +78,6 @@
     self = [super init];
     if (self)
     {
-        [self release];
         self = nil;
     }
     return self;
@@ -91,7 +90,6 @@
 	{
 		if (context == NULL)
 		{
-			[self release];
 			return nil;
 		}
 		
@@ -146,8 +144,6 @@
         CGLReleaseContext(_shareContext);
     }
 #endif
-    [_renderer release];
-	[super dealloc];
 }
 
 - (CGLContextObj)context
@@ -235,7 +231,7 @@
 
 - (SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage
 {
-	return [_surfaceTexture retain];
+	return _surfaceTexture;
 }
 
 #pragma mark -
@@ -294,7 +290,6 @@
 #if !SYPHON_DEBUG_NO_DRAWING
     [self destroySurface];
     [_renderer destroySizedResources];
-	[_surfaceTexture release];
 	_surfaceTexture = nil;
 #endif // SYPHON_DEBUG_NO_DRAWING
 }

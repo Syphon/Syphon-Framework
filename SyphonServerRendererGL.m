@@ -80,7 +80,6 @@
     [self destroySizedResources];
     [self endInContext];
     CGLReleaseContext(_context);
-    [super dealloc];
 }
 
 - (CGLContextObj)context

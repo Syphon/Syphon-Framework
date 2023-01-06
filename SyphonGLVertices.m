@@ -61,7 +61,6 @@
     {
         glDeleteBuffers(1, &_vbo);
     }
-    [super dealloc];
 }
 
 - (void)setFloats:(GLfloat *)data count:(GLsizei)count

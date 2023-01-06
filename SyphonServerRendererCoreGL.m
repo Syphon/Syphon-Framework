@@ -73,12 +73,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_vertices release];
-    [_shader release];
-    [super dealloc];
-}
 
 - (void)beginInContext
 {
@@ -373,7 +367,6 @@
 
     if (target != _shader.target)
     {
-        [_shader release];
         _shader = [[SyphonServerGLShader alloc] initForTextureTarget:target];
         [_shader useProgram];
         [_vertices bind];

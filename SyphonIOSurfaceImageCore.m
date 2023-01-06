@@ -43,7 +43,6 @@
     {
         if (!context)
         {
-            [self release];
             return nil;
         }
 
@@ -79,7 +78,6 @@
         if(err != kCGLNoError)
         {
             SYPHONLOG(@"Error creating IOSurface texture: %s & %x", CGLErrorString(err), glGetError());
-            [self release];
             return nil;
         }
     }
@@ -102,7 +100,6 @@
         }
     }
     if (cgl_ctx) CGLReleaseContext(cgl_ctx);
-    [super dealloc];
 }
 
 - (GLuint)textureName

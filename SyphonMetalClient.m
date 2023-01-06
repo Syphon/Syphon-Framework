@@ -47,7 +47,7 @@
     self = [super initWithServerDescription:description options:options newFrameHandler:handler];
     if( self )
     {
-        _device = [theDevice retain];
+        _device = theDevice;
         _threadLock = OS_SPINLOCK_INIT;
         _frame = nil;
     }
@@ -57,15 +57,12 @@
 - (void)dealloc
 {
     [self stop];
-    [super dealloc];
 }
 
 - (void)stop
 {
     OSSpinLockLock(&_threadLock);
-    [_frame release];
     _frame = nil;
-    [_device release];
     _device = nil;
     OSSpinLockUnlock(&_threadLock);
     [super stop];
@@ -74,7 +71,6 @@
 - (void)invalidateFrame
 {
     OSSpinLockLock(&_threadLock);
-    [_frame release];
     _frame = nil;
     OSSpinLockUnlock(&_threadLock);
 }
@@ -96,7 +92,7 @@
         }
     }
 
-    image = [_frame retain];
+    image = _frame;
 
     OSSpinLockUnlock(&_threadLock);
 
