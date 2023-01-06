@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)initWithServerDescription:(NSDictionary *)description
                          device:(id<MTLDevice>)device
                         options:(nullable NSDictionary *)options
-                   newFrameHandler:(nullable void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
+                newFrameHandler:(nullable void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
 
 /*!
 Returns a MTLTexture representing the current output from the server. The texture associated with the image may continue to update when you draw with it, but you should not depend on that behaviour: call this method every time you wish to access the current server frame.
