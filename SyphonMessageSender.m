@@ -32,6 +32,10 @@
 #import "SyphonCFMessageSender.h"
 //#import "SyphonMachMessageSender.h"
 
+@interface SyphonMessageSender ()
+@property (readwrite, atomic) BOOL isValid;
+@end
+
 @implementation SyphonMessageSender
 {
 @private
@@ -71,11 +75,6 @@
 	return _name;
 }
 
-- (BOOL)isValid
-{
-	return NO;
-}
-
 - (void)send:(id <NSCoding>)payload ofType:(uint32_t)type
 {
 	// subclasses override this
@@ -83,6 +82,7 @@
 
 - (void)invalidate
 {
+    self.isValid = NO;
 	if (_handler != nil)
 	{
 		_handler();

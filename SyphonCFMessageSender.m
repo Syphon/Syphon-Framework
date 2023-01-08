@@ -2,7 +2,7 @@
     SyphonCFMessageSender.m
     Syphon
 
-    Copyright 2010-2011 bangnoise (Tom Butterworth) & vade (Anton Marini).
+    Copyright 2010-2023 bangnoise (Tom Butterworth) & vade (Anton Marini).
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@
 @implementation SyphonCFMessageSender
 {
 @private
-    CFMessagePortRef _port;
     SyphonMessageQueue *_queue;
     SyphonDispatchSourceRef _dispatch;
 }
@@ -49,8 +48,8 @@
     self = [super initForName:name protocol:protocolName invalidationHandler:handler];
 	if (self)
 	{
-		_port = CFMessagePortCreateRemote(kCFAllocatorDefault, (CFStringRef)name);
-		if (_port == NULL)
+		CFMessagePortRef port = CFMessagePortCreateRemote(kCFAllocatorDefault, (CFStringRef)name);
+		if (port == NULL)
 		{
 			return nil;
 		}
@@ -58,7 +57,6 @@
 		_queue = [[SyphonMessageQueue alloc] init];
         _queue.userInfo = (__bridge void *)(self);
 		// local vars for block references, see note below
-		CFMessagePortRef port = _port;
 		SyphonMessageQueue *queue = _queue;
 		_dispatch = SyphonDispatchSourceCreate(^(){
 			
@@ -77,7 +75,6 @@
 				{
 					if (result == kCFMessagePortIsInvalid)
 					{
-						[(SyphonCFMessageSender *)queue.userInfo finishPort];
 						[(SyphonCFMessageSender *)queue.userInfo invalidate];
 						break;
 					}
@@ -97,31 +94,9 @@
 	return self;
 }
 
-- (void)finishPort
-{
-	_queue.userInfo = nil;
-	// our CFMessagePort will be released in the dispatch source's completion block
-	// we must stop referencing it now
-	bool result;
-	do {
-		void *old = _port;
-		result = OSAtomicCompareAndSwapPtrBarrier(old, NULL, (void **)&_port);
-	} while (!result);
-	do {
-		void *old = _dispatch;
-		result = OSAtomicCompareAndSwapPtrBarrier(old, NULL, (void **)&_dispatch);
-		if (result) SyphonDispatchSourceRelease(old);
-	} while (!result);
-}
-
 - (void)dealloc
 {
-	[self finishPort];
-}
-
-- (BOOL)isValid
-{
-	return (_port != NULL ? CFMessagePortIsValid(_port) : NO);
+    SyphonDispatchSourceRelease(_dispatch);
 }
 
 - (void)send:(id <NSCoding>)payload ofType:(uint32_t)type
