@@ -148,14 +148,10 @@
 		BDB8DA221211F5990028D250 /* SyphonMessageReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMessageReceiver.m; sourceTree = "<group>"; };
 		BDB8DA231211F5990028D250 /* SyphonCFMessageReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonCFMessageReceiver.h; sourceTree = "<group>"; };
 		BDB8DA241211F5990028D250 /* SyphonCFMessageReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonCFMessageReceiver.m; sourceTree = "<group>"; };
-		BDB8DA251211F5990028D250 /* SyphonMachMessageReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMachMessageReceiver.h; sourceTree = "<group>"; };
-		BDB8DA261211F5990028D250 /* SyphonMachMessageReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMachMessageReceiver.m; sourceTree = "<group>"; };
 		BDB8DA271211F5990028D250 /* SyphonMessageSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMessageSender.h; sourceTree = "<group>"; };
 		BDB8DA281211F5990028D250 /* SyphonMessageSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMessageSender.m; sourceTree = "<group>"; };
 		BDB8DA291211F5990028D250 /* SyphonCFMessageSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonCFMessageSender.h; sourceTree = "<group>"; };
 		BDB8DA2A1211F59A0028D250 /* SyphonCFMessageSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonCFMessageSender.m; sourceTree = "<group>"; };
-		BDB8DA2B1211F59A0028D250 /* SyphonMachMessageSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMachMessageSender.h; sourceTree = "<group>"; };
-		BDB8DA2C1211F59A0028D250 /* SyphonMachMessageSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMachMessageSender.m; sourceTree = "<group>"; };
 		BDB8DAF31211FA7F0028D250 /* SyphonMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMessaging.h; sourceTree = "<group>"; };
 		BDB8DAF41211FA7F0028D250 /* SyphonMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMessaging.m; sourceTree = "<group>"; };
 		BDCB92AF127A3C9A00C9E06E /* customdoxygen.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = customdoxygen.css; sourceTree = "<group>"; };
@@ -464,12 +460,8 @@
 			children = (
 				BDB8DA231211F5990028D250 /* SyphonCFMessageReceiver.h */,
 				BDB8DA241211F5990028D250 /* SyphonCFMessageReceiver.m */,
-				BDB8DA251211F5990028D250 /* SyphonMachMessageReceiver.h */,
-				BDB8DA261211F5990028D250 /* SyphonMachMessageReceiver.m */,
 				BDB8DA291211F5990028D250 /* SyphonCFMessageSender.h */,
 				BDB8DA2A1211F59A0028D250 /* SyphonCFMessageSender.m */,
-				BDB8DA2B1211F59A0028D250 /* SyphonMachMessageSender.h */,
-				BDB8DA2C1211F59A0028D250 /* SyphonMachMessageSender.m */,
 				E2DE7FD112495BF50081453B /* SyphonMessageQueue.h */,
 				E2DE7FD212495BF50081453B /* SyphonMessageQueue.m */,
 			);

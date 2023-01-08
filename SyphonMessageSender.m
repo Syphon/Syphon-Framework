@@ -50,12 +50,6 @@
 			{
                 return [[SyphonCFMessageSender alloc] initForName:name protocol:protocolName invalidationHandler:handler];
             }
-			/*
-			else if ([protocolName isEqualToString:SyphonMessagingProtocolMachMessage])
-			{
-                return [[SyphonMessageSenderMachMessage alloc] initForName:name protocol:protocolName invalidationHandler:handler];
-            }
-			 */
 			else
 			{
 			    return nil;
