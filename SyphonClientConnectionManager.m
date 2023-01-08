@@ -32,42 +32,43 @@
 #import "SyphonPrivate.h"
 #import "SyphonMessaging.h"
 #import <IOSurface/IOSurface.h>
-#import <libkern/OSAtomic.h>
+#import <os/lock.h>
+#import <stdatomic.h>
 
 #pragma mark Shared Instances
 
-static OSSpinLock _lookupTableLock = OS_SPINLOCK_INIT;
+static os_unfair_lock _lookupTableLock = OS_UNFAIR_LOCK_INIT;
 static NSMapTable *_lookupTable;
 
 static id SyphonClientPrivateCopyInstance(NSString *uuid)
 {
 	id result = nil;
-	OSSpinLockLock(&_lookupTableLock);
+	os_unfair_lock_lock(&_lookupTableLock);
 	if (uuid) result = [_lookupTable objectForKey:uuid];
-	OSSpinLockUnlock(&_lookupTableLock);
+	os_unfair_lock_unlock(&_lookupTableLock);
 	return result;
 }
 
 static void SyphonClientPrivateInsertInstance(id instance, NSString *uuid)
 {
-	OSSpinLockLock(&_lookupTableLock);
+	os_unfair_lock_lock(&_lookupTableLock);
 	if (uuid)
 	{
 		if (!_lookupTable) _lookupTable = [[NSMapTable alloc] initWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableWeakMemory capacity:1];
 		[_lookupTable setObject:instance forKey:uuid];
 	}
-	OSSpinLockUnlock(&_lookupTableLock);
+	os_unfair_lock_unlock(&_lookupTableLock);
 }
 
 static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 {
-	OSSpinLockLock(&_lookupTableLock);
+	os_unfair_lock_lock(&_lookupTableLock);
 	if (uuid) [_lookupTable removeObjectForKey:uuid];
 	if ([_lookupTable count] == 0)
 	{
 		_lookupTable = nil;
 	}
-	OSSpinLockUnlock(&_lookupTableLock);
+	os_unfair_lock_unlock(&_lookupTableLock);
 }
 
 @interface SyphonClientConnectionManager (Private)
@@ -88,11 +89,11 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
     NSString *_serverUUID;
     BOOL _serverActive;
     SyphonMessageReceiver *_connection;
-    int32_t _handlerCount;
+    atomic_int _handlerCount;
     NSHashTable *_infoClients;
     NSHashTable *_frameClients;
     dispatch_queue_t _frameQueue;
-    OSSpinLock _lock;
+    os_unfair_lock _lock;
 }
 
 - (id)initWithServerDescription:(NSDictionary *)description
@@ -121,7 +122,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 			return nil;
 		}
 		
-		_lock = OS_SPINLOCK_INIT;
+		_lock = OS_UNFAIR_LOCK_INIT;
 		_myUUID = SyphonCreateUUIDString();
         _serverActive = YES; // Until we know better - SyphonClient has API behaviour depending on this
 
@@ -140,20 +141,20 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	SYPHONLOG(@"Ending connection");
 	SyphonMessageReceiver *connection;
 	// we copy and clear ivars inside the lock, release them outside it
-	if (!hasLock) OSSpinLockLock(&_lock);
+	if (!hasLock) os_unfair_lock_lock(&_lock);
 	connection = _connection;
 	_connection = nil;
     [self invalidateFramesHavingLock];
-	if (!hasLock) OSSpinLockUnlock(&_lock);
+	if (!hasLock) os_unfair_lock_unlock(&_lock);
 	[connection invalidate];
 }
 
 - (void)invalidateServerNotHavingLock
 {
-    OSSpinLockLock(&_lock);
+    os_unfair_lock_lock(&_lock);
     _serverActive = NO;
     [self endConnectionHavingLock:YES];
-    OSSpinLockUnlock(&_lock);
+    os_unfair_lock_unlock(&_lock);
 }
 
 - (void)invalidateFramesHavingLock
@@ -171,15 +172,15 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 - (BOOL)isValid
 {
 	BOOL result;
-	OSSpinLockLock(&_lock);
+	os_unfair_lock_lock(&_lock);
 	result = _serverActive;
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
 	return result;
 }
 
 - (void)addInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)isFrameClient
 {
-	OSSpinLockLock(&_lock);
+	os_unfair_lock_lock(&_lock);
 	if (_infoClients == nil)
     {
         _infoClients = [NSHashTable weakObjectsHashTable];
@@ -224,7 +225,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
         _frameQueue = dispatch_queue_create([_myUUID cStringUsingEncoding:NSUTF8StringEncoding], 0);
         _frameClients = [NSHashTable weakObjectsHashTable];
     }
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
     if (isFrameClient)
     {
         // only access _frameClients within the queue
@@ -249,7 +250,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
             SYPHONLOG(@"Registering for info updates");
             [sender send:_myUUID ofType:SyphonMessageTypeAddClientForInfo];
         }
-        if (isFrameClient && OSAtomicIncrement32(&_handlerCount) == 1)
+        if (isFrameClient && atomic_fetch_add(&_handlerCount, 1) == 0)
         {
             SYPHONLOG(@"Registering for frame updates");
             [sender send:_myUUID ofType:SyphonMessageTypeAddClientForFrames];
@@ -265,14 +266,14 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
             [_frameClients removeObject:client];
         });
     }
-	OSSpinLockLock(&_lock);
+	os_unfair_lock_lock(&_lock);
     [_infoClients removeObject:client];
     BOOL shouldSendRemove = _infoClients.count == 0 ? YES : NO;
 	if (shouldSendRemove)
 	{
         [self endConnectionHavingLock:YES];
 	}
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
     if (_serverActive && (shouldSendRemove || isFrameClient))
     {
         // Remove ourself from the server
@@ -280,7 +281,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
                                                                       protocol:SyphonMessagingProtocolCFMessage
                                                            invalidationHandler:nil];
 
-        if (isFrameClient && OSAtomicDecrement32(&_handlerCount) == 0)
+        if (isFrameClient && atomic_fetch_sub(&_handlerCount, 1) == 1)
         {
             SYPHONLOG(@"De-registering for frame updates");
             [sender send:_myUUID ofType:SyphonMessageTypeRemoveClientForFrames];
@@ -321,19 +322,19 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 
 - (void)setSurfaceID:(IOSurfaceID)surfaceID
 {
-	OSSpinLockLock(&_lock);
+	os_unfair_lock_lock(&_lock);
 	_surfaceID = surfaceID;
 	_frameID++; // new surface means a new frame
     [self invalidateFramesHavingLock];
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
 }
 
 - (IOSurfaceRef)newSurface
 {
     IOSurfaceRef surface;
-	OSSpinLockLock(&_lock);
+	os_unfair_lock_lock(&_lock);
     surface = [self surfaceHavingLock];
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
     if (surface) CFRetain(surface);
     return surface;
 }
@@ -341,7 +342,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 - (NSUInteger)frameID
 {
 	NSUInteger result;
-	OSSpinLockLock(&_lock);
+	os_unfair_lock_lock(&_lock);
 	IOSurfaceRef surface = [self surfaceHavingLock];
 	if (surface)
 	{
@@ -353,7 +354,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 		}
 	}
 	result = _frameID;
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
 	return result;
 }
 

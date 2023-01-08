@@ -29,10 +29,11 @@
 
 #import "SyphonMetalClient.h"
 #import "SyphonSubclassing.h"
+#import <os/lock.h>
 
 @implementation SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME
 {
-    int32_t _threadLock;
+    os_unfair_lock _threadLock;
     id<MTLTexture> _frame;
     id<MTLDevice> _device;
 }
@@ -48,7 +49,7 @@
     if( self )
     {
         _device = theDevice;
-        _threadLock = OS_SPINLOCK_INIT;
+        _threadLock = OS_UNFAIR_LOCK_INIT;
         _frame = nil;
     }
     return self;
@@ -61,25 +62,25 @@
 
 - (void)stop
 {
-    OSSpinLockLock(&_threadLock);
+    os_unfair_lock_lock(&_threadLock);
     _frame = nil;
     _device = nil;
-    OSSpinLockUnlock(&_threadLock);
+    os_unfair_lock_unlock(&_threadLock);
     [super stop];
 }
 
 - (void)invalidateFrame
 {
-    OSSpinLockLock(&_threadLock);
+    os_unfair_lock_lock(&_threadLock);
     _frame = nil;
-    OSSpinLockUnlock(&_threadLock);
+    os_unfair_lock_unlock(&_threadLock);
 }
 
 - (id<MTLTexture>)newFrameImage
 {
     id<MTLTexture> image = nil;
 
-    OSSpinLockLock(&_threadLock);
+    os_unfair_lock_lock(&_threadLock);
     if (_frame == nil)
     {
         IOSurfaceRef surface = [self newSurface];
@@ -94,7 +95,7 @@
 
     image = _frame;
 
-    OSSpinLockUnlock(&_threadLock);
+    os_unfair_lock_unlock(&_threadLock);
 
     return image;
 }

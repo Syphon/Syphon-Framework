@@ -31,14 +31,13 @@
 #import "SyphonServerDirectory.h"
 #import "SyphonClientConnectionManager.h"
 #import "SyphonPrivate.h"
+#import <os/lock.h>
 
 // TODO: name?
 static void *SyphonClientServersContext = &SyphonClientServersContext;
 
 @implementation SyphonClientBase {
-    // Once our minimum version reaches 10.12, replace
-    // this with os_unfair_lock
-    OSSpinLock                      _lock;
+    os_unfair_lock                  _lock;
     NSUInteger                      _lastFrameID;
     SyphonClientConnectionManager   *_connectionManager;
     NSDictionary<NSString *, id>    *_serverDescription;
@@ -68,7 +67,7 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
     self = [super init];
     if (self)
     {
-        _lock = OS_SPINLOCK_INIT;
+        _lock = OS_UNFAIR_LOCK_INIT;
 
         _connectionManager = [[SyphonClientConnectionManager alloc] initWithServerDescription:description];
 
@@ -96,9 +95,9 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 
 - (BOOL)isValid
 {
-    OSSpinLockLock(&_lock);
+    os_unfair_lock_lock(&_lock);
     BOOL result = _connectionManager.isValid;
-    OSSpinLockUnlock(&_lock);
+    os_unfair_lock_unlock(&_lock);
     return result;
 }
 
@@ -116,14 +115,14 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 
 - (void)stopBase
 {
-    OSSpinLockLock(&_lock);
+    os_unfair_lock_lock(&_lock);
     if (_connectionManager)
     {
         [_connectionManager removeInfoClient:(id <SyphonInfoReceiving>)self
                                isFrameClient:_handler != nil ? YES : NO];
         _connectionManager = nil;
     }
-    OSSpinLockUnlock(&_lock);
+    os_unfair_lock_unlock(&_lock);
 }
 
 - (void)receiveNewFrame
@@ -142,17 +141,17 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 - (BOOL)hasNewFrame
 {
     BOOL result;
-    OSSpinLockLock(&_lock);
+    os_unfair_lock_lock(&_lock);
     result = _lastFrameID != _connectionManager.frameID;
-    OSSpinLockUnlock(&_lock);
+    os_unfair_lock_unlock(&_lock);
     return result;
 }
 
 - (NSDictionary *)serverDescription
 {
-    OSSpinLockLock(&_lock);
+    os_unfair_lock_lock(&_lock);
     NSDictionary *description = _serverDescription;
-    OSSpinLockUnlock(&_lock);
+    os_unfair_lock_unlock(&_lock);
     return description;
 }
 
@@ -172,9 +171,9 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
                 {
                     [self willChangeValueForKey:@"serverDescription"];
                     NSDictionary *copied = [description copy];
-                    OSSpinLockLock(&_lock);
+                    os_unfair_lock_lock(&_lock);
                     _serverDescription = copied;
-                    OSSpinLockUnlock(&_lock);
+                    os_unfair_lock_unlock(&_lock);
                     [self didChangeValueForKey:@"serverDescription"];
                 }
             }
@@ -189,10 +188,10 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 - (IOSurfaceRef)newSurface
 {
     IOSurfaceRef surface;
-    OSSpinLockLock(&_lock);
+    os_unfair_lock_lock(&_lock);
     _lastFrameID = [_connectionManager frameID];
     surface = [_connectionManager newSurface];
-    OSSpinLockUnlock(&_lock);
+    os_unfair_lock_unlock(&_lock);
     return surface;
 }
 

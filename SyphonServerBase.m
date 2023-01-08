@@ -8,6 +8,7 @@
 #import "SyphonServerBase.h"
 #import "SyphonServerConnectionManager.h"
 #import "SyphonPrivate.h"
+#import <os/lock.h>
 
 @interface SyphonServerBase (Private)
 + (void)retireRemainingServers;
@@ -23,7 +24,7 @@ static void finalizer()
 {
     // Once our minimum version reaches 10.12, replace
     // this with os_unfair_lock
-    OSSpinLock _mdLock;
+    os_unfair_lock _mdLock;
 
     NSString *_name;
     NSString *_uuid;
@@ -90,7 +91,7 @@ static void finalizer()
             _broadcasts = YES;
         }
 
-        _mdLock = OS_SPINLOCK_INIT;
+        _mdLock = OS_UNFAIR_LOCK_INIT;
 
         _connectionManager = [[SyphonServerConnectionManager alloc] initWithUUID:_uuid options:options];
 
@@ -127,9 +128,9 @@ static void finalizer()
 
 - (NSString*)name
 {
-    OSSpinLockLock(&_mdLock);
+    os_unfair_lock_lock(&_mdLock);
     NSString *result = _name;
-    OSSpinLockUnlock(&_mdLock);
+    os_unfair_lock_unlock(&_mdLock);
     return result;
 }
 
@@ -140,9 +141,9 @@ static void finalizer()
         newName = @"";
     }
     [newName copy];
-    OSSpinLockLock(&_mdLock);
+    os_unfair_lock_lock(&_mdLock);
     _name = newName;
-    OSSpinLockUnlock(&_mdLock);
+    os_unfair_lock_unlock(&_mdLock);
     [(SyphonServerConnectionManager *)_connectionManager setName:newName];
     if (_broadcasts)
     {
@@ -288,29 +289,29 @@ static void finalizer()
  We track all instances and send a retirement broadcast for any which haven't been stopped when the code is unloaded.
  */
 
-static OSSpinLock mRetireListLock = OS_SPINLOCK_INIT;
+static os_unfair_lock mRetireListLock = OS_UNFAIR_LOCK_INIT;
 static NSMutableSet *mRetireList = nil;
 
 + (void)addServerToRetireList:(NSString *)serverUUID
 {
-    OSSpinLockLock(&mRetireListLock);
+    os_unfair_lock_lock(&mRetireListLock);
     if (mRetireList == nil)
     {
         mRetireList = [[NSMutableSet alloc] initWithCapacity:1U];
     }
     [mRetireList addObject:serverUUID];
-    OSSpinLockUnlock(&mRetireListLock);
+    os_unfair_lock_unlock(&mRetireListLock);
 }
 
 + (void)removeServerFromRetireList:(NSString *)serverUUID
 {
-    OSSpinLockLock(&mRetireListLock);
+    os_unfair_lock_lock(&mRetireListLock);
     [mRetireList removeObject:serverUUID];
     if ([mRetireList count] == 0)
     {
         mRetireList = nil;
     }
-    OSSpinLockUnlock(&mRetireListLock);
+    os_unfair_lock_unlock(&mRetireListLock);
 }
 
 + (void)retireRemainingServers
@@ -318,10 +319,10 @@ static NSMutableSet *mRetireList = nil;
     // take the set out of the global so we don't hold the spin-lock while we send the notifications
     // even though there should never be contention for this
     NSMutableSet *mySet = nil;
-    OSSpinLockLock(&mRetireListLock);
+    os_unfair_lock_lock(&mRetireListLock);
     mySet = mRetireList;
     mRetireList = nil;
-    OSSpinLockUnlock(&mRetireListLock);
+    os_unfair_lock_unlock(&mRetireListLock);
     for (NSString *uuid in mySet) {
         SYPHONLOG(@"Retiring a server at code unload time because it was not properly stopped");
         NSDictionary *fakeServerDescription = [NSDictionary dictionaryWithObject:uuid forKey:SyphonServerDescriptionUUIDKey];

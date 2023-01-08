@@ -29,6 +29,7 @@
 
 #import "SyphonMessageQueue.h"
 #import <libkern/OSAtomic.h>
+#import <os/lock.h>
 
 /*
  
@@ -68,7 +69,7 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 @implementation SyphonMessageQueue
 {
 @private
-    OSSpinLock _lock;
+    os_unfair_lock _lock;
     void *_head;
     OSQueueHead _pool; // TODO: or maybe manage our own within the lock as we lock anyway
     void *_info;
@@ -82,7 +83,7 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 		// These are the values of OS_ATOMIC_QUEUE_INIT
 		_pool.opaque1 = NULL;
 		_pool.opaque2 = 0;
-		_lock = OS_SPINLOCK_INIT;
+		_lock = OS_UNFAIR_LOCK_INIT;
 	}
 	return self;
 }
@@ -112,7 +113,7 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 - (void)queue:(NSData *)content ofType:(uint32_t)type
 {
 	SyphonQMember *incoming = SyphonQMemberCreateFromPool(&_pool, content, type);
-	OSSpinLockLock(&_lock);
+	os_unfair_lock_lock(&_lock);
 	// We do duplicate message removal and then new message insertion in two passes.
 	// Feel free to improve on that...
 	SyphonQMember *current = (SyphonQMember *)_head;
@@ -150,14 +151,14 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 		}
 		current->next = incoming;
 	}
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
 }
 
 - (BOOL)copyAndDequeue:(NSData **)content type:(uint32_t *)type
 {
 	BOOL result;
 	SyphonQMember *toDelete;
-	OSSpinLockLock(&_lock);
+	os_unfair_lock_lock(&_lock);
 	if (_head)
 	{
 		result = YES;
@@ -174,7 +175,7 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 		*type = 0;
 		toDelete = NULL;
 	}
-	OSSpinLockUnlock(&_lock);
+    os_unfair_lock_unlock(&_lock);
 	if (toDelete)
     {
         toDelete->content = nil;

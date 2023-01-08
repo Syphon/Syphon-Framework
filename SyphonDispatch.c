@@ -36,6 +36,7 @@
 #include <Block.h>
 #include <pthread.h>
 #include <libkern/OSAtomic.h>
+#include <stdatomic.h>
 #include <dispatch/dispatch.h>
 
 //#define SYPHON_DISPATCH_DEBUG_LOGGING
@@ -91,10 +92,10 @@ static dispatch_semaphore_t _SyphonDispatchGetWorkSemaphore(void);
 
 typedef struct SyphonDispatchSource
 {
-	volatile int32_t				retainc;
+	atomic_int_fast32_t				retainc;
 	void (^fblock)(void);
-	volatile int32_t				firec;
-	void (^volatile cblock)(void);
+    atomic_int_fast32_t				firec;
+    atomic_uintptr_t                cblock;
 } SyphonDispatchSource;
 
 struct SyphonDispatchChannel
@@ -102,16 +103,16 @@ struct SyphonDispatchChannel
 	void							*next;
 	SyphonDispatchSourceRef			activeSource;
 	dispatch_semaphore_t			signal;
-	int32_t							done;
+	atomic_bool						done;
 };
 
 #pragma mark Dispatch Globals
 
 static OSQueueHead mChanPool = OS_ATOMIC_QUEUE_INIT;
-static volatile int32_t mSourceC = 0;
-static volatile int32_t mChannelC = 0;
-static volatile int32_t mActiveC = 0;
-static volatile dispatch_semaphore_t mWorkDoneSignal = NULL;
+static atomic_int_fast32_t mSourceC = 0;
+static atomic_int_fast32_t mChannelC = 0;
+static atomic_int_fast32_t mActiveC = 0;
+static atomic_uintptr_t mWorkDoneSignal = (uintptr_t)NULL;
 
 #pragma mark Constructor and Destructor
 
@@ -122,7 +123,7 @@ static void finalizer()
 	if(gettimeofday(&start, NULL) == 0)
 	{
 		uint64_t elapsed = 0; // in usec
-		while (mActiveC && elapsed < (kSyphonDispatchUnloadTimeout * USEC_PER_SEC)) {
+		while (atomic_load(&mActiveC) && elapsed < (kSyphonDispatchUnloadTimeout * USEC_PER_SEC)) {
 			dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, (kSyphonDispatchUnloadTimeout * USEC_PER_SEC) - elapsed);
 			dispatch_semaphore_wait(_SyphonDispatchGetWorkSemaphore(), timeout);
 			struct timeval now;
@@ -143,7 +144,7 @@ static void *_SyphonDispatchChannelLoop(SyphonDispatchChannel *channel)
 #endif
 	pthread_setname_np("info.v002.syphon.dispatch"); // shows up in gdb
 	dispatch_semaphore_t workDoneSem = _SyphonDispatchGetWorkSemaphore();
-	while (!channel->done)
+	while (!atomic_load(&channel->done))
 	{
 		SyphonDispatchSourceRef source = channel->activeSource;
 		channel->activeSource = NULL;
@@ -155,7 +156,7 @@ static void *_SyphonDispatchChannelLoop(SyphonDispatchChannel *channel)
 //			printf("channel %llu - fire\n", tid);
 #endif			
 			source->fblock();
-			firec = OSAtomicDecrement32Barrier(&source->firec);
+			firec = atomic_fetch_sub(&source->firec, 1) - 1;
 		}
 		// return to pool and then release
 		// so the channel can be destroyed in release if necessary
@@ -163,7 +164,7 @@ static void *_SyphonDispatchChannelLoop(SyphonDispatchChannel *channel)
 		_SyphonDispatchSourceRelease(source, true);
 		
 		// signal done work so app can exit
-		OSAtomicDecrement32Barrier(&mActiveC);
+		atomic_fetch_sub(&mActiveC, 1);
 		dispatch_semaphore_signal(workDoneSem);
 		
 #ifdef SYPHON_DISPATCH_DEBUG_LOGGING
@@ -182,16 +183,19 @@ static void *_SyphonDispatchChannelLoop(SyphonDispatchChannel *channel)
 
 static dispatch_semaphore_t _SyphonDispatchGetWorkSemaphore()
 {
-	if (!mWorkDoneSignal)
+    dispatch_semaphore_t sem = (dispatch_semaphore_t)atomic_load(&mWorkDoneSignal);
+	if (!sem)
 	{
-		dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-		if (!OSAtomicCompareAndSwapPtrBarrier(NULL, sem, (void **)&mWorkDoneSignal))
+		sem = dispatch_semaphore_create(0);
+        uintptr_t expected = (uintptr_t)NULL;
+        if (!atomic_compare_exchange_strong(&mWorkDoneSignal, &expected, (uintptr_t)sem))
 		{
 			// setting failed, some other thread must have got there first
 			dispatch_release(sem);
+            sem = (dispatch_semaphore_t)expected;
 		}
 	}
-	return mWorkDoneSignal;
+	return sem;
 }
 
 #pragma mark Sources
@@ -205,8 +209,8 @@ SyphonDispatchSourceRef SyphonDispatchSourceCreate(void (^block)(void))
 			source->retainc = 1;
 			source->fblock = Block_copy(block);
 			source->firec = 0;
-			source->cblock = NULL;
-			OSAtomicIncrement32Barrier(&mSourceC);
+			atomic_store(&source->cblock, (uintptr_t)NULL);
+			atomic_fetch_add(&mSourceC, 1);
 		}
 		return source;
 	}
@@ -220,20 +224,20 @@ SyphonDispatchSourceRef SyphonDispatchSourceCreate(void (^block)(void))
 void SyphonDispatchSourceSetCompletionBlock(SyphonDispatchSourceRef source, void (^block)(void))
 {
     void (^copied)(void) = Block_copy(block);
-    void (^old)(void);
+    uintptr_t old;
 	bool result;
 	do {
-		old = source->cblock;
-		result = OSAtomicCompareAndSwapPtrBarrier(old, copied, (void **)&source->cblock);
+        old = atomic_load(&source->cblock);
+        result = atomic_compare_exchange_strong(&source->cblock, &old, (uintptr_t)copied);
 	} while (!result);
-	if (old) Block_release(old);
+	if (old) Block_release((void (^)(void))old);
 }
 
 SyphonDispatchSourceRef SyphonDispatchSourceRetain(SyphonDispatchSourceRef source)
 {
 	if (source)
 	{
-		OSAtomicIncrement32Barrier(&source->retainc);
+		atomic_fetch_add(&source->retainc, 1);
 	}
 	return source;
 }
@@ -245,48 +249,55 @@ void SyphonDispatchSourceRelease(SyphonDispatchSourceRef source)
 
 static void _SyphonDispatchSourceRelease(SyphonDispatchSourceRef source, bool onChannel)
 {
-	if (source && (OSAtomicDecrement32Barrier(&source->retainc) == 0))
+	if (source && (atomic_fetch_sub(&source->retainc, 1) == 1))
 	{
-		if (source->cblock)
+        void (^cblock)(void) = (void (^)(void))atomic_load(&source->cblock);
+		if (cblock)
 		{
 			if (onChannel)
 			{
 				// fire the completion block
-				source->cblock();
+				cblock();
 			}
 			else
 			{
 				// fire the completion block on a new source so it too happens in the background
-				SyphonDispatchSourceRef csource = SyphonDispatchSourceCreate(source->cblock);
+				SyphonDispatchSourceRef csource = SyphonDispatchSourceCreate(cblock);
 				SyphonDispatchSourceFire(csource);
-				SyphonDispatchSourceRelease(csource);				
+				SyphonDispatchSourceRelease(csource);
 			}
 
-			Block_release(source->cblock);
+			Block_release(cblock);
 		}
 		Block_release(source->fblock);
 		free(source);
-		OSAtomicDecrement32Barrier(&mSourceC);
+		atomic_fetch_sub(&mSourceC, 1);
 		bool overLimit;
+        int_fast32_t channelC = atomic_load(&mChannelC);
 		do {
-			overLimit = (mChannelC > mSourceC);
+			overLimit = (channelC > atomic_load(&mSourceC));
 			if (overLimit)
 			{
 				SyphonDispatchChannel *channel = _SyphonDispatchChannelTryFromPool();
 				if (channel)
 				{
-					int32_t old = mChannelC;
-					if (OSAtomicCompareAndSwap32Barrier(old, old - 1, &mChannelC))
+                    if (atomic_compare_exchange_strong(&mChannelC, &channelC, channelC - 1))
 					{
 						_SyphonDispatchChannelDestroy(channel);
+                        channelC = channelC - 1;
 					}
 					else
 					{						
 						// otherwise the channel-count changed so return it to the pool and try again
+                        // channelC has been updated by atomic_compare_exchange_strong()
 						_SyphonDispatchChannelReturnToPool(channel);
 					}
 				}
-				// TODO: consider else break; here
+				else
+                {
+                    // another thread may have deleted a channel, so update the count
+                    channelC = atomic_load(&mSourceC);
+                }
 			}
 			
 		} while (overLimit);
@@ -297,11 +308,11 @@ void SyphonDispatchSourceFire(SyphonDispatchSourceRef source)
 {
 	if (source)
 	{
-		if (OSAtomicIncrement32Barrier(&source->firec) == 1)
+		if (atomic_fetch_add(&source->firec, 1) == 0)
 		{
 			// if we incremented to 1 then this source is not currently on a channel
 			// so launch it
-			OSAtomicIncrement32Barrier(&mActiveC);
+			atomic_fetch_add(&mActiveC, 1);
 			_SyphonDispatchChannelLaunchFromPool(source);
 		}
 	}
@@ -332,7 +343,7 @@ static inline void _SyphonDispatchChannelLaunchFromPool(SyphonDispatchSourceRef 
 			channel->next = NULL;
 			channel->activeSource = source;
 			channel->signal = dispatch_semaphore_create(0);
-			channel->done = 0;
+			atomic_store(&channel->done, 0);
 			
 			// create a detached thread so it will clean itself up when it exits
 			pthread_t thread;
@@ -348,7 +359,7 @@ static inline void _SyphonDispatchChannelLaunchFromPool(SyphonDispatchSourceRef 
 			}
 			else
 			{
-				OSAtomicIncrement32Barrier(&mChannelC);
+				atomic_fetch_add(&mChannelC, 1);
 			}
 		}
 	}
@@ -356,7 +367,7 @@ static inline void _SyphonDispatchChannelLaunchFromPool(SyphonDispatchSourceRef 
 
 static void _SyphonDispatchChannelDestroy(SyphonDispatchChannel *channel)
 {
-	OSAtomicIncrement32Barrier(&channel->done);
+	atomic_store(&channel->done, true);
 	dispatch_semaphore_signal(channel->signal);
 	// channel will be freed on its own thread
 }

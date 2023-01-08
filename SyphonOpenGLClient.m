@@ -34,16 +34,17 @@
 #import "SyphonIOSurfaceImageLegacy.h"
 #import "SyphonSubclassing.h"
 
-#import <libkern/OSAtomic.h>
+#import <stdatomic.h>
+#import <os/lock.h>
 
 @implementation SyphonOpenGLClient
 {
 @private
     CGLContextObj       _context;
-    int32_t             _lock;
+    os_unfair_lock      _lock;
     CGLContextObj       _shareContext;
     SyphonOpenGLImage   *_frame;
-    int32_t             _frameValid;
+    atomic_bool         _frameValid;
 }
 
 @dynamic isValid, serverDescription, hasNewFrame;
@@ -61,7 +62,7 @@
     self = [super initWithServerDescription:description options:options newFrameHandler:handler];
 	if (self)
 	{
-        _lock = OS_SPINLOCK_INIT;
+        _lock = OS_UNFAIR_LOCK_INIT;
 #ifdef SYPHON_CORE_SHARE
         _shareContext = CGLRetainContext(context);
         if (SyphonOpenGLContextIsLegacy(context))
@@ -87,9 +88,9 @@
 - (void)stop
 {
     [super stop];
-    OSSpinLockLock(&_lock);
+    os_unfair_lock_lock(&_lock);
     _frame = nil;
-    _frameValid = NO;
+    atomic_store(&_frameValid, false);
     if (_shareContext)
     {
         CGLReleaseContext(_shareContext);
@@ -100,7 +101,7 @@
         CGLReleaseContext(_context);
         _context = NULL;
     }
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
 }
 
 - (CGLContextObj)context
@@ -118,15 +119,15 @@
      Because releasing a SyphonImage causes a glDelete we postpone deletion until we can do work in the context
      DO NOT take the lock here, it may already be locked and waiting for the SyphonClientConnectionManager lock
      */
-    OSAtomicTestAndClearBarrier(0, &_frameValid);
+    atomic_store(&_frameValid, false);
 }
 
 #pragma mark Vending frames
 
 - (SyphonOpenGLImage *)newFrameImage
 {
-	OSSpinLockLock(&_lock);
-	if (_frameValid == 0)
+	os_unfair_lock_lock(&_lock);
+	if (atomic_load(&_frameValid) == false)
     {
 		_frame = nil;
 		
@@ -147,9 +148,9 @@
 			}
 		}
         
-        OSAtomicTestAndSetBarrier(0, &_frameValid);
+        atomic_store(&_frameValid, true);
     }
-	OSSpinLockUnlock(&_lock);
+	os_unfair_lock_unlock(&_lock);
 	return _frame;
 }
 
