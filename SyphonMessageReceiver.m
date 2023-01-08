@@ -39,7 +39,7 @@
     void (^_handler)(id <NSCoding>, uint32_t);
 }
 
-- (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id payload, uint32_t type))handler
+- (id)initForName:(NSString *)name protocol:(NSString *)protocolName allowedClasses:(NSSet<Class> *)classes handler:(void (^)(id payload, uint32_t type))handler
 {
     self = [super init];
     if (self)
@@ -48,7 +48,7 @@
 		{
             if ([protocolName isEqualToString:SyphonMessagingProtocolCFMessage])
 			{
-                return [[SyphonCFMessageReceiver alloc] initForName:name protocol:protocolName handler:handler];
+                return [[SyphonCFMessageReceiver alloc] initForName:name protocol:protocolName allowedClasses:classes handler:handler];
             }
 			else
 			{
@@ -63,6 +63,7 @@
 				return nil;
 			}
 			_name = [name copy];
+            _allowedClasses = classes;
 			_handler = [handler copy];
 		}
 	}

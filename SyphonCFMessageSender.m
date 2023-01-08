@@ -129,7 +129,7 @@
 	NSData *encoded;
 	if (payload)
 	{
-		encoded = [NSKeyedArchiver archivedDataWithRootObject:payload];
+		encoded = [NSKeyedArchiver archivedDataWithRootObject:payload requiringSecureCoding:YES error:nil];
 	}
 	else
 	{

@@ -44,7 +44,8 @@ static CFDataRef MessageReturnCallback (
 	id <NSCoding> decoded;
 	if (data && CFDataGetLength(data))
 	{
-        decoded = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)data];
+        NSSet<Class> *classes = ((__bridge SyphonMessageReceiver *)info).allowedClasses;
+        decoded = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:(__bridge  NSData *)data error:nil];
 	} else {
 		decoded = nil;
 	}
@@ -82,9 +83,9 @@ static CFDataRef MessageReturnCallback (
     }
 }
 
-- (id)initForName:(NSString *)name protocol:(NSString *)protocolName handler:(void (^)(id data, uint32_t type))handler
+- (id)initForName:(NSString *)name protocol:(NSString *)protocolName allowedClasses:(NSSet<Class> *)classes handler:(void (^)(id data, uint32_t type))handler
 {
-    self = [super initForName:name protocol:protocolName handler:handler];
+    self = [super initForName:name protocol:protocolName allowedClasses:classes handler:handler];
 	if (self)
 	{
 		if ([protocolName isEqualToString:SyphonMessagingProtocolCFMessage])

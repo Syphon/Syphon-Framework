@@ -189,7 +189,11 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
 	if (_infoClients.count == 1)
 	{
 		// set up a connection to receive and deal with messages from the server
-		_connection = [[SyphonMessageReceiver alloc] initForName:_myUUID protocol:SyphonMessagingProtocolCFMessage handler:^(id data, uint32_t type) {
+        NSSet *classes = [NSSet setWithObjects:[NSString class], [NSNumber class], nil];
+        _connection = [[SyphonMessageReceiver alloc] initForName:_myUUID
+                                                        protocol:SyphonMessagingProtocolCFMessage
+                                                  allowedClasses:classes
+                                                         handler:^(id data, uint32_t type) {
 			switch (type) {
 				case SyphonMessageTypeNewFrame:
 					[self publishNewFrame];

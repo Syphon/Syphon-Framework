@@ -232,9 +232,10 @@
 	dispatch_sync(_queue, ^{
 		if (!_alive)
 		{
-			
+            NSSet *classes = [NSSet setWithObjects:[NSString class], nil];
 			_connection = [[SyphonMessageReceiver alloc] initForName:_uuid
 															protocol:SyphonMessagingProtocolCFMessage
+                                                      allowedClasses:classes
 															 handler:^(id data, uint32_t type) {
 																 switch (type) {
 																	 case SyphonMessageTypeAddClientForInfo:
