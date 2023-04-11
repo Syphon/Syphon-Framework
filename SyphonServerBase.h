@@ -37,9 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 extern NSString * const SyphonServerOptionIsPrivate;
 
-#define SYPHON_SERVER_BASE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonServerBase)
-
-@interface SYPHON_SERVER_BASE_UNIQUE_CLASS_NAME : NSObject
+@interface SyphonServerBase : NSObject
 
 /*!
  If you implement your own subclass of SyphonServerBase, you must call this designated initializer from your own initializer.
@@ -72,9 +70,5 @@ extern NSString * const SyphonServerOptionIsPrivate;
 - (void)stop;
 
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonServerBase SYPHON_SERVER_BASE_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

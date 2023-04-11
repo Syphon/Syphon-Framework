@@ -32,11 +32,5 @@
 #import "SyphonMessageQueue.h"
 #import "SyphonDispatch.h"
 
-#define SYPHON_CFMESSAGE_SENDER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonCFMessageSender)
-
-@interface SYPHON_CFMESSAGE_SENDER_UNIQUE_CLASS_NAME : SyphonMessageSender
+@interface SyphonCFMessageSender : SyphonMessageSender
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonCFMessageSender SYPHON_CFMESSAGE_SENDER_UNIQUE_CLASS_NAME;
-#endif

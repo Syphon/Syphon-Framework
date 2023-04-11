@@ -30,9 +30,7 @@
 #import <Foundation/Foundation.h>
 #import <IOSurface/IOSurface.h>
 
-#define SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonImageBase)
-
-@interface SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME : NSObject
+@interface SyphonImageBase : NSObject
 /*!
  If you implement your own subclass of SyphonImageBase, you must call this designated initializer from your own initializer.
 
@@ -43,7 +41,3 @@
 */
 - (id)initWithSurface:(IOSurfaceRef)surfaceRef NS_DESIGNATED_INITIALIZER;
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonImageBase SYPHON_IMAGE_BASE_UNIQUE_CLASS_NAME;
-#endif

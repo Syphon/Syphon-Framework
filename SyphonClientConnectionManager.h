@@ -53,9 +53,7 @@
 - (void)invalidateFrame;
 @end
 
-#define SYPHON_CLIENT_CONNECTION_MANAGER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonClientConnectionManager)
-
-@interface SYPHON_CLIENT_CONNECTION_MANAGER_UNIQUE_CLASS_NAME : NSObject
+@interface SyphonClientConnectionManager : NSObject
 - (id)initWithServerDescription:(NSDictionary *)description;
 @property (readonly) BOOL isValid;
 - (void)addInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;     // Must be
@@ -63,7 +61,3 @@
 - (IOSurfaceRef)newSurface;
 @property (readonly) NSUInteger frameID;
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonClientConnectionManager SYPHON_CLIENT_CONNECTION_MANAGER_UNIQUE_CLASS_NAME;
-#endif

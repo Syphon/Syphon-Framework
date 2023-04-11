@@ -88,15 +88,13 @@ extern NSString * const SyphonServerRetireNotification;
  SyphonServerDirectory provides information on available Syphon Servers. Servers are represented by dictionaries. Generally you can expect to find some or all of the keys listed in Constants.
 */ 
 
-#define SYPHON_SERVER_DIRECTORY_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonServerDirectory)
-
-@interface SYPHON_SERVER_DIRECTORY_UNIQUE_CLASS_NAME : NSObject
+@interface SyphonServerDirectory : NSObject
 
 /*!
  Returns the shared server directory instance. This object is KVO complaint, and can be used to observe changes in server availability, server names and statuses. 
  @returns the shared server instance 
 */
-+ (SYPHON_SERVER_DIRECTORY_UNIQUE_CLASS_NAME *)sharedDirectory;
++ (SyphonServerDirectory *)sharedDirectory;
 
 /*!
  NSArray of NSDictionaries that describe (using the keys above) currently available SyphonServer instances on the system.
@@ -112,9 +110,5 @@ extern NSString * const SyphonServerRetireNotification;
 - (NSArray *)serversMatchingName:(nullable NSString *)name appName:(nullable NSString *)appname;
 
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonServerDirectory SYPHON_SERVER_DIRECTORY_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

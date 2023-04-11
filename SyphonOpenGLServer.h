@@ -71,11 +71,9 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
  It is safe to access instances of this class across threads, except for those calls related to OpenGL: a call to bindToDrawFrameOfSize: must have returned before a call is made to unbindAndPublish, and these methods must be paired and called in order. You should not call the stop method while the FBO is bound.
  */
 
-#define SYPHON_OPENGL_SERVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonOpenGLServer)
-
 @class SyphonOpenGLImage;
 
-@interface SYPHON_OPENGL_SERVER_UNIQUE_CLASS_NAME : SyphonServerBase
+@interface SyphonOpenGLServer : SyphonServerBase
 
 /** @name Instantiation */
 /** @{ */
@@ -169,9 +167,5 @@ YES if clients are currently attached, NO otherwise. If you generate frames freq
 
 /** @} */
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonOpenGLServer SYPHON_OPENGL_SERVER_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

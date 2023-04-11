@@ -31,15 +31,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define SYPHON_CLIENT_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonClient)
-
 DEPRECATED_MSG_ATTRIBUTE("Use SyphonOpenGLClient")
-@interface SYPHON_CLIENT_UNIQUE_CLASS_NAME : SyphonOpenGLClient
-- (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(nullable NSDictionary *)options newFrameHandler:(nullable void (^)(SYPHON_CLIENT_UNIQUE_CLASS_NAME *client))handler;
+@interface SyphonClient : SyphonOpenGLClient
+- (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(nullable NSDictionary *)options newFrameHandler:(nullable void (^)(SyphonClient *client))handler;
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonClient SYPHON_CLIENT_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

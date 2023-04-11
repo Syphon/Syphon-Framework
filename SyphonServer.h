@@ -31,15 +31,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define SYPHON_SERVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonServer)
-
 DEPRECATED_MSG_ATTRIBUTE("Use SyphonOpenGLServer")
-@interface SYPHON_SERVER_UNIQUE_CLASS_NAME : SyphonOpenGLServer
+@interface SyphonServer : SyphonOpenGLServer
 
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonServer SYPHON_SERVER_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

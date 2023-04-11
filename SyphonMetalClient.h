@@ -31,11 +31,9 @@
 #import <Metal/Metal.h>
 #import <Syphon/SyphonClientBase.h>
 
-#define SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMetalClient)
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME : SyphonClientBase
+@interface SyphonMetalClient : SyphonClientBase
 
 /*!
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.
@@ -48,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)initWithServerDescription:(NSDictionary *)description
                          device:(id<MTLDevice>)device
                         options:(nullable NSDictionary *)options
-                newFrameHandler:(nullable void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
+                newFrameHandler:(nullable void (^)(SyphonMetalClient *client))handler;
 
 /*!
 Returns a MTLTexture representing the current output from the server. The texture associated with the image may continue to update when you draw with it, but you should not depend on that behaviour: call this method every time you wish to access the current server frame.
@@ -63,10 +61,5 @@ Stops the client from receiving any further frames from the server. Use of this 
 - (void)stop;
 
 @end
-
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonMetalClient SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

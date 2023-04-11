@@ -27,8 +27,6 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#import "SyphonBuildMacros.h"
-
 #if SYPHON_DEBUG_NO_DRAWING
 	#define DEBUG 1
 #endif

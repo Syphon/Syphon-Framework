@@ -31,8 +31,6 @@
 #import <OpenGL/OpenGL.h>
 #import <Syphon/SyphonClientBase.h>
 
-#define SYPHON_OPENGL_CLIENT_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonOpenGLClient)
-
 @class SyphonOpenGLImage;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -45,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  It is safe to access instances of this class across threads, with the usual limitatiions related to OpenGL. The calls to SyphonOpenGLClient which may cause work to be done in a GL context are: -newFrameImage, -stop and -release.
  */
 
-@interface SYPHON_OPENGL_CLIENT_UNIQUE_CLASS_NAME : SyphonClientBase
+@interface SyphonOpenGLClient : SyphonClientBase
 
 /*! 
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.
@@ -55,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param handler A block which is invoked when a new frame becomes available. handler may be nil. This block may be invoked on a thread other than that on which the client was created.
  @returns A newly initialized SyphonOpenGLClient object, or nil if a client could not be created.
 */
-- (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(nullable NSDictionary *)options newFrameHandler:(nullable void (^)(SYPHON_OPENGL_CLIENT_UNIQUE_CLASS_NAME *client))handler;
+- (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(nullable NSDictionary *)options newFrameHandler:(nullable void (^)(SyphonOpenGLClient *client))handler;
 
 /*!
  Returns the CGLContextObj associated with the client.
@@ -96,9 +94,5 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stop;
 
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonOpenGLClient SYPHON_OPENGL_CLIENT_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

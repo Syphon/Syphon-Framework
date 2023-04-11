@@ -31,15 +31,13 @@
 #import <OpenGL/OpenGL.h>
 #import <Syphon/SyphonImageBase.h>
 
-#define SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonOpenGLImage)
-
 NS_ASSUME_NONNULL_BEGIN
 
 /** 
  SyphonImage represents an image stored as an OpenGL texture of type GL_TEXTURE_RECTANGLE.
  */
 
-@interface SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME : SyphonImageBase
+@interface SyphonOpenGLImage : SyphonImageBase
 
 /**
  A GLuint representing the texture name. The associated texture is of type GL_TEXTURE_RECTANGLE.
@@ -51,9 +49,5 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (readonly) NSSize textureSize;
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonOpenGLImage SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

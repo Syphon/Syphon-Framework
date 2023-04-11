@@ -31,9 +31,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define SYPHON_CLIENT_BASE_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonClientBase)
-
-@interface SYPHON_CLIENT_BASE_UNIQUE_CLASS_NAME : NSObject
+@interface SyphonClientBase : NSObject
 /*!
  Returns a new client instance for the described server. You should check the isValid property after initialization to ensure a connection was made to the server.
  @param description Typically acquired from the shared SyphonServerDirectory, or one of Syphon's notifications.
@@ -65,9 +63,5 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (readonly) BOOL hasNewFrame;
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonClientBase SYPHON_CLIENT_BASE_UNIQUE_CLASS_NAME;
-#endif
 
 NS_ASSUME_NONNULL_END

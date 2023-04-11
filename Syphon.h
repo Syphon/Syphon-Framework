@@ -154,25 +154,6 @@
  [myClient stop];
  @endcode
  
- @section plugins Syphon.framework in a Plugin
-
- If you are using Syphon in any sort of plugin, please download the framework source and compile a version of the framework with unique class names. This avoids class-name conflicts if another plugin or the host application also embeds the Syphon framework. The framework source is set up to make this easy for you: you just need to change one build setting.
- 
- <ol>
- <li><h4>Open the framework's Xcode project.</h4>
- <p></p>
- </li>
- <li><h4>Define SYPHON_UNIQUE_CLASS_NAME_PREFIX using the Preprocessor Macros build setting.</h4>
- <p>Select the Syphon target in the project window.<br/>
- Click the Build Settings tab to display the build settings.<br/>
- Scroll down (or use the search field) to find the Preprocessor Macros (GCC_PREPROCESSOR_DEFINITIONS) setting.<br/>
- Double click the setting to add SYPHON_UNIQUE_CLASS_NAME_PREFIX=MyPluginName as a macro.
- </p></li>
- <li><h4>Build the framework.</h4>
- <p>The built framework will have custom class names. The headers alias the custom names, so you can use SyphonOpenGLServer, SyphonOpenGLClient, SyphonOpenGLImage and SyphonServerDirectory as normal in your code.<br/>
- </p></li>
- </ol>
- 
  @section help More examples and help
  
  Example projects implementing a server and client are included with the Syphon SDK. You can also examine the source to some Syphon implementations on <a href="https://github.com/Syphon">GitHub</a>.

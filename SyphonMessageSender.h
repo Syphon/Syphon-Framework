@@ -29,18 +29,12 @@
 
 #import <Foundation/Foundation.h>
 
-#define SYPHON_MESSAGE_SENDER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMessageSender)
-
-@interface SYPHON_MESSAGE_SENDER_UNIQUE_CLASS_NAME : NSObject
+@interface SyphonMessageSender : NSObject
 - (id)initForName:(NSString *)name protocol:(NSString *)protocolName invalidationHandler:(void (^)(void))handler;
 @property (readonly) NSString *name;
 @property (readonly) BOOL isValid;
 - (void)send:(id <NSCoding>)payload ofType:(uint32_t)type;
 @end
-@interface SYPHON_MESSAGE_SENDER_UNIQUE_CLASS_NAME (Subclassing)
+@interface SyphonMessageSender (Subclassing)
 - (void)invalidate;
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonMessageSender SYPHON_MESSAGE_SENDER_UNIQUE_CLASS_NAME;
-#endif

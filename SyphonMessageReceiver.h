@@ -29,9 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define SYPHON_MESSAGE_RECEIVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMessageReceiver)
-
-@interface SYPHON_MESSAGE_RECEIVER_UNIQUE_CLASS_NAME : NSObject
+@interface SyphonMessageReceiver : NSObject
 - (id)initForName:(NSString *)name
          protocol:(NSString *)protocolName
    allowedClasses:(NSSet<Class> *)classes
@@ -41,10 +39,6 @@
 // Always invalidate before release
 - (void)invalidate;
 @end
-@interface SYPHON_MESSAGE_RECEIVER_UNIQUE_CLASS_NAME (Subclassing)
+@interface SyphonMessageReceiver (Subclassing)
 - (void)receiveMessageWithPayload:(id)payload ofType:(uint32_t)type;
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonMessageReceiver SYPHON_MESSAGE_RECEIVER_UNIQUE_CLASS_NAME;
-#endif

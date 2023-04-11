@@ -51,8 +51,7 @@ extern NSString * const SyphonServerOptionIsPrivate;
  It is safe to access instances of this class across threads.
  */
 
-#define SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonMetalServer)
-@interface SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME : SyphonServerBase
+@interface SyphonMetalServer : SyphonServerBase
 
 /** @name Instantiation */
 /** @{ */

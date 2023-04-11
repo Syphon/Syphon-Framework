@@ -31,7 +31,7 @@
 #import "SyphonSubclassing.h"
 #import <os/lock.h>
 
-@implementation SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME
+@implementation SyphonMetalClient
 {
     os_unfair_lock _threadLock;
     id<MTLTexture> _frame;
@@ -43,7 +43,7 @@
 - (id)initWithServerDescription:(NSDictionary *)description
                          device:(id<MTLDevice>)theDevice
                         options:(NSDictionary *)options
-                   newFrameHandler:(void (^)(SYPHON_METAL_CLIENT_UNIQUE_CLASS_NAME *client))handler
+                   newFrameHandler:(void (^)(SyphonMetalClient *client))handler
 {
     self = [super initWithServerDescription:description options:options newFrameHandler:handler];
     if( self )

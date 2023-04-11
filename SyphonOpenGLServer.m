@@ -50,7 +50,7 @@
     CGLContextObj _shareContext;
 
     BOOL _pushPending;
-    SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME *_surfaceTexture;
+    SyphonOpenGLImage *_surfaceTexture;
 
     BOOL _wantsContextChanges;
 
@@ -229,7 +229,7 @@
     [_renderer endInContext];
 }
 
-- (SYPHON_OPENGL_IMAGE_UNIQUE_CLASS_NAME *)newFrameImage
+- (SyphonOpenGLImage *)newFrameImage
 {
 	return _surfaceTexture;
 }

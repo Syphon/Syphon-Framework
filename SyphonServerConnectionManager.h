@@ -36,9 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  This isn't a problem currently, as SyphonServer is KVO compliant for name/serverDescription
  */
 
-#define SYPHON_SERVER_CONNECTION_MANAGER_UNIQUE_CLASS_NAME SYPHON_UNIQUE_CLASS_NAME(SyphonServerConnectionManager)
-
-@interface SYPHON_SERVER_CONNECTION_MANAGER_UNIQUE_CLASS_NAME : NSObject
+@interface SyphonServerConnectionManager : NSObject
 - (id)initWithUUID:(NSString *)uuid options:(NSDictionary *)options;
 @property (readonly) NSDictionary *surfaceDescription;
 /*
@@ -53,7 +51,3 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - (void)setSurfaceID:(IOSurfaceID)newID;
 - (void)setName:(NSString *)name;
 @end
-
-#if defined(SYPHON_USE_CLASS_ALIAS)
-@compatibility_alias SyphonServerConnectionManager SYPHON_SERVER_CONNECTION_MANAGER_UNIQUE_CLASS_NAME;
-#endif

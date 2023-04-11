@@ -32,7 +32,7 @@
 #import "SyphonPrivate.h"
 #import "SyphonSubclassing.h"
 
-@implementation SYPHON_METAL_SERVER_UNIQUE_CLASS_NAME
+@implementation SyphonMetalServer
 {
     id<MTLTexture> _surfaceTexture;
     id<MTLDevice> _device;
