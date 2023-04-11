@@ -28,7 +28,7 @@
 */
 
 #import "SyphonMessageQueue.h"
-#import <libkern/OSAtomic.h>
+#import <stdatomic.h>
 #import <os/lock.h>
 
 /*
@@ -72,7 +72,7 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
     os_unfair_lock _lock;
     void *_head;
     OSQueueHead _pool; // TODO: or maybe manage our own within the lock as we lock anyway
-    void *_info;
+    atomic_uintptr_t _info;
 }
 
 - (id)init
@@ -186,15 +186,15 @@ static SyphonQMember *SyphonQMemberCreateFromPool(OSQueueHead *pool, NSData *mco
 
 - (void *)userInfo
 {
-	return _info;
+    return (void *)atomic_load(&_info);
 }
 
 - (void)setUserInfo:(void *)info
 {
 	bool result;
 	do {
-		void *old = _info;
-		result = OSAtomicCompareAndSwapPtrBarrier(old, info, &_info);
+		uintptr_t old = _info;
+        result = atomic_compare_exchange_strong(&_info, &old, (uintptr_t)info);
 	} while (!result);
 }
 @end

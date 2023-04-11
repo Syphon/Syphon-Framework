@@ -15,7 +15,7 @@
 @end
 
 __attribute__((destructor))
-static void finalizer()
+static void finalizer(void)
 {
     [SyphonServerBase retireRemainingServers];
 }

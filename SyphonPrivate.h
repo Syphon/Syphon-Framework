@@ -31,6 +31,8 @@
 
 #ifdef __OBJC__
 
+#import <stdatomic.h> // For SyphonSafeBool
+
 #define kSyphonIdentifier @"info.v002.Syphon"
 
 // NSNotification names for Syphon's distributed notifications
@@ -60,7 +62,7 @@ extern NSString * const SyphonServerOptionStencilBufferResolution;
 
 NSString *SyphonCreateUUIDString(void) NS_RETURNS_RETAINED;
 
-typedef volatile int32_t SyphonSafeBool;
+typedef atomic_int_fast32_t SyphonSafeBool;
 
 BOOL SyphonSafeBoolGet(SyphonSafeBool *b);
 void SyphonSafeBoolSet(SyphonSafeBool *b, BOOL value);

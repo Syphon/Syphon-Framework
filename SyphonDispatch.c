@@ -117,7 +117,7 @@ static atomic_uintptr_t mWorkDoneSignal = (uintptr_t)NULL;
 #pragma mark Constructor and Destructor
 
 __attribute__((destructor))
-static void finalizer()
+static void finalizer(void)
 {
 	struct timeval start;
 	if(gettimeofday(&start, NULL) == 0)
@@ -181,7 +181,7 @@ static void *_SyphonDispatchChannelLoop(SyphonDispatchChannel *channel)
 	return NULL;
 }
 
-static dispatch_semaphore_t _SyphonDispatchGetWorkSemaphore()
+static dispatch_semaphore_t _SyphonDispatchGetWorkSemaphore(void)
 {
     dispatch_semaphore_t sem = (dispatch_semaphore_t)atomic_load(&mWorkDoneSignal);
 	if (!sem)
