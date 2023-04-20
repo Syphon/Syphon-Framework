@@ -185,11 +185,18 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
     }
 }
 
+- (void)updateFrameID
+{
+    os_unfair_lock_lock(&_lock);
+    _lastFrameID = [_connectionManager frameID];
+    os_unfair_lock_unlock(&_lock);
+}
+
 - (IOSurfaceRef)newSurface
 {
     IOSurfaceRef surface;
+    [self updateFrameID];
     os_unfair_lock_lock(&_lock);
-    _lastFrameID = [_connectionManager frameID];
     surface = [_connectionManager newSurface];
     os_unfair_lock_unlock(&_lock);
     return surface;

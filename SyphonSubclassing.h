@@ -65,6 +65,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (IOSurfaceRef)newSurface;
 
 /*!
+ Subclasses must call this method when dispensing a new frame to allow SyphonClientBase to return a correct value for -hasNewFrame
+ */
+- (void)updateFrameID;
+
+/*!
  Subclasses override this method to invalidate their output when the server's surface backing changes. Do not call this method directly -
  it will be called for you when necessary.
  */

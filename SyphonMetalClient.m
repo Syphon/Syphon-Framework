@@ -83,6 +83,8 @@
 
 - (id<MTLTexture>)newFrameImage
 {
+    [self updateFrameID];
+
     id<MTLTexture> image = nil;
 
     os_unfair_lock_lock(&_threadLock);

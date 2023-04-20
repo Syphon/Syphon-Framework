@@ -126,6 +126,7 @@
 
 - (SyphonOpenGLImage *)newFrameImage
 {
+    [self updateFrameID];
 	os_unfair_lock_lock(&_lock);
 	if (atomic_load(&_frameValid) == false)
     {
