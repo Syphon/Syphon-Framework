@@ -31,9 +31,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*! @name Server Description Dictionary Key Constants */
-/*! @{ */
-
 /*!
  @relates SyphonServerDirectory
  The object for this key is a NSString which uniquely identifies a SyphonServer instance. If two dictionaries contain the same string for this key, they represent the same server. This is provided solely to allow you to programmatically determine the identity of a server, and should never be displayed to users in interface elements. This key is not guaranteed to exist in the dictionary.
@@ -58,11 +55,6 @@ extern NSString * const SyphonServerDescriptionAppNameKey;
 */
 extern NSString * const SyphonServerDescriptionIconKey;
 
-/*! @} */
-
-/*! @name Notifications */
-/*! @{ */
-
 /*!
  @relates SyphonServerDirectory
  A new SyphonServer is available on the system. The notification object is the shared SyphonServerDirectory instance. The user info dictionary describes the server and may contain SyphonServerDescription keys.
@@ -81,12 +73,9 @@ extern NSString * const SyphonServerUpdateNotification;
 */
 extern NSString * const SyphonServerRetireNotification;
 
-/*! @} */
-
-/*! 
- @nosubgrouping
- SyphonServerDirectory provides information on available Syphon Servers. Servers are represented by dictionaries. Generally you can expect to find some or all of the keys listed in Constants.
-*/ 
+/*!
+ A server directory provides information on available Syphon servers. Servers are represented by dictionaries. Generally you can expect to find some or all of the keys listed in Constants.
+*/
 
 @interface SyphonServerDirectory : NSObject
 
@@ -97,15 +86,15 @@ extern NSString * const SyphonServerRetireNotification;
 + (SyphonServerDirectory *)sharedDirectory;
 
 /*!
- NSArray of NSDictionaries that describe (using the keys above) currently available SyphonServer instances on the system.
+ `NSArray` of `NSDictionaries` that describe (using the keys above) currently available SyphonServer instances on the system.
 */
 @property (readonly) NSArray *servers;
 
 /*! 
- Use this method to discover servers based soley on their name, or application host name. Both parameters are optional. If you do not specify either, all available SyphonServers will be returned.
- @param name Optional (pass nil to not specify) Name of the published SyphonServer, matches the key value for SyphonServerDescriptionNameKey
- @param appname Optional (pass nil to not specify) Application Name of the published SyphonServer, matches the key value for SyphonServerDescriptionAppNameKey
- @returns An array of NSDictionaries matching the query you specified. 
+ Use this method to discover servers based soley on their name, or application host name. Both parameters are optional. If you do not specify either, all available Syphon servers will be returned.
+ @param name Optional (pass `nil` to not specify) Name of the published Syphon server, matches the key value for ``SyphonServerDescriptionNameKey``
+ @param appname Optional (pass `nil` to not specify) Application name of the published Syphon server, matches the key value for ``SyphonServerDescriptionAppNameKey``
+ @returns An array of dictionaries matching the query you specified. 
 */
 - (NSArray *)serversMatchingName:(nullable NSString *)name appName:(nullable NSString *)appname;
 

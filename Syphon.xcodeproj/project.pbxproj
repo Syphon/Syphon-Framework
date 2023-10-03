@@ -6,21 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		BD909C9612785ADE00CC898A /* Syphon Documentation */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = BD909C9C12785B0300CC898A /* Build configuration list for PBXAggregateTarget "Syphon Documentation" */;
-			buildPhases = (
-				BD909C9512785ADE00CC898A /* ShellScript */,
-			);
-			dependencies = (
-				BD909C9B12785AE400CC898A /* PBXTargetDependency */,
-			);
-			name = "Syphon Documentation";
-			productName = "Syphon Documentation";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		1B09069B11CB2FBD00BCBE41 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B09069A11CB2FBD00BCBE41 /* IOSurface.framework */; };
 		1B09069D11CB2FBD00BCBE41 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B09069C11CB2FBD00BCBE41 /* OpenGL.framework */; };
@@ -87,6 +72,7 @@
 		E28D0CB11D9542B30036DF26 /* SyphonGLVertices.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CAF1D9542B30036DF26 /* SyphonGLVertices.m */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		E28D0CB41D95770C0036DF26 /* SyphonServerGLVertices.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CB21D95770C0036DF26 /* SyphonServerGLVertices.h */; };
 		E28D0CB51D95770C0036DF26 /* SyphonServerGLVertices.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CB31D95770C0036DF26 /* SyphonServerGLVertices.m */; };
+		E28E64532ACC9130005654C4 /* Syphon.docc in Sources */ = {isa = PBXBuildFile; fileRef = E28E64522ACC8934005654C4 /* Syphon.docc */; };
 		E2C755A72964C19D00C8B5D5 /* SyphonMetalShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */; };
 		E2CF04FE227398E600B8CD19 /* SyphonServerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E2CF04FF227398E600B8CD19 /* SyphonServerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CF04FD227398E600B8CD19 /* SyphonServerBase.m */; };
@@ -99,16 +85,6 @@
 		E2DE7FD312495BF50081453B /* SyphonMessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = E2DE7FD112495BF50081453B /* SyphonMessageQueue.h */; };
 		E2DE7FD412495BF50081453B /* SyphonMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DE7FD212495BF50081453B /* SyphonMessageQueue.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		BD909C9A12785AE400CC898A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = Syphon;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -144,7 +120,6 @@
 		BD45585D11DF6BD300F15521 /* SyphonServerConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerConnectionManager.m; sourceTree = "<group>"; };
 		BD606D6611D2842D00E02702 /* SyphonServerDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerDirectory.h; sourceTree = "<group>"; wrapsLines = 1; };
 		BD606D6711D2842D00E02702 /* SyphonServerDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerDirectory.m; sourceTree = "<group>"; };
-		BD909AA21277BF9D00CC898A /* doxygen.config */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = doxygen.config; sourceTree = "<group>"; };
 		BDB8DA211211F5990028D250 /* SyphonMessageReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMessageReceiver.h; sourceTree = "<group>"; };
 		BDB8DA221211F5990028D250 /* SyphonMessageReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMessageReceiver.m; sourceTree = "<group>"; };
 		BDB8DA231211F5990028D250 /* SyphonCFMessageReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonCFMessageReceiver.h; sourceTree = "<group>"; };
@@ -155,9 +130,7 @@
 		BDB8DA2A1211F59A0028D250 /* SyphonCFMessageSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonCFMessageSender.m; sourceTree = "<group>"; };
 		BDB8DAF31211FA7F0028D250 /* SyphonMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMessaging.h; sourceTree = "<group>"; };
 		BDB8DAF41211FA7F0028D250 /* SyphonMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMessaging.m; sourceTree = "<group>"; };
-		BDCB92AF127A3C9A00C9E06E /* customdoxygen.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = customdoxygen.css; sourceTree = "<group>"; };
 		BDCB92B0127A3C9A00C9E06E /* footer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = footer.html; sourceTree = "<group>"; };
-		BDCB9399127ADEBF00C9E06E /* DoxygenLayout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = DoxygenLayout.xml; sourceTree = "<group>"; };
 		BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonOpenGLFunctions.c; sourceTree = "<group>"; };
 		BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLFunctions.h; sourceTree = "<group>"; };
 		BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonDispatch.h; sourceTree = "<group>"; };
@@ -177,7 +150,6 @@
 		E240462E23EF71D4004C14E9 /* SyphonImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonImage.h; sourceTree = "<group>"; };
 		E240462F23EF71D4004C14E9 /* SyphonImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonImage.m; sourceTree = "<group>"; };
 		E240463423F0B9EF004C14E9 /* SyphonSubclassing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonSubclassing.h; sourceTree = "<group>"; };
-		E26877562199C4E600B8E495 /* Building Syphon.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Building Syphon.md"; sourceTree = "<group>"; };
 		E28D0C981D8F43380036DF26 /* SyphonServerRendererCoreGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerRendererCoreGL.h; sourceTree = "<group>"; };
 		E28D0C991D8F43380036DF26 /* SyphonServerRendererCoreGL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerRendererCoreGL.m; sourceTree = "<group>"; };
 		E28D0CA61D9296520036DF26 /* SyphonGLShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonGLShader.h; sourceTree = "<group>"; };
@@ -188,6 +160,7 @@
 		E28D0CAF1D9542B30036DF26 /* SyphonGLVertices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonGLVertices.m; sourceTree = "<group>"; };
 		E28D0CB21D95770C0036DF26 /* SyphonServerGLVertices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerGLVertices.h; sourceTree = "<group>"; };
 		E28D0CB31D95770C0036DF26 /* SyphonServerGLVertices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerGLVertices.m; sourceTree = "<group>"; };
+		E28E64522ACC8934005654C4 /* Syphon.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Syphon.docc; sourceTree = "<group>"; };
 		E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SyphonMetalShaders.metal; sourceTree = "<group>"; };
 		E2C755A82964C32500C8B5D5 /* SyphonServerMetalTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServerMetalTypes.h; sourceTree = "<group>"; };
 		E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServerBase.h; sourceTree = "<group>"; };
@@ -231,7 +204,7 @@
 		0867D691FE84028FC02AAC07 /* OpenVideoTap */ = {
 			isa = PBXGroup;
 			children = (
-				E26877562199C4E600B8E495 /* Building Syphon.md */,
+				E28E64522ACC8934005654C4 /* Syphon.docc */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
@@ -431,10 +404,7 @@
 		BDCB92AE127A3C7200C9E06E /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
-				BDCB92AF127A3C9A00C9E06E /* customdoxygen.css */,
-				BDCB9399127ADEBF00C9E06E /* DoxygenLayout.xml */,
 				BDCB92B0127A3C9A00C9E06E /* footer.html */,
-				BD909AA21277BF9D00CC898A /* doxygen.config */,
 			);
 			name = Documentation;
 			sourceTree = "<group>";
@@ -560,7 +530,6 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* Syphon */,
-				BD909C9612785ADE00CC898A /* Syphon Documentation */,
 			);
 		};
 /* End PBXProject section */
@@ -575,32 +544,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		BD909C9512785ADE00CC898A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/SyphonClient.h",
-				"$(SRCROOT)/SyphonImage.h",
-				"$(SRCROOT)/SyphonServerDirectory.h",
-				"$(SRCROOT)/SyphonServer.h",
-				"$(SRCROOT)/doxygen.config",
-				"$(SRCROOT)/Syphon.h",
-				"$(SRCROOT)/customdoxygen.css",
-				"$(SRCROOT)/footer.html",
-				"$(SRCROOT)/DoxygenLayout.xml",
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/info.v002.syphon.docs.docset/Contents/Info.plist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#  Syphon doxygen script based on http://developer.apple.com/tools/creatingdocsetswithdoxygen.html\n#  Build the doxygen documentation for the project and load the docset into Xcode.\n\n#  Use the following to adjust the value of the $DOXYGEN_PATH User-Defined Setting:\n#    Binary install location: /Applications/Doxygen.app/Contents/Resources/doxygen\n#    Source build install location: /usr/local/bin/doxygen\n\n#  If the config file doesn't exist, run 'doxygen -g $SOURCE_ROOT/doxygen.config' to \n#   a get default file.\n\nif ! [ -f \"$SOURCE_ROOT/doxygen.config\" ] \nthen \n  echo doxygen config file does not exist\n  $DOXYGEN_PATH -g \"$SOURCE_ROOT/doxygen.config\"\nfi\n\n# Make the Derived File directory if it doesn't exist, and delete previous output\nmkdir -p \"$DERIVED_FILE_DIR\"\nrm -rf \"$DERIVED_FILE_DIR/DoxygenDocs\"\n\n#  Append the proper input/output directories and docset info to the config file.\n#  This works even though values are assigned higher up in the file. Easier than sed.\n\ncp \"$SOURCE_ROOT/doxygen.config\" \"$TEMP_DIR/doxygen.config\"\n\necho \"INPUT = \\\"$BUILT_PRODUCTS_DIR/Syphon.framework/Headers/\\\" \\\"$SRCROOT/footer.html\\\" \\\"$SRCROOT/customdoxygen.css\\\"\" >> \"$TEMP_DIR/doxygen.config\"\necho \"OUTPUT_DIRECTORY = \\\"$DERIVED_FILE_DIR/DoxygenDocs\\\"\" >> \"$TEMP_DIR/doxygen.config\"\n\n#  Run doxygen on the updated config file.\n#  Note: doxygen creates a Makefile that does most of the heavy lifting.\n\n$DOXYGEN_PATH \"$TEMP_DIR/doxygen.config\"\n\n#  make will invoke docsetutil. Take a look at the Makefile to see how this is done.\n\nmake -C \"$DERIVED_FILE_DIR/DoxygenDocs/html\" install\n\n# Copy the results back to our Built Products directory\n\nrm -rf \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation\"\ncp -R \"$DERIVED_FILE_DIR/DoxygenDocs/html\" \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Info.plist\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/installdox\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Makefile\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Nodes.xml\"\nrm -f \"$BUILT_PRODUCTS_DIR/FrameworkDocumentation/Tokens.xml\"\n\n\nexit 0\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8DC2EF540486A6940098B216 /* Sources */ = {
@@ -618,6 +561,7 @@
 				E28D0C9B1D8F43380036DF26 /* SyphonServerRendererCoreGL.m in Sources */,
 				BD45586311DF6BD300F15521 /* SyphonServerConnectionManager.m in Sources */,
 				E28D0CB51D95770C0036DF26 /* SyphonServerGLVertices.m in Sources */,
+				E28E64532ACC9130005654C4 /* Syphon.docc in Sources */,
 				BDB8DA301211F59A0028D250 /* SyphonMessageReceiver.m in Sources */,
 				BDB8DA321211F59A0028D250 /* SyphonCFMessageReceiver.m in Sources */,
 				565D06AC25CAA2FA0048C4DD /* SyphonMetalClient.m in Sources */,
@@ -646,14 +590,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		BD909C9B12785AE400CC898A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8DC2EF4F0486A6940098B216 /* Syphon */;
-			targetProxy = BD909C9A12785AE400CC898A /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C1666FE841158C02AAC07 /* InfoPlist.strings */ = {
@@ -745,7 +681,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
+				DOXYGEN_PATH = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -793,7 +729,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
+				DOXYGEN_PATH = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -835,7 +771,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen;
+				DOXYGEN_PATH = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -890,44 +826,6 @@
 			};
 			name = "Debug Messaging Only";
 		};
-		BD909C9712785ADE00CC898A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				PRODUCT_NAME = "Syphon Documentation";
-			};
-			name = Debug;
-		};
-		BD909C9812785ADE00CC898A /* Debug Messaging Only */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				PRODUCT_NAME = "Syphon Documentation";
-			};
-			name = "Debug Messaging Only";
-		};
-		BD909C9912785ADE00CC898A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				PRODUCT_NAME = "Syphon Documentation";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -947,16 +845,6 @@
 				1DEB91B208733DA50010E9CD /* Debug */,
 				BD5A05F712187C68005D3F6E /* Debug Messaging Only */,
 				1DEB91B308733DA50010E9CD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		BD909C9C12785B0300CC898A /* Build configuration list for PBXAggregateTarget "Syphon Documentation" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BD909C9712785ADE00CC898A /* Debug */,
-				BD909C9812785ADE00CC898A /* Debug Messaging Only */,
-				BD909C9912785ADE00CC898A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

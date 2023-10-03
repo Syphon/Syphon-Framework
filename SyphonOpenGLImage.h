@@ -33,7 +33,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** 
+/**
  SyphonImage represents an image stored as an OpenGL texture of type GL_TEXTURE_RECTANGLE.
  */
 
