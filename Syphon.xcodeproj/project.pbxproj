@@ -3,12 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1B09069B11CB2FBD00BCBE41 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B09069A11CB2FBD00BCBE41 /* IOSurface.framework */; };
-		1B09069D11CB2FBD00BCBE41 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B09069C11CB2FBD00BCBE41 /* OpenGL.framework */; };
 		1B0906C111CBB0F500BCBE41 /* SyphonOpenGLServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906BF11CBB0F500BCBE41 /* SyphonOpenGLServer.m */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		1B0906C711CBB1C100BCBE41 /* SyphonOpenGLClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906C511CBB1C100BCBE41 /* SyphonOpenGLClient.m */; };
 		1B0906C911CBB1CE00BCBE41 /* Syphon.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C811CBB1CE00BCBE41 /* Syphon.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -21,7 +19,6 @@
 		8488126724361D4D008E17CC /* SyphonServerRendererMetal.m in Sources */ = {isa = PBXBuildFile; fileRef = 8488126524361D4D008E17CC /* SyphonServerRendererMetal.m */; };
 		84E4D22A2385927B00E24F2D /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E4D2292385927B00E24F2D /* Metal.framework */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
-		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		BD038877122EAB1A007725FF /* SyphonImageBase.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038875122EAB1A007725FF /* SyphonImageBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BD038878122EAB1A007725FF /* SyphonImageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038876122EAB1A007725FF /* SyphonImageBase.m */; };
 		BD038887122EABE2007725FF /* SyphonOpenGLImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BD038886122EABE2007725FF /* SyphonOpenGLImage.m */; };
@@ -73,6 +70,9 @@
 		E28D0CB41D95770C0036DF26 /* SyphonServerGLVertices.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CB21D95770C0036DF26 /* SyphonServerGLVertices.h */; };
 		E28D0CB51D95770C0036DF26 /* SyphonServerGLVertices.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CB31D95770C0036DF26 /* SyphonServerGLVertices.m */; };
 		E28E64532ACC9130005654C4 /* Syphon.docc in Sources */ = {isa = PBXBuildFile; fileRef = E28E64522ACC8934005654C4 /* Syphon.docc */; };
+		E28E64572ACCB325005654C4 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28E64562ACCB30B005654C4 /* OpenGL.framework */; };
+		E28E64582ACCB32A005654C4 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28E64552ACCB30B005654C4 /* IOSurface.framework */; };
+		E28E645A2ACCB3A2005654C4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28E64592ACCB3A2005654C4 /* Foundation.framework */; };
 		E2C755A72964C19D00C8B5D5 /* SyphonMetalShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */; };
 		E2CF04FE227398E600B8CD19 /* SyphonServerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E2CF04FF227398E600B8CD19 /* SyphonServerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CF04FD227398E600B8CD19 /* SyphonServerBase.m */; };
@@ -87,11 +87,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		1B09069A11CB2FBD00BCBE41 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
-		1B09069C11CB2FBD00BCBE41 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1B0906BE11CBB0F500BCBE41 /* SyphonOpenGLServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLServer.h; sourceTree = "<group>"; wrapsLines = 1; };
 		1B0906BF11CBB0F500BCBE41 /* SyphonOpenGLServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonOpenGLServer.m; sourceTree = "<group>"; };
 		1B0906C411CBB1C100BCBE41 /* SyphonOpenGLClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLClient.h; sourceTree = "<group>"; wrapsLines = 1; };
@@ -130,12 +125,10 @@
 		BDB8DA2A1211F59A0028D250 /* SyphonCFMessageSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonCFMessageSender.m; sourceTree = "<group>"; };
 		BDB8DAF31211FA7F0028D250 /* SyphonMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonMessaging.h; sourceTree = "<group>"; };
 		BDB8DAF41211FA7F0028D250 /* SyphonMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonMessaging.m; sourceTree = "<group>"; };
-		BDCB92B0127A3C9A00C9E06E /* footer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = footer.html; sourceTree = "<group>"; };
 		BDFAE525148CDA84008C9E6F /* SyphonOpenGLFunctions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonOpenGLFunctions.c; sourceTree = "<group>"; };
 		BDFAE526148CDA84008C9E6F /* SyphonOpenGLFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonOpenGLFunctions.h; sourceTree = "<group>"; };
 		BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonDispatch.h; sourceTree = "<group>"; };
 		BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SyphonDispatch.c; sourceTree = "<group>"; };
-		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		E21003C41D85F9320066E934 /* SyphonIOSurfaceImageLegacy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonIOSurfaceImageLegacy.h; sourceTree = "<group>"; };
 		E21003C51D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonIOSurfaceImageLegacy.m; sourceTree = "<group>"; };
 		E21003C81D85FAD00066E934 /* SyphonIOSurfaceImageCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonIOSurfaceImageCore.h; sourceTree = "<group>"; };
@@ -161,6 +154,9 @@
 		E28D0CB21D95770C0036DF26 /* SyphonServerGLVertices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonServerGLVertices.h; sourceTree = "<group>"; };
 		E28D0CB31D95770C0036DF26 /* SyphonServerGLVertices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonServerGLVertices.m; sourceTree = "<group>"; };
 		E28E64522ACC8934005654C4 /* Syphon.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Syphon.docc; sourceTree = "<group>"; };
+		E28E64552ACCB30B005654C4 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		E28E64562ACCB30B005654C4 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		E28E64592ACCB3A2005654C4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SyphonMetalShaders.metal; sourceTree = "<group>"; };
 		E2C755A82964C32500C8B5D5 /* SyphonServerMetalTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServerMetalTypes.h; sourceTree = "<group>"; };
 		E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServerBase.h; sourceTree = "<group>"; };
@@ -181,10 +177,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E28E64582ACCB32A005654C4 /* IOSurface.framework in Frameworks */,
 				84E4D22A2385927B00E24F2D /* Metal.framework in Frameworks */,
-				8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */,
-				1B09069B11CB2FBD00BCBE41 /* IOSurface.framework in Frameworks */,
-				1B09069D11CB2FBD00BCBE41 /* OpenGL.framework in Frameworks */,
+				E28E64572ACCB325005654C4 /* OpenGL.framework in Frameworks */,
+				E28E645A2ACCB3A2005654C4 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,21 +204,10 @@
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
-				BDCB92AE127A3C7200C9E06E /* Documentation */,
-				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				84E4D2282385927B00E24F2D /* Frameworks */,
 			);
 			name = OpenVideoTap;
-			sourceTree = "<group>";
-		};
-		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
-				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
-			);
-			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
 		089C1665FE841158C02AAC07 /* Resources */ = {
@@ -247,26 +232,6 @@
 				1B09098411CD99F900BCBE41 /* Communication */,
 			);
 			name = Classes;
-			sourceTree = "<group>";
-		};
-		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				1B09069C11CB2FBD00BCBE41 /* OpenGL.framework */,
-				1B09069A11CB2FBD00BCBE41 /* IOSurface.framework */,
-				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
-			);
-			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
-				D2F7E79907B2D74100F64583 /* CoreData.framework */,
-				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		1B0906C211CBB0FB00BCBE41 /* Server */ = {
@@ -338,6 +303,9 @@
 		84E4D2282385927B00E24F2D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E28E64592ACCB3A2005654C4 /* Foundation.framework */,
+				E28E64562ACCB30B005654C4 /* OpenGL.framework */,
+				E28E64552ACCB30B005654C4 /* IOSurface.framework */,
 				84E4D2292385927B00E24F2D /* Metal.framework */,
 			);
 			name = Frameworks;
@@ -399,14 +367,6 @@
 				BD606D6711D2842D00E02702 /* SyphonServerDirectory.m */,
 			);
 			name = "Server Directory";
-			sourceTree = "<group>";
-		};
-		BDCB92AE127A3C7200C9E06E /* Documentation */ = {
-			isa = PBXGroup;
-			children = (
-				BDCB92B0127A3C9A00C9E06E /* footer.html */,
-			);
-			name = Documentation;
 			sourceTree = "<group>";
 		};
 		BDCB93DE127AE42C00C9E06E /* FrameworkDocumentation */ = {
@@ -511,7 +471,8 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1420;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Syphon" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -681,9 +642,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DOXYGEN_PATH = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -702,7 +663,6 @@
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				VALID_ARCHS = "i386 x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -729,8 +689,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DOXYGEN_PATH = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = SYPHON_CORE_SHARE;
@@ -744,7 +704,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				SDKROOT = macosx;
-				VALID_ARCHS = "i386 x86_64 arm64";
 			};
 			name = Release;
 		};
@@ -771,9 +730,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DOXYGEN_PATH = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -793,7 +752,6 @@
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				VALID_ARCHS = "i386 x86_64 arm64";
 			};
 			name = "Debug Messaging Only";
 		};
