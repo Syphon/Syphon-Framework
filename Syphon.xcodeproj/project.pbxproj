@@ -24,7 +24,7 @@
 /* Begin PBXBuildFile section */
 		1B09069B11CB2FBD00BCBE41 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B09069A11CB2FBD00BCBE41 /* IOSurface.framework */; };
 		1B09069D11CB2FBD00BCBE41 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B09069C11CB2FBD00BCBE41 /* OpenGL.framework */; };
-		1B0906C111CBB0F500BCBE41 /* SyphonOpenGLServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906BF11CBB0F500BCBE41 /* SyphonOpenGLServer.m */; };
+		1B0906C111CBB0F500BCBE41 /* SyphonOpenGLServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906BF11CBB0F500BCBE41 /* SyphonOpenGLServer.m */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		1B0906C711CBB1C100BCBE41 /* SyphonOpenGLClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0906C511CBB1C100BCBE41 /* SyphonOpenGLClient.m */; };
 		1B0906C911CBB1CE00BCBE41 /* Syphon.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C811CBB1CE00BCBE41 /* Syphon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B09098711CD9A1C00BCBE41 /* SyphonClientConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B09098511CD9A1C00BCBE41 /* SyphonClientConnectionManager.h */; settings = {ATTRIBUTES = (); }; };
@@ -60,9 +60,9 @@
 		BDFBD77D126F4D8800075A23 /* SyphonDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = BDFBD77B126F4D8800075A23 /* SyphonDispatch.h */; };
 		BDFBD77E126F4D8800075A23 /* SyphonDispatch.c in Sources */ = {isa = PBXBuildFile; fileRef = BDFBD77C126F4D8800075A23 /* SyphonDispatch.c */; };
 		E21003C61D85F9320066E934 /* SyphonIOSurfaceImageLegacy.h in Headers */ = {isa = PBXBuildFile; fileRef = E21003C41D85F9320066E934 /* SyphonIOSurfaceImageLegacy.h */; };
-		E21003C71D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m in Sources */ = {isa = PBXBuildFile; fileRef = E21003C51D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m */; };
+		E21003C71D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m in Sources */ = {isa = PBXBuildFile; fileRef = E21003C51D85F9320066E934 /* SyphonIOSurfaceImageLegacy.m */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		E21003CA1D85FAD00066E934 /* SyphonIOSurfaceImageCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E21003C81D85FAD00066E934 /* SyphonIOSurfaceImageCore.h */; };
-		E21003CB1D85FAD00066E934 /* SyphonIOSurfaceImageCore.m in Sources */ = {isa = PBXBuildFile; fileRef = E21003C91D85FAD00066E934 /* SyphonIOSurfaceImageCore.m */; };
+		E21003CB1D85FAD00066E934 /* SyphonIOSurfaceImageCore.m in Sources */ = {isa = PBXBuildFile; fileRef = E21003C91D85FAD00066E934 /* SyphonIOSurfaceImageCore.m */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		E218B67618436D38004FD9E3 /* SyphonOpenGLServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906BE11CBB0F500BCBE41 /* SyphonOpenGLServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E218B67718436D3B004FD9E3 /* SyphonOpenGLClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0906C411CBB1C100BCBE41 /* SyphonOpenGLClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E218B67818436D3F004FD9E3 /* SyphonOpenGLImage.h in Headers */ = {isa = PBXBuildFile; fileRef = BD038870122EA9FF007725FF /* SyphonOpenGLImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -78,19 +78,19 @@
 		E240463523F0B9EF004C14E9 /* SyphonSubclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = E240463423F0B9EF004C14E9 /* SyphonSubclassing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E28AAA8E29E5EB2F0016DB31 /* SyphonMetalClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 565D06A725CAA2FA0048C4DD /* SyphonMetalClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E28D0C9A1D8F43380036DF26 /* SyphonServerRendererCoreGL.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0C981D8F43380036DF26 /* SyphonServerRendererCoreGL.h */; };
-		E28D0C9B1D8F43380036DF26 /* SyphonServerRendererCoreGL.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0C991D8F43380036DF26 /* SyphonServerRendererCoreGL.m */; };
+		E28D0C9B1D8F43380036DF26 /* SyphonServerRendererCoreGL.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0C991D8F43380036DF26 /* SyphonServerRendererCoreGL.m */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		E28D0CA81D9296520036DF26 /* SyphonGLShader.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CA61D9296520036DF26 /* SyphonGLShader.h */; };
-		E28D0CA91D9296520036DF26 /* SyphonGLShader.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CA71D9296520036DF26 /* SyphonGLShader.m */; };
+		E28D0CA91D9296520036DF26 /* SyphonGLShader.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CA71D9296520036DF26 /* SyphonGLShader.m */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		E28D0CAC1D930B9F0036DF26 /* SyphonServerGLShader.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CAA1D930B9F0036DF26 /* SyphonServerGLShader.h */; };
 		E28D0CAD1D930B9F0036DF26 /* SyphonServerGLShader.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CAB1D930B9F0036DF26 /* SyphonServerGLShader.m */; };
 		E28D0CB01D9542B30036DF26 /* SyphonGLVertices.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CAE1D9542B30036DF26 /* SyphonGLVertices.h */; };
-		E28D0CB11D9542B30036DF26 /* SyphonGLVertices.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CAF1D9542B30036DF26 /* SyphonGLVertices.m */; };
+		E28D0CB11D9542B30036DF26 /* SyphonGLVertices.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CAF1D9542B30036DF26 /* SyphonGLVertices.m */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		E28D0CB41D95770C0036DF26 /* SyphonServerGLVertices.h in Headers */ = {isa = PBXBuildFile; fileRef = E28D0CB21D95770C0036DF26 /* SyphonServerGLVertices.h */; };
 		E28D0CB51D95770C0036DF26 /* SyphonServerGLVertices.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D0CB31D95770C0036DF26 /* SyphonServerGLVertices.m */; };
 		E2C755A72964C19D00C8B5D5 /* SyphonMetalShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */; };
 		E2CF04FE227398E600B8CD19 /* SyphonServerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E2CF04FF227398E600B8CD19 /* SyphonServerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = E2CF04FD227398E600B8CD19 /* SyphonServerBase.m */; };
-		E2D6C8881D8B470E00108260 /* SyphonCGL.c in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8861D8B470E00108260 /* SyphonCGL.c */; };
+		E2D6C8881D8B470E00108260 /* SyphonCGL.c in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C8861D8B470E00108260 /* SyphonCGL.c */; settings = {COMPILER_FLAGS = "-DGL_SILENCE_DEPRECATION"; }; };
 		E2D6C8891D8B470E00108260 /* SyphonCGL.h in Headers */ = {isa = PBXBuildFile; fileRef = E2D6C8871D8B470E00108260 /* SyphonCGL.h */; };
 		E2D6C88C1D8B4A6D00108260 /* SyphonServerRendererGL.h in Headers */ = {isa = PBXBuildFile; fileRef = E2D6C88A1D8B4A6D00108260 /* SyphonServerRendererGL.h */; };
 		E2D6C88D1D8B4A6D00108260 /* SyphonServerRendererGL.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6C88B1D8B4A6D00108260 /* SyphonServerRendererGL.m */; };
