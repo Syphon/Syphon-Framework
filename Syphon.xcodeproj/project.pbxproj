@@ -157,6 +157,7 @@
 		E28E64552ACCB30B005654C4 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		E28E64562ACCB30B005654C4 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		E28E64592ACCB3A2005654C4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E28E645B2ACCB473005654C4 /* Syphon.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = Syphon.modulemap; sourceTree = "<group>"; };
 		E2C755A62964C19D00C8B5D5 /* SyphonMetalShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SyphonMetalShaders.metal; sourceTree = "<group>"; };
 		E2C755A82964C32500C8B5D5 /* SyphonServerMetalTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServerMetalTypes.h; sourceTree = "<group>"; };
 		E2CF04FC227398E600B8CD19 /* SyphonServerBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonServerBase.h; sourceTree = "<group>"; };
@@ -216,6 +217,7 @@
 				BD1718201224308200CB2E18 /* Exported_Symbols.exp */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
+				E28E645B2ACCB473005654C4 /* Syphon.modulemap */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -578,6 +580,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
 				EXPORTED_SYMBOLS_FILE = $SRCROOT/Exported_Symbols.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -587,6 +590,9 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MODULEMAP_FILE = Syphon.modulemap;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
@@ -607,12 +613,16 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
 				EXPORTED_SYMBOLS_FILE = $SRCROOT/Exported_Symbols.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Syphon_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MODULEMAP_FILE = Syphon.modulemap;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
@@ -769,6 +779,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
 				EXPORTED_SYMBOLS_FILE = $SRCROOT/Exported_Symbols.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -778,6 +789,9 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = NO;
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MODULEMAP_FILE = Syphon.modulemap;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.v002.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = Syphon;
 				WRAPPER_EXTENSION = framework;
