@@ -12,7 +12,7 @@ If your new format is not an Objective C class, implement a new image class by s
 
 ### Servers
 
-Implement a server by subclassing ``SyphonServerBase``. Add methods to your subclass to publish frames. When needed, call ``SyphonServerBase/copySurfaceForWidth:height:options:`` to obtain an `IOSurfaceRef`. When you have updated the surface, call ``SyphonServerBase/publish``. Add a method named `-newFrameImage` which returns an instance of your ``SyphonImageBase`` subclass (or the new type directly).
+Implement a server by subclassing ``SyphonServerBase``. Add methods to your subclass to publish frames. When needed, call ``SyphonServerBase/newSurfaceForWidth:height:options:`` to obtain an `IOSurfaceRef`. When you have updated the surface, call ``SyphonServerBase/publish``. Add a method named `-newFrameImage` which returns an instance of your ``SyphonImageBase`` subclass (or the new type directly).
 
 ### Clients
 

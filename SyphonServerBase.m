@@ -239,7 +239,7 @@ static void finalizer(void)
     }
 }
 
-- (IOSurfaceRef)copySurfaceForWidth:(size_t)width height:(size_t)height options:(NSDictionary<NSString *, id> *)options
+- (IOSurfaceRef)newSurfaceForWidth:(size_t)width height:(size_t)height options:(NSDictionary<NSString *, id> *)options
 {
     // TODO: are we locking here?
     if (!_surface || IOSurfaceGetWidth(_surface) != width || IOSurfaceGetHeight(_surface) != height)

@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param options currently ignored, pass nil
  @returns an existing or new IOSurface sized for the given dimensions - to be released by the caller using CFRelease
  */
-- (nullable IOSurfaceRef)copySurfaceForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
+- (nullable IOSurfaceRef)newSurfaceForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
 
 /*!
  Subclasses may call this to release any current IOSurface

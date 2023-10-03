@@ -97,7 +97,7 @@
                                                                                                  height:size.height
                                                                                               mipmapped:NO];
             descriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
-            IOSurfaceRef surface = [self copySurfaceForWidth:size.width height:size.height options:nil];
+            IOSurfaceRef surface = [self newSurfaceForWidth:size.width height:size.height options:nil];
             if (surface)
             {
                 _surfaceTexture = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];

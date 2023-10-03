@@ -261,9 +261,9 @@
 #if !SYPHON_DEBUG_NO_DRAWING
 	// init our texture and IOSurface
 
-    // copySurfaceForWidth:height: returns a retained IOSurface, we release it
+    // newSurfaceForWidth:height: returns a retained IOSurface, we release it
     // once we are done with it
-    IOSurfaceRef surface = [self copySurfaceForWidth:size.width height:size.height options:nil];
+    IOSurfaceRef surface = [self newSurfaceForWidth:size.width height:size.height options:nil];
 
     _surfaceTexture = [_renderer newImageForSurface:surface];
 
