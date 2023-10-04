@@ -69,10 +69,10 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
     {
         _lock = OS_UNFAIR_LOCK_INIT;
 
-        _connectionManager = [[SyphonClientConnectionManager alloc] initWithServerDescription:description];
-
         _handler = [handler copy]; // copy don't retain
         _serverDescription = description;
+
+        _connectionManager = [[SyphonClientConnectionManager alloc] initWithServerDescription:description];
 
         [[SyphonServerDirectory sharedDirectory] addObserver:self
                                                   forKeyPath:@"servers"
