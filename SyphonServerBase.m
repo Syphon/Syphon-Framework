@@ -266,6 +266,25 @@ static void finalizer(void)
     return _surface;
 }
 
+- (void)publishSurface:(IOSurfaceRef)surface
+{
+    if (_surface)
+    {
+        CFRelease(_surface);
+    }
+    
+    _surface = surface;
+    
+    if (_surface)
+    {
+        // Return retained (caller releases)
+        CFRetain(_surface);
+        _pushPending = true;
+    }
+    
+    [self publish];
+}
+
 - (void)publish
 {
     if (_pushPending)
@@ -276,6 +295,7 @@ static void finalizer(void)
     }
     [(SyphonServerConnectionManager *)_connectionManager publishNewFrame];
 }
+
 #pragma mark Notification Handling for Server Presence
 /*
  Broadcast and discovery is done via NSDistributedNotificationCenter. Servers notify announce, change (currently only affects name) and retirement.
