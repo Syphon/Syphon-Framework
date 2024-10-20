@@ -296,7 +296,7 @@ static void _SyphonDispatchSourceRelease(SyphonDispatchSourceRef source, bool on
 				else
                 {
                     // another thread may have deleted a channel, so update the count
-                    channelC = atomic_load(&mSourceC);
+                    channelC = atomic_load(&mChannelC);
                 }
 			}
 			
