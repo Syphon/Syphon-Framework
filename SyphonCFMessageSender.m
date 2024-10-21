@@ -63,8 +63,6 @@
 			//// IMPORTANT																					//
 			//// Do not refer to any ivars in this block, or self will be retained, causing a retain-loop	//
 			SyphonCFMessageSender *blockSafeSelf = weakSelf;
-			if (blockSafeSelf == nil)
-				return;
 			CFDataRef returned;
 			SInt32 result;
 			uint32_t mType;
