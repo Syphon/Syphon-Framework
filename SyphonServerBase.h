@@ -28,6 +28,7 @@
 */
 
 #import <Foundation/Foundation.h>
+#import <IOSurface/IOSurface.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -63,6 +64,16 @@ extern NSString * const SyphonServerOptionIsPrivate;
  YES if clients are currently attached, NO otherwise. If you generate frames frequently (for instance on a display-link timer), you may choose to test this and only call publishFrameTexture:textureTarget:imageRegion:textureDimensions:flipped: when clients are attached.
  */
 @property (readonly) BOOL hasClients;
+
+
+/*!
+ Direclty publish an IOSurface you own. Note your surface MUST have kIOSurfaceIsGlobal property set to true, otherwise you will fail to publish and silently die
+ This API  circumvents normal Syphon Server operations, and does not opt in to IOSurface re-use, which makes this sub optimal in most, but not all situations.
+ 
+ This function will retain the surface until the next publishSurface: call, at which point the surface will be released, and the new incoming surface will be retained. 
+ */
+- (void)publishSurface:(IOSurfaceRef)surface;
+
 
 /*!
  Stops the server instance. Use of this method is optional and releasing all references to the server has the same effect.

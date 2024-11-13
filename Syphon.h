@@ -33,6 +33,7 @@
 #import <Syphon/SyphonOpenGLServer.h>
 #import <Syphon/SyphonOpenGLClient.h>
 #import <Syphon/SyphonOpenGLImage.h>
+#import <Syphon/SyphonServerBase.h>
 
 /*
  Deprecated headers
