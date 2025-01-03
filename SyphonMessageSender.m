@@ -64,6 +64,7 @@
 			// SyphonMessageSender init here
 			_handler = [handler copy];
 			_name = [name copy];
+            _isValid = YES;
 		}
 	}
 	return self;
