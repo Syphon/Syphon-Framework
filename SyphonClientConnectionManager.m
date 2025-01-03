@@ -96,7 +96,7 @@ static void SyphonClientPrivateRemoveInstance(id instance, NSString *uuid)
     os_unfair_lock _lock;
 }
 
-- (id)initWithServerDescription:(NSDictionary *)description
+- (id)initWithServerDescription:(NSDictionary<NSString *, id> *)description
 {
     self = [super init];
 	if (self)

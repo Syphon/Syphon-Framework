@@ -82,7 +82,7 @@
 	return [self initWithUUID:nil options:nil];
 }
 
-- (id)initWithUUID:(NSString *)uuid options:(NSDictionary *)options
+- (id)initWithUUID:(NSString *)uuid options:(NSDictionary<NSString *, id> *)options
 {
     self = [super init];
     if (self)
@@ -115,7 +115,7 @@
 	});
 }
 
-- (NSDictionary *)surfaceDescription
+- (NSDictionary<NSString *, id<NSCoding>> *)surfaceDescription
 {
 	return [NSDictionary dictionaryWithObject:SyphonSurfaceTypeIOSurface forKey:SyphonSurfaceType];
 }

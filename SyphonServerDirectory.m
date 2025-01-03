@@ -54,7 +54,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 @implementation SyphonServerDirectory
 {
 @private
-    NSMutableArray *_servers;
+    NSMutableArray<NSDictionary<NSString *, id<NSCoding>> *> *_servers;
     pthread_mutex_t _generalLock;
     pthread_mutex_t _mutateLock;
     NSMutableSet *_pings;
@@ -121,15 +121,15 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 	pthread_mutex_destroy(&_mutateLock);
 }
 
-- (NSArray *)servers
+- (NSArray<NSDictionary<NSString *, id<NSCoding>> *> *)servers
 {
 	pthread_mutex_lock(&_generalLock);
-	NSArray *array = [NSArray arrayWithArray:_servers];
+	NSArray<NSDictionary<NSString *, id<NSCoding>> *> *array = [NSArray arrayWithArray:_servers];
 	pthread_mutex_unlock(&_generalLock);
 	return array;
 }
 
-- (NSArray *)serversMatchingName:(NSString *)name appName:(NSString *)appname
+- (NSArray<NSDictionary<NSString *, id<NSCoding>> *> *)serversMatchingName:(NSString *)name appName:(NSString *)appname
 {
 	if ([name length] == 0)
 	{
@@ -149,7 +149,7 @@ NSString * const SyphonServerRetireNotification = @"SyphonServerRetireNotificati
 			return NO;
 		}
 	}];
-	NSArray *array = [_servers objectsAtIndexes:indexes];
+	NSArray<NSDictionary<NSString *, id<NSCoding>> *> *array = [_servers objectsAtIndexes:indexes];
 	pthread_mutex_unlock(&_generalLock);
 	return array;
 }

@@ -42,9 +42,9 @@
 
 @dynamic isValid, serverDescription, hasNewFrame;
 
-- (id)initWithServerDescription:(NSDictionary *)description
+- (id)initWithServerDescription:(NSDictionary<NSString *, id> *)description
                          device:(id<MTLDevice>)theDevice
-                        options:(NSDictionary *)options
+                        options:(NSDictionary<NSString *, id> *)options
                    newFrameHandler:(void (^)(SyphonMetalClient *client))handler
 {
     self = [super initWithServerDescription:description options:options newFrameHandler:handler];

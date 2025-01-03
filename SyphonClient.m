@@ -34,7 +34,10 @@
 
 @implementation SyphonClient
 
-- (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(NSDictionary *)options newFrameHandler:(void (^)(SyphonClient * _Nonnull))handler
+- (id)initWithServerDescription:(NSDictionary<NSString *, id> *)description
+						context:(CGLContextObj)context
+						options:(NSDictionary<NSString *, id> *)options
+				newFrameHandler:(void (^)(SyphonClient * _Nonnull))handler
 {
     self = [super initWithServerDescription:description
                                     context:context

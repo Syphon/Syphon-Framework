@@ -62,7 +62,9 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
     return [self initWithServerDescription:@{} options:nil newFrameHandler:nil];
 }
 
-- (instancetype)initWithServerDescription:(NSDictionary<NSString *, id> *)description options:(nullable NSDictionary<NSString *, id> *)options newFrameHandler:(nullable void (^)(id client))handler
+- (instancetype)initWithServerDescription:(NSDictionary<NSString *, id> *)description
+								  options:(nullable NSDictionary<NSString *, id> *)options
+						  newFrameHandler:(nullable void (^)(id client))handler
 {
     self = [super init];
     if (self)
@@ -147,7 +149,7 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
     return result;
 }
 
-- (NSDictionary *)serverDescription
+- (NSDictionary<NSString *, id> *)serverDescription
 {
     os_unfair_lock_lock(&_lock);
     NSDictionary *description = _serverDescription;

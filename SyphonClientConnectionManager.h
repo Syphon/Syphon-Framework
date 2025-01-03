@@ -54,7 +54,7 @@
 @end
 
 @interface SyphonClientConnectionManager : NSObject
-- (id)initWithServerDescription:(NSDictionary *)description;
+- (id)initWithServerDescription:(NSDictionary<NSString *, id> *)description;
 @property (readonly) BOOL isValid;
 - (void)addInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;     // Must be
 - (void)removeInfoClient:(id <SyphonInfoReceiving>)client isFrameClient:(BOOL)frameClient;  // paired

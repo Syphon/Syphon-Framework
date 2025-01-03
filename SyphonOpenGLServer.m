@@ -63,7 +63,7 @@
 @dynamic serverDescription;
 @dynamic hasClients;
 
-+ (GLuint)integerValueForKey:(NSString *)key fromOptions:(NSDictionary *)options
++ (GLuint)integerValueForKey:(NSString *)key fromOptions:(NSDictionary<NSString *, id> *)options
 {
     NSNumber *number = [options objectForKey:key];
     if ([number respondsToSelector:@selector(unsignedIntValue)])
@@ -83,7 +83,7 @@
     return self;
 }
 
-- (instancetype)initWithName:(NSString*)serverName context:(CGLContextObj)context options:(NSDictionary *)options
+- (instancetype)initWithName:(NSString*)serverName context:(CGLContextObj)context options:(NSDictionary<NSString *, id> *)options
 {
     self = [super initWithName:serverName options:options];
 	if(self)

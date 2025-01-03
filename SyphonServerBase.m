@@ -68,7 +68,7 @@ static void finalizer(void)
     return [self initWithName:@"" options:nil];
 }
 
-- (instancetype)initWithName:(NSString *)serverName options:(NSDictionary *)options
+- (instancetype)initWithName:(NSString *)serverName options:(NSDictionary<NSString *, id> *)options
 {
     self = [super init];
     if (self)
@@ -144,16 +144,16 @@ static void finalizer(void)
     os_unfair_lock_lock(&_mdLock);
     _name = newName;
     os_unfair_lock_unlock(&_mdLock);
-    [(SyphonServerConnectionManager *)_connectionManager setName:newName];
+    [_connectionManager setName:newName];
     if (_broadcasts)
     {
         [self broadcastServerUpdate];
     }
 }
 
-- (NSDictionary *)serverDescription
+- (NSDictionary<NSString *, id<NSCoding>> *)serverDescription
 {
-    NSDictionary *surface = ((SyphonServerConnectionManager *)_connectionManager).surfaceDescription;
+    NSDictionary<NSString *, id<NSCoding>> *surface = _connectionManager.surfaceDescription;
     if (!surface) surface = [NSDictionary dictionary];
     /*
      Getting the app name: helper tasks, command-line tools, etc, don't have a NSRunningApplication instance,
@@ -177,7 +177,7 @@ static void finalizer(void)
 
 - (BOOL)hasClients
 {
-    return ((SyphonServerConnectionManager *)_connectionManager).hasClients;
+    return _connectionManager.hasClients;
 }
 
 - (void)stop
@@ -189,8 +189,8 @@ static void finalizer(void)
 {
     if (_connectionManager)
     {
-        [(SyphonServerConnectionManager *)_connectionManager removeObserver:self forKeyPath:@"hasClients"];
-        [(SyphonServerConnectionManager *)_connectionManager stop];
+        [_connectionManager removeObserver:self forKeyPath:@"hasClients"];
+        [_connectionManager stop];
         _connectionManager = nil;
     }
     if (_broadcasts)
@@ -271,10 +271,10 @@ static void finalizer(void)
     if (_pushPending)
     {
         // Push the new surface ID to clients
-        [(SyphonServerConnectionManager *)_connectionManager setSurfaceID:IOSurfaceGetID(_surface)];
+        [_connectionManager setSurfaceID:IOSurfaceGetID(_surface)];
         _pushPending = NO;
     }
-    [(SyphonServerConnectionManager *)_connectionManager publishNewFrame];
+    [_connectionManager publishNewFrame];
 }
 #pragma mark Notification Handling for Server Presence
 /*

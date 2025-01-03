@@ -57,7 +57,10 @@
 }
 #endif
 
-- (id)initWithServerDescription:(NSDictionary *)description context:(CGLContextObj)context options:(NSDictionary *)options newFrameHandler:(void (^)(SyphonOpenGLClient *client))handler
+- (id)initWithServerDescription:(NSDictionary<NSString *, id> *)description
+						context:(CGLContextObj)context
+						options:(NSDictionary<NSString *, id> *)options
+				newFrameHandler:(void (^)(SyphonOpenGLClient *client))handler
 {
     self = [super initWithServerDescription:description options:options newFrameHandler:handler];
 	if (self)

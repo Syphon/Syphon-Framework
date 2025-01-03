@@ -46,7 +46,7 @@
 
 #pragma mark - Lifecycle
 
-- (id)initWithName:(NSString *)name device:(id<MTLDevice>)theDevice options:(NSDictionary *)options
+- (id)initWithName:(NSString *)name device:(id<MTLDevice>)theDevice options:(NSDictionary<NSString *, id> *)options
 {
     self = [super initWithName:name options:options];
     if( self )

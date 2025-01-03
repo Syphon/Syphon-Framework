@@ -37,8 +37,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 @interface SyphonServerConnectionManager : NSObject
-- (id)initWithUUID:(NSString *)uuid options:(NSDictionary *)options;
-@property (readonly) NSDictionary *surfaceDescription;
+- (id)initWithUUID:(NSString *)uuid options:(NSDictionary<NSString *, id> *)options;
+@property (readonly) NSDictionary<NSString *, id<NSCoding>> *surfaceDescription;
 /*
  - (BOOL)start
  
