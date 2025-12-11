@@ -85,11 +85,11 @@ vertex RasterizerData textureToScreenVertexShader(uint vertexID [[ vertex_id ]],
 // Fragment shader with linear filtering
 //
 // Metal 4 Optimizations:
-// - Half-precision color processing (native on Apple GPUs)
 // - Efficient texture sampling with linear filtering
 // - Optimized for tile memory bandwidth
+// - Compatible with BGRA8Unorm and other 8-bit normalized formats
 fragment half4 textureToScreenSamplingShader(RasterizerData in [[stage_in]],
-                                             texture2d<half> colorTexture [[ texture(SYPHONTextureIndexZero) ]])
+                                             texture2d<float> colorTexture [[ texture(SYPHONTextureIndexZero) ]])
 {
     // Linear sampler for high-quality scaling
     // Metal 4 optimizes sampler state for reduced overhead
@@ -98,11 +98,11 @@ fragment half4 textureToScreenSamplingShader(RasterizerData in [[stage_in]],
                                      address::clamp_to_edge,
                                      coord::normalized);
 
-    // Sample with half-precision - native format for Apple GPU tile memory
+    // Sample texture and convert to half-precision for output
     // Metal 4's improved compilation optimizes this sampling operation
-    const half4 colorSample = colorTexture.sample(textureSampler, float2(in.textureCoordinate));
+    const float4 colorSample = colorTexture.sample(textureSampler, float2(in.textureCoordinate));
 
-    return colorSample;
+    return half4(colorSample);
 }
 
 // Fragment shader with nearest-neighbor sampling (pixel-perfect)
@@ -111,8 +111,9 @@ fragment half4 textureToScreenSamplingShader(RasterizerData in [[stage_in]],
 // - Zero filtering overhead for 1:1 pixel copies
 // - Optimized for memcpy-like operations in tile memory
 // - Reduced bandwidth usage on unified memory architecture
+// - Compatible with BGRA8Unorm and other 8-bit normalized formats
 fragment half4 textureToScreenNearestShader(RasterizerData in [[stage_in]],
-                                           texture2d<half> colorTexture [[ texture(SYPHONTextureIndexZero) ]])
+                                           texture2d<float> colorTexture [[ texture(SYPHONTextureIndexZero) ]])
 {
     // Nearest-neighbor sampler for pixel-perfect copying
     // Metal 4 recognizes this pattern and uses fastest path
@@ -121,6 +122,6 @@ fragment half4 textureToScreenNearestShader(RasterizerData in [[stage_in]],
                                      address::clamp_to_edge,
                                      coord::normalized);
 
-    const half4 colorSample = colorTexture.sample(textureSampler, float2(in.textureCoordinate));
-    return colorSample;
+    const float4 colorSample = colorTexture.sample(textureSampler, float2(in.textureCoordinate));
+    return half4(colorSample);
 }
