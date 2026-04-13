@@ -42,13 +42,37 @@
     if( self )
     {
         NSError *error = NULL;
-        NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-        id<MTLLibrary> defaultLibrary = [device newDefaultLibraryWithBundle:bundle error:&error];
-        if(error)
+
+        // Compile shaders from source at runtime.  When Syphon is vendored as
+        // source (not a framework bundle) there is no pre-compiled .metallib,
+        // so newDefaultLibraryWithBundle: returns nil.
+        NSString *shaderSrc = @
+            "#include <metal_stdlib>\n"
+            "using namespace metal;\n"
+            "typedef struct { float4 clipSpacePosition [[position]]; float2 textureCoordinate; } RasterizerData;\n"
+            "vertex RasterizerData textureToScreenVertexShader(uint vertexID [[ vertex_id ]],\n"
+            "    constant float2 *vertexArray [[ buffer(0) ]],\n"
+            "    constant vector_uint2 *viewportSizePointer [[ buffer(1) ]]) {\n"
+            "    RasterizerData out;\n"
+            "    float2 pixelSpacePosition = vertexArray[vertexID * 2];\n"
+            "    float2 viewportSize = float2(*viewportSizePointer);\n"
+            "    out.clipSpacePosition.xy = pixelSpacePosition / (viewportSize / 2.0);\n"
+            "    out.clipSpacePosition.z = 0.0; out.clipSpacePosition.w = 1.0;\n"
+            "    out.textureCoordinate = vertexArray[vertexID * 2 + 1];\n"
+            "    return out;\n"
+            "}\n"
+            "fragment float4 textureToScreenSamplingShader(RasterizerData in [[stage_in]],\n"
+            "    texture2d<half> colorTexture [[ texture(0) ]]) {\n"
+            "    constexpr sampler textureSampler(mag_filter::nearest, min_filter::nearest);\n"
+            "    return float4(colorTexture.sample(textureSampler, in.textureCoordinate));\n"
+            "}\n";
+        id<MTLLibrary> defaultLibrary = [device newLibraryWithSource:shaderSrc options:nil error:&error];
+        if(!defaultLibrary)
         {
-            SYPHONLOG(@"Metal library could not be loaded:%@", error);
+            SYPHONLOG(@"Metal shader compilation failed:%@", error);
+            return nil;
         }
-        
+
         // Load the vertex/shader function from the library
         id <MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"textureToScreenVertexShader"];
         id <MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"textureToScreenSamplingShader"];
