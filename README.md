@@ -16,15 +16,15 @@ See https://docs.google.com/document/d/1_MKwKu7VuTFuePBDCQe1Pr8EFBxEzwV9hszeseRS
    - SyphonPixelFormatBGRA8Unorm
    - SyphonPixelFormatRGBA16Float
    - SyphonPixelFormatRGBA32Float
-
+     
 * SyphonServerOptionColorPrimariesKey
-   -SyphonColorPrimariesBT601NTSC
-   -SyphonColorPrimariesBT601PAL
-   -SyphonColorPrimariesBT709
-   -SyphonColorPrimariesBT2020
-   -SyphonColorPrimariesP3D65
-   -SyphonColorPrimariesPassthrough
-
+   - SyphonColorPrimariesBT601NTSC
+   - SyphonColorPrimariesBT601PAL
+   - SyphonColorPrimariesBT709
+   - SyphonColorPrimariesBT2020
+   - SyphonColorPrimariesP3D65
+   - SyphonColorPrimariesPassthrough
+     
 * SyphonServerOptionTransferFunctionKey
    - SyphonTransferFunctionLinear
    - SyphonTransferFunctionSRGB
@@ -33,7 +33,7 @@ See https://docs.google.com/document/d/1_MKwKu7VuTFuePBDCQe1Pr8EFBxEzwV9hszeseRS
    - SyphonTransferFunctionPQ
    - SyphonTransferFunctionHLG
    - SyphonTransferFunctionPassthrough
-
+     
 * SyphonServerOptionColorRangeKey
    - SyphonColorRangeFull
    - SyphonColorRangeVideo
