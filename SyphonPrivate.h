@@ -27,10 +27,17 @@
      SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define kSyphonDictionaryVersion 0U
+// Syphon Framework versions prior to 1.0
+// Wupports OpenGl and Metal BGRa8 Only
+#define kSyphonDictionaryVersionLegacy 0U
+
+#define kSyphonDictionaryVersion 1U
+
 
 #ifdef __OBJC__
 
+#import <CoreVideo/CoreVideo.h>
+#import <Metal/Metal.h>
 #import <stdatomic.h> // For SyphonSafeBool
 
 #define kSyphonIdentifier @"info.v002.Syphon"
@@ -53,14 +60,53 @@ extern NSString * const SyphonServerDescriptionSurfacesKey; // An NSArray of NSD
 // Surface-description (dictionary for SyphonServerDescriptionSurfacesKey) keys // and content
 extern NSString * const SyphonSurfaceType;
 extern NSString * const SyphonSurfaceTypeIOSurface;
+extern NSString * const SyphonSurfaceDescriptionPixelFormatKey;
+extern NSString * const SyphonSurfaceDescriptionColorPrimariesKey;
+extern NSString * const SyphonSurfaceDescriptionTransferFunctionKey;
+extern NSString * const SyphonSurfaceDescriptionColorRangeKey;
 
 // SyphonServer options
 extern NSString * const SyphonServerOptionIsPrivate;
 extern NSString * const SyphonServerOptionAntialiasSampleCount;
 extern NSString * const SyphonServerOptionDepthBufferResolution;
 extern NSString * const SyphonServerOptionStencilBufferResolution;
+extern NSString * const SyphonMetalServerOptionPixelFormat;
+extern NSString * const SyphonMetalServerOptionColorPrimaries;
+extern NSString * const SyphonMetalServerOptionTransferFunction;
+extern NSString * const SyphonMetalServerOptionColorRange;
+
+extern NSString * const SyphonPixelFormatBGRA8;
+extern NSString * const SyphonPixelFormatRGBA16Float;
+extern NSString * const SyphonPixelFormatRGBA32Float;
+
+extern NSString * const SyphonColorPrimariesBT601NTSC;
+extern NSString * const SyphonColorPrimariesBT601PAL;
+extern NSString * const SyphonColorPrimariesBT709;
+extern NSString * const SyphonColorPrimariesBT2020;
+extern NSString * const SyphonColorPrimariesP3D65;
+extern NSString * const SyphonColorPrimariesPassthrough;
+
+extern NSString * const SyphonTransferFunctionLinear;
+extern NSString * const SyphonTransferFunctionSRGB;
+extern NSString * const SyphonTransferFunctionGamma22;
+extern NSString * const SyphonTransferFunctionBT1886;
+extern NSString * const SyphonTransferFunctionPQ;
+extern NSString * const SyphonTransferFunctionHLG;
+extern NSString * const SyphonTransferFunctionPassthrough;
+
+extern NSString * const SyphonColorRangeFull;
+extern NSString * const SyphonColorRangeVideo;
+extern NSString * const SyphonColorRangeWide;
+extern NSString * const SyphonColorRangePassthrough;
 
 NSString *SyphonCreateUUIDString(void) NS_RETURNS_RETAINED;
+
+NSDictionary<NSString *, id> *SyphonIOSurfaceDescriptionFromServerDescription(NSDictionary<NSString *, id> *description);
+MTLPixelFormat SyphonMTLPixelFormatFromName(NSString *formatName);
+NSString *SyphonNameFromMTLPixelFormat(MTLPixelFormat pixelFormat);
+OSType SyphonCVPixelFormatFromMTLPixelFormat(MTLPixelFormat pixelFormat);
+NSUInteger SyphonBytesPerElementFromMTLPixelFormat(MTLPixelFormat pixelFormat);
+BOOL SyphonColorHintOptionsAreValid(NSDictionary<NSString *, id> *options);
 
 typedef atomic_int_fast32_t SyphonSafeBool;
 

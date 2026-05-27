@@ -39,6 +39,54 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString * const SyphonServerOptionIsPrivate;
 
 /*!
+ @relates SyphonMetalServer
+ Optional `NSString` specifying the pixel format used for the Metal server's published IOSurface. If omitted, the server uses legacy BGRA8 behavior.
+*/
+extern NSString * const SyphonMetalServerOptionPixelFormat;
+
+/*!
+ @relates SyphonMetalServer
+ Optional advisory `NSString` describing the color primaries of the published surface. This is a hint only; Syphon does not apply color management.
+*/
+extern NSString * const SyphonMetalServerOptionColorPrimaries;
+
+/*!
+ @relates SyphonMetalServer
+ Optional advisory `NSString` describing the transfer function of the published surface. This is a hint only; Syphon does not apply color management.
+*/
+extern NSString * const SyphonMetalServerOptionTransferFunction;
+
+/*!
+ @relates SyphonMetalServer
+ Optional advisory `NSString` describing the numeric/color range of the published surface. This is a hint only; Syphon does not apply color management.
+*/
+extern NSString * const SyphonMetalServerOptionColorRange;
+
+extern NSString * const SyphonPixelFormatBGRA8;
+extern NSString * const SyphonPixelFormatRGBA16Float;
+extern NSString * const SyphonPixelFormatRGBA32Float;
+
+extern NSString * const SyphonColorPrimariesBT601NTSC;
+extern NSString * const SyphonColorPrimariesBT601PAL;
+extern NSString * const SyphonColorPrimariesBT709;
+extern NSString * const SyphonColorPrimariesBT2020;
+extern NSString * const SyphonColorPrimariesP3D65;
+extern NSString * const SyphonColorPrimariesPassthrough;
+
+extern NSString * const SyphonTransferFunctionLinear;
+extern NSString * const SyphonTransferFunctionSRGB;
+extern NSString * const SyphonTransferFunctionGamma22;
+extern NSString * const SyphonTransferFunctionBT1886;
+extern NSString * const SyphonTransferFunctionPQ;
+extern NSString * const SyphonTransferFunctionHLG;
+extern NSString * const SyphonTransferFunctionPassthrough;
+
+extern NSString * const SyphonColorRangeFull;
+extern NSString * const SyphonColorRangeVideo;
+extern NSString * const SyphonColorRangeWide;
+extern NSString * const SyphonColorRangePassthrough;
+
+/*!
  A server handles the publishing of frames from one video source to any number of clients.
  
  Frames are published by passing in an existing Metal texture.
@@ -54,7 +102,7 @@ extern NSString * const SyphonServerOptionIsPrivate;
 
  @param name Non-unique human readable server name. This is not required and may be `nil`, but is usually used by clients in their UI to aid identification.
  @param device The `MTLDevice` that textures will be valid and available on for publishing.
- @param options A dictionary containing key-value pairs to specify options for the server. The only currently supported option is SyphonServerOptionIsPrivate. See its description for details.
+ @param options A dictionary containing key-value pairs to specify options for the server. Supported options are `SyphonServerOptionIsPrivate`, `SyphonMetalServerOptionPixelFormat`, and the optional advisory color hint keys. See their descriptions for details.
  @returns A newly intialized SyphonMetalServer. Nil on failure.
 */
 - (id)initWithName:(nullable NSString*)name device:(id<MTLDevice>)device options:(nullable NSDictionary<NSString *, id> *)options;

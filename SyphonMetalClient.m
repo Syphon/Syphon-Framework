@@ -28,6 +28,7 @@
  */
 
 #import "SyphonMetalClient.h"
+#import "SyphonPrivate.h"
 #import "SyphonSubclassing.h"
 #import <os/lock.h>
 #import <stdatomic.h>
@@ -56,6 +57,23 @@
         atomic_store(&_frameValid, false);
     }
     return self;
+}
+
+- (BOOL)supportsServerDescription:(NSDictionary<NSString *, id> *)description
+{
+    NSNumber *dictionaryVersion = description[SyphonServerDescriptionDictionaryVersionKey];
+    if (dictionaryVersion == nil || [dictionaryVersion unsignedIntValue] > 1U)
+    {
+        return NO;
+    }
+
+    NSDictionary<NSString *, id> *surfaceDescription = SyphonIOSurfaceDescriptionFromServerDescription(description);
+    if (surfaceDescription == nil)
+    {
+        return NO;
+    }
+
+    return SyphonMTLPixelFormatFromName(surfaceDescription[SyphonSurfaceDescriptionPixelFormatKey]) != MTLPixelFormatInvalid;
 }
 
 - (void)dealloc
@@ -95,7 +113,9 @@
         IOSurfaceRef surface = [self newSurface];
         if (surface != nil)
         {
-            MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:IOSurfaceGetWidth(surface) height:IOSurfaceGetHeight(surface) mipmapped:NO];
+            NSDictionary<NSString *, id> *surfaceDescription = SyphonIOSurfaceDescriptionFromServerDescription(self.serverDescription);
+            MTLPixelFormat pixelFormat = SyphonMTLPixelFormatFromName(surfaceDescription[SyphonSurfaceDescriptionPixelFormatKey]);
+            MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:pixelFormat width:IOSurfaceGetWidth(surface) height:IOSurfaceGetHeight(surface) mipmapped:NO];
             _frame = [_device newTextureWithDescriptor:descriptor iosurface:surface plane:0];
 
             CFRelease(surface);

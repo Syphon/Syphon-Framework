@@ -57,6 +57,30 @@ extern NSString * const SyphonServerDescriptionIconKey;
 
 /*!
  @relates SyphonServerDirectory
+ The object for this key is a NSString describing the IOSurface pixel format for an entry in ``SyphonServerDescriptionSurfacesKey``. If omitted, clients should assume the legacy BGRA8 surface format.
+*/
+extern NSString * const SyphonSurfaceDescriptionPixelFormatKey;
+
+/*!
+ @relates SyphonServerDirectory
+ Optional advisory color metadata for a surface description. If present, the object is a NSString describing the color primaries of the surface data.
+*/
+extern NSString * const SyphonSurfaceDescriptionColorPrimariesKey;
+
+/*!
+ @relates SyphonServerDirectory
+ Optional advisory color metadata for a surface description. If present, the object is a NSString describing the transfer function of the surface data.
+*/
+extern NSString * const SyphonSurfaceDescriptionTransferFunctionKey;
+
+/*!
+ @relates SyphonServerDirectory
+ Optional advisory color metadata for a surface description. If present, the object is a NSString describing the numeric/color range of the surface data.
+*/
+extern NSString * const SyphonSurfaceDescriptionColorRangeKey;
+
+/*!
+ @relates SyphonServerDirectory
  A new SyphonServer is available on the system. The notification object is the shared SyphonServerDirectory instance. The user info dictionary describes the server and may contain SyphonServerDescription keys.
 */
 extern NSString * const SyphonServerAnnounceNotification;

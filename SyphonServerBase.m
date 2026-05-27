@@ -153,7 +153,7 @@ static void finalizer(void)
 
 - (NSDictionary<NSString *, id<NSCoding>> *)serverDescription
 {
-    NSDictionary<NSString *, id<NSCoding>> *surface = _connectionManager.surfaceDescription;
+    NSDictionary<NSString *, id<NSCoding>> *surface = [self surfaceDescription];
     if (!surface) surface = [NSDictionary dictionary];
     /*
      Getting the app name: helper tasks, command-line tools, etc, don't have a NSRunningApplication instance,
@@ -167,12 +167,31 @@ static void finalizer(void)
     if (!appName) appName = [NSString string];
 
     return [NSDictionary dictionaryWithObjectsAndKeys:
-            [NSNumber numberWithUnsignedInt:kSyphonDictionaryVersion], SyphonServerDescriptionDictionaryVersionKey,
+            [NSNumber numberWithUnsignedInt:[self serverDescriptionDictionaryVersion]], SyphonServerDescriptionDictionaryVersionKey,
             self.name, SyphonServerDescriptionNameKey,
             _uuid, SyphonServerDescriptionUUIDKey,
             appName, SyphonServerDescriptionAppNameKey,
             [NSArray arrayWithObject:surface], SyphonServerDescriptionSurfacesKey,
             nil];
+}
+
+- (NSDictionary<NSString *, id<NSCoding>> *)surfaceDescription
+{
+    return [NSDictionary dictionaryWithObject:SyphonSurfaceTypeIOSurface forKey:SyphonSurfaceType];
+}
+
+- (unsigned int)serverDescriptionDictionaryVersion
+{
+    return kSyphonDictionaryVersion;
+}
+
+- (NSDictionary<NSString *, id> *)surfaceAttributesForWidth:(size_t)width height:(size_t)height options:(NSDictionary<NSString *, id> *)options
+{
+    return @{(NSString *)kIOSurfaceIsGlobal: @(YES),
+             (NSString *)kIOSurfaceWidth: @(width),
+             (NSString *)kIOSurfaceHeight: @(height),
+             (NSString *)kIOSurfacePixelFormat: @(kCVPixelFormatType_32BGRA),
+             (NSString *)kIOSurfaceBytesPerElement: @(4U)};
 }
 
 - (BOOL)hasClients
@@ -249,11 +268,7 @@ static void finalizer(void)
             CFRelease(_surface);
         }
         // init our texture and IOSurface
-        NSDictionary<NSString *, id> *surfaceAttributes = @{(NSString*)kIOSurfaceIsGlobal: @(YES),
-                                                            (NSString*)kIOSurfaceWidth: @(width),
-                                                            (NSString*)kIOSurfaceHeight: @(height),
-                                                            (NSString*)kIOSurfacePixelFormat: @(kCVPixelFormatType_32BGRA),
-                                                            (NSString*)kIOSurfaceBytesPerElement: @(4U)};
+        NSDictionary<NSString *, id> *surfaceAttributes = [self surfaceAttributesForWidth:width height:height options:options];
 
         _surface =  IOSurfaceCreate((CFDictionaryRef) surfaceAttributes);
 

@@ -76,6 +76,11 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
         _handler = [handler copy]; // copy don't retain
         _serverDescription = description;
 
+        if (_connectionManager == nil || ![self supportsServerDescription:description])
+        {
+            return nil;
+        }
+
         [[SyphonServerDirectory sharedDirectory] addObserver:self
                                                   forKeyPath:@"servers"
                                                      options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
@@ -83,16 +88,15 @@ static void *SyphonClientServersContext = &SyphonClientServersContext;
 
         [_connectionManager addInfoClient:(id <SyphonInfoReceiving>)self
                             isFrameClient:handler != nil ? YES : NO];
-
-        NSNumber *dictionaryVersion = [description objectForKey:SyphonServerDescriptionDictionaryVersionKey];
-        if (dictionaryVersion == nil
-            || [dictionaryVersion unsignedIntValue] > kSyphonDictionaryVersion
-            || _connectionManager == nil)
-        {
-            return nil;
-        }
     }
     return self;
+}
+
+- (BOOL)supportsServerDescription:(NSDictionary<NSString *, id> *)description
+{
+    NSNumber *dictionaryVersion = [description objectForKey:SyphonServerDescriptionDictionaryVersionKey];
+    return dictionaryVersion != nil
+        && [dictionaryVersion unsignedIntValue] <= kSyphonDictionaryVersion;
 }
 
 - (BOOL)isValid

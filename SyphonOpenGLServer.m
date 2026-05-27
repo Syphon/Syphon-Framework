@@ -155,6 +155,12 @@
 #endif
 }
 
+// Override our base implementation - OpenGL is legacy.
+- (unsigned int)serverDescriptionDictionaryVersion
+{
+    return kSyphonDictionaryVersionLegacy;
+}
+
 - (void)stop
 {
 	[self destroyResources];

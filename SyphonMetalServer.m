@@ -37,6 +37,8 @@
     id<MTLTexture> _surfaceTexture;
     id<MTLDevice> _device;
     SyphonServerRendererMetal *_renderer;
+    MTLPixelFormat _surfacePixelFormat;
+    NSDictionary<NSString *, id<NSCoding>> *_surfaceDescription;
 }
 
 // These are redeclared from SyphonServerBase.h
@@ -51,9 +53,40 @@
     self = [super initWithName:name options:options];
     if( self )
     {
+        NSString *formatName = options[SyphonMetalServerOptionPixelFormat];
+        _surfacePixelFormat = SyphonMTLPixelFormatFromName(formatName);
+        if (_surfacePixelFormat == MTLPixelFormatInvalid)
+        {
+            SYPHONLOG(@"Unsupported Syphon Metal server pixel format: %@", formatName);
+            return nil;
+        }
+        if (!SyphonColorHintOptionsAreValid(options))
+        {
+            SYPHONLOG(@"Invalid Syphon Metal server color hint options");
+            return nil;
+        }
+
         _device = theDevice;
         _surfaceTexture = nil;
-        _renderer = [[SyphonServerRendererMetal alloc] initWithDevice:theDevice colorPixelFormat:MTLPixelFormatBGRA8Unorm];
+        NSMutableDictionary<NSString *, id<NSCoding>> *surfaceDescription = [NSMutableDictionary dictionaryWithObject:SyphonSurfaceTypeIOSurface
+                                                                                                                forKey:SyphonSurfaceType];
+        NSString *surfacePixelFormatName = SyphonNameFromMTLPixelFormat(_surfacePixelFormat);
+        if (surfacePixelFormatName != nil)
+        {
+            surfaceDescription[SyphonSurfaceDescriptionPixelFormatKey] = surfacePixelFormatName;
+        }
+        NSString *colorPrimaries = options[SyphonMetalServerOptionColorPrimaries];
+        NSString *transferFunction = options[SyphonMetalServerOptionTransferFunction];
+        NSString *colorRange = options[SyphonMetalServerOptionColorRange];
+        if (colorPrimaries != nil)
+        {
+            surfaceDescription[SyphonSurfaceDescriptionColorPrimariesKey] = colorPrimaries;
+            surfaceDescription[SyphonSurfaceDescriptionTransferFunctionKey] = transferFunction;
+            surfaceDescription[SyphonSurfaceDescriptionColorRangeKey] = colorRange;
+        }
+        _surfaceDescription = [surfaceDescription copy];
+
+        _renderer = [[SyphonServerRendererMetal alloc] initWithDevice:theDevice colorPixelFormat:_surfacePixelFormat];
         if (!_renderer)
         {
             return nil;
@@ -92,7 +125,7 @@
         }
         if(_surfaceTexture == nil)
         {
-            MTLTextureDescriptor *descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm
+            MTLTextureDescriptor *descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:_surfacePixelFormat
                                                                                                   width:size.width
                                                                                                  height:size.height
                                                                                               mipmapped:NO];
@@ -107,6 +140,30 @@
         }
         return _surfaceTexture;
     }
+}
+
+- (NSDictionary<NSString *, id<NSCoding>> *)surfaceDescription
+{
+    return _surfaceDescription;
+}
+
+- (unsigned int)serverDescriptionDictionaryVersion
+{
+    // to aid with compatibilty with existing "legacy" clients
+    // any server that supports BGRA8 vends a legacy identifier
+    // otherwise we opt into the current version
+    return _surfacePixelFormat == MTLPixelFormatBGRA8Unorm ? kSyphonDictionaryVersionLegacy : kSyphonDictionaryVersion;
+}
+
+- (NSDictionary<NSString *, id> *)surfaceAttributesForWidth:(size_t)width height:(size_t)height options:(NSDictionary<NSString *,id> *)options
+{
+    OSType cvPixelFormat = SyphonCVPixelFormatFromMTLPixelFormat(_surfacePixelFormat);
+    NSUInteger bytesPerElement = SyphonBytesPerElementFromMTLPixelFormat(_surfacePixelFormat);
+    return @{(NSString *)kIOSurfaceIsGlobal: @(YES),
+             (NSString *)kIOSurfaceWidth: @(width),
+             (NSString *)kIOSurfaceHeight: @(height),
+             (NSString *)kIOSurfacePixelFormat: @(cvPixelFormat),
+             (NSString *)kIOSurfaceBytesPerElement: @(bytesPerElement)};
 }
 
 - (void)destroyResources
@@ -138,6 +195,14 @@
 {
     if(textureToPublish == nil) {
         SYPHONLOG(@"TextureToPublish is nil. Syphon will not publish");
+        return;
+    }
+
+    if (textureToPublish.pixelFormat != _surfacePixelFormat)
+    {
+        SYPHONLOG(@"TextureToPublish pixel format (%lu) does not match server format (%lu). Syphon will not publish",
+                  (unsigned long)textureToPublish.pixelFormat,
+                  (unsigned long)_surfacePixelFormat);
         return;
     }
     

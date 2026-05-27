@@ -35,13 +35,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SyphonServerBase (SyphonSubclassing)
 /*!
- Subclasses call this to obtain a new IOSurface to draw to. The surface will always be in a BGRA8 format, other formats are not currently supported.
+ Subclasses call this to obtain a new IOSurface to draw to.
  @param width the width of the IOSurface in pixels
  @param height the height of the IOSurface in pixels
  @param options currently ignored, pass nil
  @returns an existing or new IOSurface sized for the given dimensions - to be released by the caller using CFRelease
  */
 - (nullable IOSurfaceRef)newSurfaceForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
+
+/*!
+ Subclasses may override to customize the surface description published in serverDescription.
+ */
+- (NSDictionary<NSString *, id<NSCoding>> *)surfaceDescription;
+
+/*!
+ Subclasses may override to customize the dictionary version advertised in serverDescription.
+ */
+- (unsigned int)serverDescriptionDictionaryVersion;
+
+/*!
+ Subclasses may override to customize IOSurface allocation attributes.
+ */
+- (NSDictionary<NSString *, id> *)surfaceAttributesForWidth:(size_t)width height:(size_t)height options:(nullable NSDictionary<NSString *, id> *)options;
 
 /*!
  Subclasses may call this to release any current IOSurface
@@ -74,6 +89,11 @@ NS_ASSUME_NONNULL_BEGIN
  it will be called for you when necessary.
  */
 - (void)invalidateFrame;
+
+/*!
+ Subclasses may override to accept additional server description versions or metadata.
+ */
+- (BOOL)supportsServerDescription:(NSDictionary<NSString *, id> *)description;
 @end
 
 NS_ASSUME_NONNULL_END
