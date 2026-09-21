@@ -140,7 +140,7 @@ static void finalizer(void)
     {
         newName = @"";
     }
-    [newName copy];
+    newName = [newName copy];
     os_unfair_lock_lock(&_mdLock);
     _name = newName;
     os_unfair_lock_unlock(&_mdLock);
