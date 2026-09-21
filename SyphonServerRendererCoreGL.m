@@ -399,13 +399,19 @@
 
     // render to our FBO with an IOSurface backed texture attachment (whew!)
 #ifdef SYPHON_CORE_RESTORE
-    // TODO: preserve state
-    GLint prev;
-    if(target == GL_TEXTURE_RECTANGLE)
-        glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &prev);
-    else
-        glGetIntegerv(GL_TEXTURE_BINDING_2D, &prev);
-    
+    // save state we are about to change – we may be sharing a share group with other
+    // contexts, and (on some drivers) state set here is visible to them, so restore it all
+    GLint previousActiveTexture;
+    GLint previousTexture2D;
+    GLint previousTextureRectangle;
+    GLint previousViewport[4];
+    GLboolean previousBlend;
+    glGetIntegerv(GL_ACTIVE_TEXTURE, &previousActiveTexture);
+    glActiveTexture(GL_TEXTURE0);
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &previousTexture2D);
+    glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &previousTextureRectangle);
+    glGetIntegerv(GL_VIEWPORT, previousViewport);
+    glGetBooleanv(GL_BLEND, &previousBlend);
 #endif
     // Setup OpenGL states
 #ifndef SYPHON_CORE_SHARE
@@ -426,8 +432,16 @@
     [_shader endProgram];
 
 #ifdef SYPHON_CORE_RESTORE
-    // TODO: restore state
-    glBindTexture(target, prev);
+    // restore state
+    glBindTexture(GL_TEXTURE_2D, previousTexture2D);
+    glBindTexture(GL_TEXTURE_RECTANGLE, previousTextureRectangle);
+    glViewport(previousViewport[0], previousViewport[1], previousViewport[2], previousViewport[3]);
+    if (previousBlend) {
+        glEnable(GL_BLEND);
+    } else {
+        glDisable(GL_BLEND);
+    }
+    glActiveTexture(previousActiveTexture);
 #else
     glBindTexture(target, 0);
 #endif
